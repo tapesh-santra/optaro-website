@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supply Chain Agent Network v2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #06060f;
+    color: #e0e0f0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    user-select: none;
+  }
+
+  canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
+  .title-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 20px 36px;
+    display: flex; align-items: center; gap: 16px;
+    z-index: 10;
+    background: linear-gradient(180deg, rgba(6,6,15,0.95) 0%, rgba(6,6,15,0.6) 70%, transparent 100%);
+  }
+
+  .title-bar h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px; font-weight: 700; letter-spacing: 1px; color: #fff;
+  }
+  .title-bar h1 span { color: #6366f1; }
+
+  .title-dot {
+    width: 8px; height: 8px; background: #22c55e;
+    border-radius: 50%; box-shadow: 0 0 12px #22c55e88;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.8); }
+  }
+
+  .title-status {
+    font-size: 12px; color: #22c55e; font-weight: 500;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  /* Scenario Panel */
+  .scenario-panel {
+    position: fixed; left: 24px; top: 80px; bottom: 24px;
+    width: 310px; z-index: 10;
+    display: flex; flex-direction: column; gap: 12px;
+    pointer-events: none; overflow-y: auto;
+  }
+  .scenario-panel::-webkit-scrollbar { display: none; }
+
+  .scenario-card {
+    background: rgba(15, 15, 35, 0.7);
+    border: 1px solid rgba(99,102,241,0.15);
+    border-radius: 16px; padding: 18px 20px;
+    backdrop-filter: blur(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.4; transform: translateX(-8px);
+  }
+  .scenario-card.active {
+    opacity: 1; transform: translateX(0);
+    border-color: rgba(99,102,241,0.4);
+    box-shadow: 0 0 40px rgba(99,102,241,0.08);
+  }
+
+  .scenario-label {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: #6366f1; margin-bottom: 6px;
+  }
+  .scenario-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 10px;
+  }
+  .scenario-desc { font-size: 12px; color: #7a7a9e; line-height: 1.6; }
+
+  /* Step Timeline */
+  .step-timeline { display: flex; flex-direction: column; gap: 0; margin-top: 12px; }
+
+  .step-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    position: relative; padding: 6px 0;
+    opacity: 0.25;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateX(-4px);
+  }
+  .step-row.active { opacity: 1; transform: translateX(0); }
+  .step-row.completed { opacity: 0.55; transform: translateX(0); }
+
+  .step-dot-wrapper {
+    width: 20px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+  }
+  .step-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #2a2a4a; border: 2px solid #3a3a5a;
+    transition: all 0.4s ease; position: relative; z-index: 1;
+  }
+  .step-row.active .step-dot {
+    background: #6366f1; border-color: #6366f1; box-shadow: 0 0 12px #6366f188;
+  }
+  .step-row.completed .step-dot {
+    background: #22c55e; border-color: #22c55e; box-shadow: 0 0 8px #22c55e44;
+  }
+  .step-line { width: 2px; height: 16px; background: #1a1a3a; margin-top: 2px; }
+  .step-row.completed .step-line { background: #22c55e44; }
+  .step-text { font-size: 11px; color: #8888aa; line-height: 1.4; transition: color 0.4s ease; }
+  .step-row.active .step-text { color: #e0e0ff; }
+  .step-agent-name { font-weight: 600; color: inherit; }
+  .step-row.active .step-agent-name { color: #a5b4fc; }
+
+  /* Legend */
+  .legend {
+    position: fixed; bottom: 24px; left: 24px; z-index: 10;
+    display: flex; gap: 20px;
+    background: rgba(15, 15, 35, 0.65);
+    padding: 12px 20px; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(16px);
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: #7a7a9e; font-weight: 500;
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* Recommendation Output */
+  .rec-output { position: fixed; right: 24px; bottom: 24px; width: 340px; z-index: 10; pointer-events: none; }
+  .rec-card {
+    background: rgba(15, 15, 35, 0.75);
+    border: 1px solid rgba(244,114,182,0.2);
+    border-radius: 16px; padding: 20px;
+    backdrop-filter: blur(20px);
+    opacity: 0; transform: translateY(12px);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .rec-card.visible { opacity: 1; transform: translateY(0); }
+
+  .rec-badge {
+    display: inline-block; font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 6px;
+    background: rgba(244,114,182,0.15); color: #f472b6; margin-bottom: 10px;
+  }
+  .rec-card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px;
+  }
+  .rec-card-body { font-size: 12px; color: #8888aa; line-height: 1.6; }
+  .rec-card-body strong { color: #c4b5fd; font-weight: 600; }
+
+  .rec-chain {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+  }
+  .rec-chain-node {
+    font-size: 9px; font-weight: 600;
+    padding: 2px 7px; border-radius: 4px;
+    background: rgba(99,102,241,0.12); color: #a5b4fc; white-space: nowrap;
+  }
+  .rec-chain-arrow { color: #3a3a5a; font-size: 10px; }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed; z-index: 20;
+    background: rgba(15, 15, 35, 0.92);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 12px; padding: 14px 18px;
+    backdrop-filter: blur(20px); max-width: 260px;
+    pointer-events: none; opacity: 0; transition: opacity 0.25s ease;
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px;
+  }
+  .tooltip-tier {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .tooltip-desc { font-size: 11px; color: #7a7a9e; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div class="title-bar">
+  <div class="title-dot"></div>
+  <h1>Supply Chain <span>Agent Network</span></h1>
+  <span class="title-status">System Active</span>
+</div>
+
+<div class="scenario-panel" id="scenarioPanel"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#00ff87;box-shadow:0 0 12px #00ff87aa"></div>Command & Orchestration</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#bf5fff;box-shadow:0 0 12px #bf5fffaa"></div>Super Agents</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#00d4ff;box-shadow:0 0 12px #00d4ffaa"></div>Utility Agents</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff3d8f;box-shadow:0 0 12px #ff3d8faa"></div>Recommendation</div>
+</div>
+
+<div class="rec-output"><div class="rec-card" id="recCard"></div></div>
+
+<div class="tooltip" id="tooltip">
+  <div class="tooltip-name" id="ttName"></div>
+  <div class="tooltip-tier" id="ttTier"></div>
+  <div class="tooltip-desc" id="ttDesc"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA (defined first so everything can reference it)
+// ══════════════════════════════════════════════
+
+const COLORS = {
+  command:      { main: '#00ff87', glow: '#00ff87', bg: 'rgba(0,255,135,0.12)',  text: '#00ff87', fill: 'rgba(0,255,135,0.08)' },
+  orchestrator: { main: '#00ffcc', glow: '#00ffaa', bg: 'rgba(0,255,204,0.10)',  text: '#00ffcc', fill: 'rgba(0,255,204,0.06)' },
+  super:        { main: '#bf5fff', glow: '#a855f7', bg: 'rgba(191,95,255,0.10)', text: '#d08fff', fill: 'rgba(191,95,255,0.07)' },
+  utility:      { main: '#00d4ff', glow: '#00bbff', bg: 'rgba(0,212,255,0.10)',  text: '#00e5ff', fill: 'rgba(0,212,255,0.06)' },
+};
+
+const agents = [
+  { id: 'cmd', label: 'Command Centre',             tier: 'command',      icon: '\u2B22',
+    desc: 'Central AI brain — monitors the entire supply chain, delegates analysis to orchestrators, and compiles final recommendations.' },
+  { id: 'ppo', label: 'Planning Param Orchestrator', tier: 'orchestrator', icon: '\u2699',
+    desc: 'Coordinates planning parameter updates — safety stock levels, lead times, MOQs — by invoking super & utility agents in sequence.' },
+  { id: 'imo', label: 'Inventory Mgmt Orchestrator', tier: 'orchestrator', icon: '\u21C4',
+    desc: 'Manages inventory flow decisions — rebalancing, expediting, production rescheduling — to prevent shortages and reduce excess.' },
+  { id: 'dss', label: 'Dynamic Safety Stock',        tier: 'super',        icon: '\u2606',
+    desc: 'Calculates optimal safety stock using demand variability, lead-time uncertainty, and service-level targets.' },
+  { id: 'srb', label: 'Stock Rebalancing',           tier: 'super',        icon: '\u21F5',
+    desc: 'Identifies surplus at one location and shortages at another, then recommends inter-site transfers.' },
+  { id: 'prs', label: 'Production Rescheduling',     tier: 'super',        icon: '\u2692',
+    desc: 'Adjusts production schedules in real time when demand shifts or supply disruptions occur.' },
+  { id: 'exp', label: 'Expedite',                    tier: 'super',        icon: '\u26A1',
+    desc: 'Triggers emergency procurement or accelerated shipping when critical shortages are detected.' },
+  { id: 'tlt', label: 'Transport Lead Time',         tier: 'utility',      icon: '\u2708',
+    desc: 'Provides real-time transportation lead-time estimates by route, carrier, and mode.' },
+  { id: 'moq', label: 'MOQ Calculator',              tier: 'utility',      icon: '\u2261',
+    desc: 'Calculates Minimum Order Quantities based on supplier contracts, volume discounts, and demand forecasts.' },
+  { id: 'wba', label: 'Writeback Agent',             tier: 'utility',      icon: '\u21E9',
+    desc: 'Persists approved recommendations back into ERP / planning systems, closing the loop.' },
+  { id: 'pri', label: 'Projected Inventory',         tier: 'utility',      icon: '\u2197',
+    desc: 'Forecasts future inventory positions by combining current stock, inbound orders, demand signals, and planned production.' },
+  { id: 'isc', label: 'Shortage / Excess Calc',      tier: 'utility',      icon: '\u26A0',
+    desc: 'Compares projected inventory against requirements to flag upcoming shortages or excess.' },
+];
+
+const agentMap = {};
+agents.forEach(a => {
+  a.x = 0; a.y = 0; a.activation = 0; a.baseRadius = 0;
+  agentMap[a.id] = a;
+});
+
+const connections = [
+  ['cmd','ppo'], ['cmd','imo'],
+  ['ppo','dss'], ['ppo','srb'],
+  ['imo','srb'], ['imo','prs'], ['imo','exp'],
+  ['dss','tlt'], ['dss','pri'],
+  ['srb','moq'], ['srb','pri'], ['srb','wba'], ['srb','tlt'],
+  ['prs','pri'], ['prs','wba'], ['prs','moq'],
+  ['exp','isc'], ['exp','pri'], ['exp','tlt'],
+  ['isc','exp'], ['pri','srb'],
+];
+
+const scenarios = [
+  {
+    title: 'Expedite Emergency Order',
+    desc: 'Critical shortage detected — system triggers urgent procurement across the agent chain.',
+    recommendation: {
+      title: 'Expedite Order #EXP-4892',
+      body: 'SKU-4892 projected <strong>shortage at DC-West</strong> in 5 days. Air freight booked from Supplier-A. <strong>ETA: 2 days</strong>. Cost delta: +$12,400.',
+    },
+    steps: [
+      { agent: 'cmd', action: 'Detects demand anomaly, activates Inventory Management Orchestrator' },
+      { agent: 'imo', action: 'Evaluates situation, delegates to Expedite super agent' },
+      { agent: 'exp', action: 'Queries utility agents for shortage analysis & lead times' },
+      { agent: 'isc', action: 'Confirms shortage: 1,200 units below safety stock in 5 days' },
+      { agent: 'pri', action: 'Validates no inbound orders will cover the gap' },
+      { agent: 'tlt', action: 'Returns fastest route: air freight, 2-day transit' },
+      { agent: 'exp', action: 'Compiles expedite recommendation with cost analysis' },
+      { agent: 'wba', action: 'Writes PO and updated ETA back to ERP system' },
+    ],
+    chain: ['cmd','imo','exp','isc','pri','tlt','exp','wba'],
+  },
+  {
+    title: 'Safety Stock Recalibration',
+    desc: 'Demand variability spike triggers dynamic safety stock adjustment.',
+    recommendation: {
+      title: 'Safety Stock Update #SS-1201',
+      body: 'SKU-1201 safety stock increased from <strong>450 to 620 units</strong> based on 34% demand variability spike. Service level maintained at <strong>98.5%</strong>.',
+    },
+    steps: [
+      { agent: 'cmd', action: 'Scheduled planning review cycle, activates Planning Orchestrator' },
+      { agent: 'ppo', action: 'Initiates safety stock recalculation across high-variability SKUs' },
+      { agent: 'dss', action: 'Pulls latest demand & lead-time data from utility agents' },
+      { agent: 'tlt', action: 'Returns updated supplier lead times (avg +1.2 days)' },
+      { agent: 'pri', action: 'Projects forward inventory under new safety stock levels' },
+      { agent: 'dss', action: 'Optimizes safety stock: 450 \u2192 620 units for target SL 98.5%' },
+      { agent: 'wba', action: 'Updates safety stock parameter in planning system' },
+    ],
+    chain: ['cmd','ppo','dss','tlt','pri','dss','wba'],
+  },
+  {
+    title: 'Cross-DC Stock Rebalance',
+    desc: 'Excess inventory at one DC, shortage at another — triggers network-wide rebalancing.',
+    recommendation: {
+      title: 'Stock Transfer #TR-3301',
+      body: 'Transfer <strong>1,200 units of SKU-3301</strong> from DC-East (excess) to DC-Central (shortage). Transit: 3 days. Avoids <strong>$45K in lost sales</strong>.',
+    },
+    steps: [
+      { agent: 'cmd', action: 'Inventory imbalance alert, activates Inventory Orchestrator' },
+      { agent: 'imo', action: 'Routes to Stock Rebalancing agent for multi-DC optimization' },
+      { agent: 'srb', action: 'Queries projected inventory across all DCs' },
+      { agent: 'pri', action: 'Returns: DC-East +3,400 excess, DC-Central -1,200 shortage' },
+      { agent: 'tlt', action: 'Calculates inter-DC transfer lead time: 3 days by ground' },
+      { agent: 'moq', action: 'Validates transfer qty meets minimum shipment threshold' },
+      { agent: 'srb', action: 'Generates optimal transfer plan with cost-benefit analysis' },
+      { agent: 'wba', action: 'Creates transfer order in WMS, updates allocations' },
+    ],
+    chain: ['cmd','imo','srb','pri','tlt','moq','srb','wba'],
+  },
+  {
+    title: 'Production Reschedule',
+    desc: 'Supply disruption triggers manufacturing schedule adjustment.',
+    recommendation: {
+      title: 'Reschedule #PR-7750',
+      body: 'Shift <strong>Line-3 production of SKU-7750</strong> forward by 2 days to cover projected gap. MOQ validated. <strong>No additional cost</strong> \u2014 capacity available.',
+    },
+    steps: [
+      { agent: 'cmd', action: 'Supplier delay notification received, activates Inventory Orchestrator' },
+      { agent: 'imo', action: 'Assesses impact, delegates to Production Rescheduling agent' },
+      { agent: 'prs', action: 'Analyzes current schedule and queries projected inventory' },
+      { agent: 'pri', action: 'Projects stockout in 8 days without schedule change' },
+      { agent: 'moq', action: 'Confirms minimum production batch is feasible for early run' },
+      { agent: 'prs', action: 'Generates reschedule: move Line-3 forward by 2 days' },
+      { agent: 'wba', action: 'Updates production schedule and material requirements in MES' },
+    ],
+    chain: ['cmd','imo','prs','pri','moq','prs','wba'],
+  },
+];
+
+// ══════════════════════════════════════════════
+//  CANVAS SETUP
+// ══════════════════════════════════════════════
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W = 0, H = 0, dpr = 1;
+
+function resize() {
+  dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  layoutNodes();
+}
+
+// ══════════════════════════════════════════════
+//  LAYOUT
+// ══════════════════════════════════════════════
+
+function layoutNodes() {
+  var cx = W / 2 + 60;   // offset right to make room for left panel
+  var topY = H * 0.1 + 30;
+  var tierH = (H * 0.78) / 3;
+
+  agentMap.cmd.x = cx;         agentMap.cmd.y = topY;           agentMap.cmd.baseRadius = 44;
+
+  agentMap.ppo.x = cx - 175;   agentMap.ppo.y = topY + tierH * 0.85; agentMap.ppo.baseRadius = 37;
+  agentMap.imo.x = cx + 175;   agentMap.imo.y = topY + tierH * 0.85; agentMap.imo.baseRadius = 37;
+
+  var sy = topY + tierH * 1.72;
+  var sw = Math.min(W * 0.52, 580);
+  agentMap.dss.x = cx - sw * 0.5;  agentMap.dss.y = sy; agentMap.dss.baseRadius = 34;
+  agentMap.srb.x = cx - sw * 0.17; agentMap.srb.y = sy; agentMap.srb.baseRadius = 34;
+  agentMap.prs.x = cx + sw * 0.17; agentMap.prs.y = sy; agentMap.prs.baseRadius = 34;
+  agentMap.exp.x = cx + sw * 0.5;  agentMap.exp.y = sy; agentMap.exp.baseRadius = 34;
+
+  var uy = topY + tierH * 2.6;
+  var uw = Math.min(W * 0.58, 700);
+  var utilIds = ['tlt','moq','wba','pri','isc'];
+  utilIds.forEach(function(id, i) {
+    agentMap[id].x = cx - uw / 2 + (uw / (utilIds.length - 1)) * i;
+    agentMap[id].y = uy;
+    agentMap[id].baseRadius = 28;
+  });
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+
+function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+
+function getControlPoint(from, to) {
+  var mx = (from.x + to.x) / 2;
+  var my = (from.y + to.y) / 2;
+  var dx = Math.abs(to.x - from.x);
+  var dy = to.y - from.y;
+  var offset = dy < 50 ? -60 : -dx * 0.15;
+  return { x: mx, y: my + offset };
+}
+
+function bezierPoint(p0, cp, p1, t) {
+  var u = 1 - t;
+  return {
+    x: u*u*p0.x + 2*u*t*cp.x + t*t*p1.x,
+    y: u*u*p0.y + 2*u*t*cp.y + t*t*p1.y,
+  };
+}
+
+function hexAlpha(hex, alpha01) {
+  // Convert "#rrggbb" + alpha to rgba string
+  var r = parseInt(hex.slice(1,3), 16);
+  var g = parseInt(hex.slice(3,5), 16);
+  var b = parseInt(hex.slice(5,7), 16);
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha01 + ')';
+}
+
+// ══════════════════════════════════════════════
+//  ANIMATION STATE
+// ══════════════════════════════════════════════
+
+var currentScenario = -1;
+var currentStep = -1;
+var stepTimer = 0;
+var STEP_DURATION = 2200;
+var PAUSE_BETWEEN = 3500;
+var scenarioPhase = 'idle';
+var phaseTimer = 0;
+var travelPulses = [];
+var burstParticles = [];
+
+var ambientParticles = [];
+for (var i = 0; i < 50; i++) {
+  ambientParticles.push({
+    x: Math.random() * 2400, y: Math.random() * 1400,
+    r: Math.random() * 1.2 + 0.3,
+    dx: (Math.random() - 0.5) * 0.12,
+    dy: (Math.random() - 0.5) * 0.12,
+    o: Math.random() * 0.12 + 0.02,
+  });
+}
+
+// Ambient idle particles flowing along random connections
+var ambientFlows = [];
+function spawnAmbientFlow() {
+  var idx = Math.floor(Math.random() * connections.length);
+  var c = connections[idx];
+  var from = agentMap[c[0]], to = agentMap[c[1]];
+  if (!from || !to) return;
+  ambientFlows.push({
+    fromId: c[0], toId: c[1], progress: 0,
+    speed: 0.003 + Math.random() * 0.004,
+    color: COLORS[from.tier].main,
+  });
+}
+
+// ══════════════════════════════════════════════
+//  DRAWING FUNCTIONS
+// ══════════════════════════════════════════════
+
+function drawConnection(from, to, alpha, color, width) {
+  var cp = getControlPoint(from, to);
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.quadraticCurveTo(cp.x, cp.y, to.x, to.y);
+  ctx.strokeStyle = color;
+  ctx.globalAlpha = alpha;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function drawNode(agent, time) {
+  var c = COLORS[agent.tier];
+  var r = agent.baseRadius;
+  if (r <= 0) return;
+  var act = agent.activation;
+  var x = agent.x, y = agent.y;
+
+  // ── Always-on ambient glow (large, soft) ──
+  var ambR = r + 30;
+  var ambGrd = ctx.createRadialGradient(x, y, r * 0.2, x, y, ambR);
+  ambGrd.addColorStop(0, hexAlpha(c.glow, 0.12 + act * 0.2));
+  ambGrd.addColorStop(0.5, hexAlpha(c.glow, 0.04 + act * 0.08));
+  ambGrd.addColorStop(1, hexAlpha(c.glow, 0));
+  ctx.beginPath();
+  ctx.arc(x, y, ambR, 0, Math.PI * 2);
+  ctx.fillStyle = ambGrd;
+  ctx.fill();
+
+  // ── Activation-boosted outer glow ──
+  if (act > 0.01) {
+    var glowR = r + 40 * act;
+    var grd = ctx.createRadialGradient(x, y, r * 0.2, x, y, glowR);
+    grd.addColorStop(0, hexAlpha(c.glow, act * 0.5));
+    grd.addColorStop(0.5, hexAlpha(c.glow, act * 0.15));
+    grd.addColorStop(1, hexAlpha(c.glow, 0));
+    ctx.beginPath();
+    ctx.arc(x, y, glowR, 0, Math.PI * 2);
+    ctx.fillStyle = grd;
+    ctx.fill();
+  }
+
+  // ── Activation rings ──
+  if (act > 0.05) {
+    ctx.beginPath();
+    ctx.arc(x, y, r + 5 + act * 8, 0, Math.PI * 2);
+    ctx.strokeStyle = c.main;
+    ctx.globalAlpha = act * 0.7;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    ctx.beginPath();
+    ctx.arc(x, y, r + 14 + act * 14, 0, Math.PI * 2);
+    ctx.strokeStyle = c.main;
+    ctx.globalAlpha = act * 0.3;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // ── Main circle (dark glass with colored tint) ──
+  var bgGrad = ctx.createRadialGradient(x, y - r * 0.3, 0, x, y, r);
+  bgGrad.addColorStop(0, 'rgba(30,30,60,' + (0.88 + act * 0.08) + ')');
+  bgGrad.addColorStop(1, 'rgba(16,16,36,' + (0.92 + act * 0.05) + ')');
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = bgGrad;
+  ctx.fill();
+
+  // Color fill overlay
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = hexAlpha(c.main, 0.06 + act * 0.12);
+  ctx.fill();
+
+  // ── Border (bright neon) ──
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.strokeStyle = c.main;
+  ctx.globalAlpha = 0.55 + act * 0.45;
+  ctx.lineWidth = 2 + act * 1.5;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Bright border glow (doubled stroke)
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.strokeStyle = c.main;
+  ctx.globalAlpha = 0.15 + act * 0.2;
+  ctx.lineWidth = 6 + act * 4;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // ── Inner ring ──
+  ctx.beginPath();
+  ctx.arc(x, y, r * 0.72, 0, Math.PI * 2);
+  ctx.strokeStyle = c.main;
+  ctx.globalAlpha = 0.12 + act * 0.2;
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // ── Icon ──
+  var iconSize = agent.tier === 'command' ? 20 : 16;
+  ctx.font = iconSize + 'px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = c.text;
+  ctx.globalAlpha = 0.8 + act * 0.2;
+  ctx.fillText(agent.icon, x, y - (r > 32 ? 8 : 5));
+  ctx.globalAlpha = 1;
+
+  // ── Label ──
+  var words = agent.label.split(' ');
+  var labelLines = [];
+  if (words.length <= 2) {
+    labelLines = [agent.label];
+  } else {
+    var mid = Math.ceil(words.length / 2);
+    labelLines = [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+  }
+
+  ctx.font = '600 ' + (r > 32 ? '11' : '10') + 'px Inter, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.globalAlpha = 0.85 + act * 0.15;
+  labelLines.forEach(function(line, i) {
+    ctx.fillText(line, x, y + (r > 32 ? 7 : 4) + i * 13);
+  });
+  ctx.globalAlpha = 1;
+
+  // ── Tier badge below ──
+  var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY' };
+  ctx.font = '700 8px Inter, sans-serif';
+  ctx.fillStyle = c.text;
+  ctx.globalAlpha = 0.5 + act * 0.35;
+  ctx.fillText(tierNames[agent.tier], x, y + r + 16);
+  ctx.globalAlpha = 1;
+}
+
+function drawTravelPulse(tp) {
+  var from = agentMap[tp.fromId];
+  var to = agentMap[tp.toId];
+  if (!from || !to) return;
+  var cp = getControlPoint(from, to);
+  var eased = easeInOutCubic(tp.progress);
+  var pos = bezierPoint(from, cp, to, eased);
+
+  // Trail (bright)
+  for (var i = 1; i <= 10; i++) {
+    var tt = Math.max(0, eased - i * 0.03);
+    var trailPos = bezierPoint(from, cp, to, tt);
+    var alpha = (1 - i / 10) * 0.55;
+    ctx.beginPath();
+    ctx.arc(trailPos.x, trailPos.y, 4 - i * 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = tp.color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // Large glow around main dot
+  var grd = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 28);
+  grd.addColorStop(0, hexAlpha(tp.color, 0.8));
+  grd.addColorStop(0.3, hexAlpha(tp.color, 0.3));
+  grd.addColorStop(1, hexAlpha(tp.color, 0));
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 28, 0, Math.PI * 2);
+  ctx.fillStyle = grd;
+  ctx.fill();
+
+  // Core white-hot dot
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 4.5, 0, Math.PI * 2);
+  ctx.fillStyle = '#ffffff';
+  ctx.fill();
+
+  // Neon ring
+  ctx.beginPath();
+  ctx.arc(pos.x, pos.y, 7, 0, Math.PI * 2);
+  ctx.strokeStyle = tp.color;
+  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.85;
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Highlight the connection line brightly as pulse travels
+  drawConnection(from, to, 0.5, tp.color, 3);
+}
+
+function drawBurstParticle(p) {
+  var sz = p.r * Math.max(0, p.life);
+  // Glow
+  var grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, sz + 4);
+  grd.addColorStop(0, hexAlpha(p.color, p.life * 0.6));
+  grd.addColorStop(1, hexAlpha(p.color, 0));
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, sz + 4, 0, Math.PI * 2);
+  ctx.fillStyle = grd;
+  ctx.fill();
+  // Core
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, sz, 0, Math.PI * 2);
+  ctx.fillStyle = p.color;
+  ctx.globalAlpha = Math.max(0, p.life) * 0.9;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+// ══════════════════════════════════════════════
+//  UI PANEL FUNCTIONS
+// ══════════════════════════════════════════════
+
+function renderScenarioPanel(scenarioIdx, stepIdx) {
+  var panel = document.getElementById('scenarioPanel');
+  var s = scenarios[scenarioIdx];
+  if (!s) { panel.innerHTML = ''; return; }
+
+  var html = '<div class="scenario-card active">';
+  html += '<div class="scenario-label">Active Scenario</div>';
+  html += '<div class="scenario-title">' + s.title + '</div>';
+  html += '<div class="scenario-desc">' + s.desc + '</div>';
+  html += '<div class="step-timeline">';
+
+  s.steps.forEach(function(step, i) {
+    var cls = i < stepIdx ? 'completed' : i === stepIdx ? 'active' : '';
+    var agent = agentMap[step.agent];
+    html += '<div class="step-row ' + cls + '">';
+    html += '<div class="step-dot-wrapper"><div class="step-dot"></div>';
+    if (i < s.steps.length - 1) html += '<div class="step-line"></div>';
+    html += '</div>';
+    html += '<div class="step-text"><span class="step-agent-name">' + agent.label + '</span><br/>';
+    html += '<span style="font-size:10px">' + step.action + '</span></div>';
+    html += '</div>';
+  });
+
+  html += '</div></div>';
+  panel.innerHTML = html;
+}
+
+function showRecommendation(scenarioIdx) {
+  var s = scenarios[scenarioIdx];
+  var card = document.getElementById('recCard');
+  var chainHtml = s.chain.map(function(id) {
+    return '<span class="rec-chain-node">' + agentMap[id].label + '</span>';
+  }).join('<span class="rec-chain-arrow">\u2192</span>');
+
+  card.innerHTML = '<div class="rec-badge">Recommendation Generated</div>' +
+    '<div class="rec-card-title">' + s.recommendation.title + '</div>' +
+    '<div class="rec-card-body">' + s.recommendation.body + '</div>' +
+    '<div class="rec-chain">' + chainHtml + '</div>';
+  card.classList.add('visible');
+}
+
+function hideRecommendation() {
+  document.getElementById('recCard').classList.remove('visible');
+}
+
+// ══════════════════════════════════════════════
+//  SCENARIO STATE MACHINE
+// ══════════════════════════════════════════════
+
+function advanceScenario(dt) {
+  if (scenarioPhase === 'idle') {
+    phaseTimer += dt;
+    if (phaseTimer > 1500) {
+      currentScenario = (currentScenario + 1) % scenarios.length;
+      currentStep = -1;
+      scenarioPhase = 'running';
+      phaseTimer = 0;
+      stepTimer = 0;
+      hideRecommendation();
+    }
+    return;
+  }
+
+  if (scenarioPhase === 'running') {
+    stepTimer += dt;
+    if (stepTimer > STEP_DURATION || currentStep === -1) {
+      currentStep++;
+      stepTimer = 0;
+
+      var s = scenarios[currentScenario];
+      if (currentStep >= s.steps.length) {
+        scenarioPhase = 'showing-rec';
+        phaseTimer = 0;
+        showRecommendation(currentScenario);
+        return;
+      }
+
+      var step = s.steps[currentStep];
+      var agent = agentMap[step.agent];
+      agent.activation = 1.0;
+
+      // Travel pulse from previous step agent
+      if (currentStep > 0) {
+        var prevAgentId = s.steps[currentStep - 1].agent;
+        var tierColor = COLORS[agent.tier].main;
+        travelPulses.push({
+          fromId: prevAgentId, toId: step.agent,
+          progress: 0, speed: 0.015 + Math.random() * 0.005,
+          color: tierColor,
+        });
+      }
+
+      renderScenarioPanel(currentScenario, currentStep);
+    }
+    return;
+  }
+
+  if (scenarioPhase === 'showing-rec') {
+    phaseTimer += dt;
+    if (phaseTimer > 5000) {
+      scenarioPhase = 'pausing';
+      phaseTimer = 0;
+      hideRecommendation();
+    }
+    return;
+  }
+
+  if (scenarioPhase === 'pausing') {
+    phaseTimer += dt;
+    if (phaseTimer > PAUSE_BETWEEN) {
+      scenarioPhase = 'idle';
+      phaseTimer = 0;
+      currentStep = -1;
+      document.getElementById('scenarioPanel').innerHTML = '';
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+//  HOVER TOOLTIP
+// ══════════════════════════════════════════════
+
+var hoveredAgent = null;
+var tooltipEl = document.getElementById('tooltip');
+
+canvas.addEventListener('mousemove', function(e) {
+  var mx = e.clientX, my = e.clientY;
+  var found = null;
+  for (var i = 0; i < agents.length; i++) {
+    var a = agents[i];
+    var dx = mx - a.x, dy = my - a.y;
+    if (dx*dx + dy*dy < (a.baseRadius + 10) * (a.baseRadius + 10)) {
+      found = a; break;
+    }
+  }
+  if (found !== hoveredAgent) {
+    hoveredAgent = found;
+    if (found) {
+      document.getElementById('ttName').textContent = found.label;
+      var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY' };
+      var ttTier = document.getElementById('ttTier');
+      ttTier.textContent = tierNames[found.tier];
+      ttTier.style.color = COLORS[found.tier].text;
+      document.getElementById('ttDesc').textContent = found.desc;
+      tooltipEl.classList.add('visible');
+    } else {
+      tooltipEl.classList.remove('visible');
+    }
+  }
+  if (hoveredAgent) {
+    var tx = Math.min(mx + 18, W - 280);
+    var ty = Math.min(my + 18, H - 160);
+    tooltipEl.style.left = tx + 'px';
+    tooltipEl.style.top = ty + 'px';
+  }
+});
+
+// ══════════════════════════════════════════════
+//  MAIN RENDER LOOP
+// ══════════════════════════════════════════════
+
+var lastTime = 0;
+var ambientFlowTimer = 0;
+
+function frame(t) {
+  var dt = lastTime ? (t - lastTime) : 16;
+  if (dt > 100) dt = 16; // Cap on tab-switch
+  lastTime = t;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // ── Background ──
+  var bgGrad = ctx.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, H * 0.9);
+  bgGrad.addColorStop(0, '#0d0d20');
+  bgGrad.addColorStop(1, '#06060f');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Dot grid
+  ctx.fillStyle = 'rgba(100,120,200,0.05)';
+  var gs = 48;
+  for (var gx = gs; gx < W; gx += gs) {
+    for (var gy = gs; gy < H; gy += gs) {
+      ctx.beginPath();
+      ctx.arc(gx, gy, 0.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Ambient floating particles
+  for (var pi = 0; pi < ambientParticles.length; pi++) {
+    var p = ambientParticles[pi];
+    p.x += p.dx; p.y += p.dy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(120,150,255,' + (p.o * 2) + ')';
+    ctx.fill();
+  }
+
+  // ── Decay activations smoothly ──
+  for (var ai = 0; ai < agents.length; ai++) {
+    if (agents[ai].activation > 0) {
+      agents[ai].activation = Math.max(0, agents[ai].activation - dt * 0.00025);
+    }
+  }
+
+  // ── Draw connections ──
+  for (var ci = 0; ci < connections.length; ci++) {
+    var from = agentMap[connections[ci][0]];
+    var to = agentMap[connections[ci][1]];
+    var maxAct = Math.max(from.activation, to.activation);
+    var alpha = 0.12 + maxAct * 0.5;
+    var width = 1.2 + maxAct * 2.5;
+    drawConnection(from, to, alpha, COLORS[from.tier].main, width);
+
+    // Glow layer on active connections
+    if (maxAct > 0.1) {
+      drawConnection(from, to, maxAct * 0.2, COLORS[from.tier].main, width + 6);
+    }
+  }
+
+  // ── Ambient flows (idle data movement) ──
+  ambientFlowTimer += dt;
+  if (ambientFlowTimer > 800) {
+    ambientFlowTimer = 0;
+    if (ambientFlows.length < 3) spawnAmbientFlow();
+  }
+
+  for (var fi = ambientFlows.length - 1; fi >= 0; fi--) {
+    var af = ambientFlows[fi];
+    af.progress += af.speed * (dt / 16);
+    if (af.progress >= 1) {
+      ambientFlows.splice(fi, 1);
+      continue;
+    }
+    var afFrom = agentMap[af.fromId];
+    var afTo = agentMap[af.toId];
+    if (!afFrom || !afTo) { ambientFlows.splice(fi, 1); continue; }
+    var afCp = getControlPoint(afFrom, afTo);
+    var afPos = bezierPoint(afFrom, afCp, afTo, easeInOutCubic(af.progress));
+
+    // Glowing flow dot
+    var afGrd = ctx.createRadialGradient(afPos.x, afPos.y, 0, afPos.x, afPos.y, 8);
+    afGrd.addColorStop(0, hexAlpha(af.color, 0.5));
+    afGrd.addColorStop(1, hexAlpha(af.color, 0));
+    ctx.beginPath();
+    ctx.arc(afPos.x, afPos.y, 8, 0, Math.PI * 2);
+    ctx.fillStyle = afGrd;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(afPos.x, afPos.y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = af.color;
+    ctx.globalAlpha = 0.6;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // ── Scenario-driven travel pulses ──
+  for (var ti = travelPulses.length - 1; ti >= 0; ti--) {
+    var tp = travelPulses[ti];
+    tp.progress += tp.speed * (dt / 16);
+    if (tp.progress >= 1) {
+      // Burst at destination
+      var destAgent = agentMap[tp.toId];
+      for (var bi = 0; bi < 10; bi++) {
+        var angle = (Math.PI * 2 / 10) * bi + Math.random() * 0.3;
+        burstParticles.push({
+          x: destAgent.x, y: destAgent.y,
+          vx: Math.cos(angle) * (1.5 + Math.random() * 1.5),
+          vy: Math.sin(angle) * (1.5 + Math.random() * 1.5),
+          life: 1, r: 2.5 + Math.random() * 1.5, color: tp.color,
+        });
+      }
+      travelPulses.splice(ti, 1);
+      continue;
+    }
+    drawTravelPulse(tp);
+  }
+
+  // ── Burst particles ──
+  for (var bpi = burstParticles.length - 1; bpi >= 0; bpi--) {
+    var bp = burstParticles[bpi];
+    bp.x += bp.vx; bp.y += bp.vy;
+    bp.vx *= 0.95; bp.vy *= 0.95;
+    bp.life -= dt * 0.0018;
+    if (bp.life <= 0) { burstParticles.splice(bpi, 1); continue; }
+    drawBurstParticle(bp);
+  }
+
+  // ── Draw nodes ──
+  for (var ni = 0; ni < agents.length; ni++) {
+    drawNode(agents[ni], t);
+  }
+
+  // ── Tier labels (right side, very subtle) ──
+  ctx.font = '500 11px Inter, sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(120,140,220,0.2)';
+  var tiers = [
+    { label: 'COMMAND', y: agentMap.cmd.y },
+    { label: 'ORCHESTRATORS', y: agentMap.ppo.y },
+    { label: 'SUPER AGENTS', y: agentMap.dss.y },
+    { label: 'UTILITY AGENTS', y: agentMap.tlt.y },
+  ];
+  for (var tii = 0; tii < tiers.length; tii++) {
+    ctx.fillText(tiers[tii].label, W - 30, tiers[tii].y + 4);
+  }
+
+  // ── Advance scenario ──
+  advanceScenario(dt);
+
+  requestAnimationFrame(frame);
+}
+
+// ══════════════════════════════════════════════
+//  INIT — everything is defined, now start
+// ══════════════════════════════════════════════
+
+resize();
+window.addEventListener('resize', resize);
+requestAnimationFrame(frame);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optaro.ai — AI-First Agentic Supply Chain Platform</title>
+  <meta name="description" content="Optaro deploys AI agents across your supply chain — sensing demand, rightsizing inventory, and executing decisions to protect EBITDA and unlock growth.">
+  <link rel="icon" type="image/png" href="assets/images/optaro-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script>(function(){var t=localStorage.getItem('optaro-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');})()</script>
+</head>
+<body>
+  <!-- Particle Canvas Background -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <img src="assets/images/optaro-logo.png" alt="Optaro.ai" class="logo-img logo-dark">
+        <img src="assets/images/optaro-logo-light.png" alt="Optaro.ai" class="logo-img logo-light">
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero" class="nav-link active">Home</a></li>
+        <li><a href="#about-platform" class="nav-link">Platform</a></li>
+        <li><a href="#use-cases" class="nav-link">Use Cases</a></li>
+        <li><a href="#agent-network" class="nav-link">Agent Network</a></li>
+        <li><a href="#who-we-serve" class="nav-link">Who We Serve</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <i class="fas fa-sun" id="themeIcon"></i>
+      </button>
+      <a href="#contact" class="nav-cta">
+        <span>Request Demo</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="hero-content">
+      <div class="hero-badge animate-on-scroll">
+        <span class="badge-dot"></span>
+        <span>AI FIRST AGENTIC SUPPLY CHAIN PLATFORM</span>
+      </div>
+      <h1 class="hero-title animate-on-scroll">
+        Your supply chain.<br>
+        <span class="gradient-text">Autonomous.</span>
+        <span class="gradient-text-alt">Operational.</span>
+        <span class="text-glow">Now.</span>
+      </h1>
+      <p class="hero-subtitle animate-on-scroll">
+        Optaro, an AI first platform, deploys AI agents across your supply chain — sensing demand, rightsizing inventory, and executing decisions to protect EBITDA, release working capital, and unlock revenue growth.
+      </p>
+      <div class="hero-features animate-on-scroll">
+        <div class="hero-feature">
+          <i class="fas fa-robot"></i>
+          <span>Pre-built and trained AI agents for speed to value</span>
+        </div>
+        <div class="hero-feature">
+          <i class="fas fa-shield-halved"></i>
+          <span>Retain your competitive advantage by keeping your data in your world</span>
+        </div>
+      </div>
+      <div class="hero-actions animate-on-scroll">
+        <a href="#contact" class="btn btn-primary">
+          <span>Get Started</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="#agent-network" class="btn btn-ghost">
+          <i class="fas fa-play"></i>
+          <span>See It In Action</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero-stats animate-on-scroll">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-coins"></i></div>
+        <div class="stat-value" data-target="10" data-suffix="–15%">10–15%</div>
+        <div class="stat-label">Working Capital<br>Released</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-value" data-target="3" data-prefix="+" data-suffix="%">+3%</div>
+        <div class="stat-label">Revenue Growth<br>Enabled</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+        <div class="stat-value" data-target="14">14</div>
+        <div class="stat-label">Days to First<br>Agent Action</div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- About Platform Section -->
+  <section class="section about-platform" id="about-platform">
+    <div class="section-container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag"><i class="fas fa-microchip"></i> THE PLATFORM</span>
+        <h2 class="section-title">Agentic AI That <span class="gradient-text">Actually Acts</span></h2>
+        <p class="section-desc">Not another dashboard. Not another recommendation engine. Optaro agents autonomously execute decisions across your supply chain — within guardrails you trust.</p>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card animate-on-scroll" data-neon="cyan">
+          <div class="platform-card-glow"></div>
+          <div class="platform-card-border"></div>
+          <div class="platform-card-icon"><i class="fas fa-brain"></i></div>
+          <h3>Autonomous Decision-Making</h3>
+          <p>AI agents that don't just surface the right answer but act on it, within guardrails that make autonomous execution something leaders can genuinely trust.</p>
+        </div>
+        <div class="platform-card animate-on-scroll" data-neon="purple">
+          <div class="platform-card-glow"></div>
+          <div class="platform-card-border"></div>
+          <div class="platform-card-icon"><i class="fas fa-network-wired"></i></div>
+          <h3>Multi-Agent Orchestration</h3>
+          <p>Command Centre coordinates specialized orchestrators, super agents, and utility agents in a hierarchical network that mirrors real supply chain complexity.</p>
+        </div>
+        <div class="platform-card animate-on-scroll" data-neon="green">
+          <div class="platform-card-glow"></div>
+          <div class="platform-card-border"></div>
+          <div class="platform-card-icon"><i class="fas fa-lock"></i></div>
+          <h3>Your Data, Your World</h3>
+          <p>Every decision an agent makes is traceable and explainable. Your data stays within your environment — governance and accountability are built in.</p>
+        </div>
+        <div class="platform-card animate-on-scroll" data-neon="pink">
+          <div class="platform-card-glow"></div>
+          <div class="platform-card-border"></div>
+          <div class="platform-card-icon"><i class="fas fa-plug"></i></div>
+          <h3>ERP Integration</h3>
+          <p>Writeback agents close the loop — persisting approved recommendations directly back into your SAP, Oracle, NetSuite, or planning systems.</p>
+        </div>
+        <div class="platform-card animate-on-scroll" data-neon="amber">
+          <div class="platform-card-glow"></div>
+          <div class="platform-card-border"></div>
+          <div class="platform-card-icon"><i class="fas fa-gauge-high"></i></div>
+          <h3>Speed to Value</h3>
+          <p>Pre-built, pre-trained AI agents mean you're operational in days, not months. No 12-month implementation projects required.</p>
+        </div>
+        <div class="platform-card animate-on-scroll" data-neon="indigo">
+          <div class="platform-card-glow"></div>
+          <div class="platform-card-border"></div>
+          <div class="platform-card-icon"><i class="fas fa-cloud"></i></div>
+          <h3>Google Cloud Powered</h3>
+          <p>Built on Google Cloud infrastructure for enterprise-grade security, scalability, and reliability your organization demands.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases Section -->
+  <section class="section use-cases" id="use-cases">
+    <div class="section-container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag"><i class="fas fa-diagram-project"></i> USE CASES</span>
+        <h2 class="section-title">Supply Chain <span class="gradient-text">Agentic Use Cases</span></h2>
+        <p class="section-desc">Watch how Optaro's autonomous agents collaborate in real-time to detect, decide, and act across your supply chain.</p>
+      </div>
+
+      <!-- Use Case Cards — 7 cards, matching slide exactly -->
+      <div class="usecase-cards-grid">
+
+        <div class="usecase-card animate-on-scroll" data-scenario="0">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-route"></i>
+            </div>
+            <h3 class="usecase-card-title">Transportation Lead Time Recommendation</h3>
+            <p class="usecase-card-desc">Analyze transport lane lead times, identify high-variability lanes and missed delivery windows, and recommend corrective actions.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+        <div class="usecase-card animate-on-scroll" data-scenario="1">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="usecase-card-title">Projected Inventory Positions</h3>
+            <p class="usecase-card-desc">Build forward-looking inventory projections using current stock, inbound supply, demand forecasts, and planned production.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+        <div class="usecase-card animate-on-scroll" data-scenario="2">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="usecase-card-title">Inventory Shortage & Excess Detection</h3>
+            <p class="usecase-card-desc">Analyze projected inventory to flag upcoming shortages and excess with recommended actions.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+        <div class="usecase-card animate-on-scroll" data-scenario="0">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-truck-fast"></i>
+            </div>
+            <h3 class="usecase-card-title">Expedite Management</h3>
+            <p class="usecase-card-desc">Identify orders and shipments needing expediting based on projected shortages, priority, and cost-benefit analysis.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+        <div class="usecase-card animate-on-scroll" data-scenario="3">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-industry"></i>
+            </div>
+            <h3 class="usecase-card-title">Production Rescheduling</h3>
+            <p class="usecase-card-desc">Reschedule production plans based on demand signals, inventory positions, and capacity constraints.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+        <div class="usecase-card animate-on-scroll" data-scenario="2">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-arrows-rotate"></i>
+            </div>
+            <h3 class="usecase-card-title">Stock Rebalancing</h3>
+            <p class="usecase-card-desc">Identify surplus and deficit locations and recommend inventory transfers to improve fill rates across the network.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+        <div class="usecase-card animate-on-scroll" data-scenario="1">
+          <div class="usecase-card-border"></div>
+          <div class="usecase-card-glow"></div>
+          <div class="usecase-card-shine"></div>
+          <div class="usecase-card-content">
+            <div class="usecase-icon-wrap">
+              <div class="usecase-icon-ring"></div>
+              <i class="fas fa-shield-halved"></i>
+            </div>
+            <h3 class="usecase-card-title">Dynamic Safety Stock Optimization</h3>
+            <p class="usecase-card-desc">Dynamically calculate and adjust safety stock levels based on demand variability, lead times, and service level targets.</p>
+            <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- S/C Agent Network Section -->
+  <section class="section agent-network-section" id="agent-network">
+    <div class="section-container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag"><i class="fas fa-diagram-project"></i> S/C AGENT NETWORK</span>
+        <h2 class="section-title">Supply Chain <span class="gradient-text">Agent Network</span></h2>
+        <p class="section-desc">Watch autonomous AI agents collaborate in real-time — sensing, deciding, and acting across your supply chain.</p>
+      </div>
+      <div class="agent-network-embed animate-on-scroll">
+        <iframe src="design/supply-chain-agents-embed.html" id="agentNetworkFrame" title="Supply Chain Agent Network" frameborder="0" allowtransparency="true"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who We Serve Section -->
+  <section class="section who-we-serve" id="who-we-serve">
+    <div class="section-container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag"><i class="fas fa-building"></i> WHO WE SERVE</span>
+        <h2 class="section-title">Built for Complexity <span class="gradient-text">at Every Scale</span></h2>
+        <p class="section-desc">From $50M to $5B+ revenue — with a particular fit for businesses that need enterprise-grade supply chain without the enterprise implementation cost or timeline.</p>
+      </div>
+      <div class="serve-grid">
+        <!-- Mid-Market Card -->
+        <div class="serve-card animate-on-scroll">
+          <div class="serve-card-glow serve-glow-cyan"></div>
+          <div class="serve-card-header">
+            <div class="serve-icon"><i class="fas fa-rocket"></i></div>
+            <div class="serve-revenue">$50M – $500M</div>
+            <h3 class="serve-title">Mid-Market Operators</h3>
+          </div>
+          <p class="serve-challenge">Mid-market manufacturers and distributors face a compounding problem: the supply chain has grown complex enough to demand enterprise-grade AI — but the budget, timeline, and IT capacity for a monolithic implementation are nowhere in sight.</p>
+          <ul class="serve-features">
+            <li><i class="fas fa-boxes-stacked"></i><span>500–50K SKUs, 1–10 locations</span></li>
+            <li><i class="fas fa-server"></i><span>NetSuite, Dynamics or mid-market SAP</span></li>
+            <li><i class="fas fa-trophy"></i><span>SC excellence without 12-month project</span></li>
+            <li><i class="fas fa-dollar-sign"></i><span>Enterprise AI, fraction of the cost</span></li>
+          </ul>
+        </div>
+        <!-- Enterprise Card -->
+        <div class="serve-card animate-on-scroll">
+          <div class="serve-card-glow serve-glow-purple"></div>
+          <div class="serve-card-header">
+            <div class="serve-icon"><i class="fas fa-city"></i></div>
+            <div class="serve-revenue">$500M – $5B+</div>
+            <h3 class="serve-title">Enterprise Leaders</h3>
+          </div>
+          <p class="serve-challenge">Enterprise supply chain leaders have invested heavily in planning platforms, ERP customisation, and analyst teams. What's missing is the layer that closes the loop between recommendation and action — autonomously, at the scale and speed global operations demand.</p>
+          <ul class="serve-features">
+            <li><i class="fas fa-database"></i><span>SAP, Oracle, OMP, Kinaxis, o9</span></li>
+            <li><i class="fas fa-money-bill-trend-up"></i><span>Working capital $50M+ in network</span></li>
+            <li><i class="fas fa-chart-pie"></i><span>Reduce planner exceptions by 70%+</span></li>
+            <li><i class="fas fa-file-invoice-dollar"></i><span>CFO-connected supply chain reporting</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="partner-badge animate-on-scroll">
+        <i class="fab fa-google"></i>
+        <span>Partnered with Google Cloud</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Founder Section -->
+  <section class="section about" id="about">
+    <div class="section-container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag"><i class="fas fa-user-tie"></i> ABOUT OPTARO</span>
+        <h2 class="section-title">Built by a <span class="gradient-text">Supply Chain Leader</span></h2>
+      </div>
+      <div class="about-content">
+        <div class="founder-card animate-on-scroll">
+          <div class="founder-avatar">
+            <div class="avatar-placeholder"><i class="fas fa-user"></i></div>
+            <div class="avatar-ring"></div>
+          </div>
+          <h3 class="founder-name">Mark Robinson</h3>
+          <p class="founder-role">Founder & CEO · Optaro.ai</p>
+          <div class="founder-credentials">
+            <span class="credential"><i class="fas fa-briefcase"></i> CFO / CSCO</span>
+            <span class="credential"><i class="fas fa-microchip"></i> VP Digital & AI</span>
+            <span class="credential"><i class="fas fa-building-columns"></i> PwC Director</span>
+            <span class="credential"><i class="fas fa-graduation-cap"></i> EY Trained</span>
+            <span class="credential"><i class="fas fa-calendar"></i> 25+ Years</span>
+          </div>
+        </div>
+        <div class="founder-quote animate-on-scroll">
+          <blockquote>
+            <i class="fas fa-quote-left quote-icon"></i>
+            <p>"Most AI in supply chain promised transformation and delivered dashboards. We built Optaro because we knew the problem wasn't data — it was that no system would actually act on it."</p>
+          </blockquote>
+          <div class="founder-belief">
+            <h4><i class="fas fa-lightbulb"></i> Mark's Belief</h4>
+            <p>I believe we are at a genuine inflection point — where AI can move beyond augmenting individual functions and become the connective intelligence that orchestrates decisions across an entire business.</p>
+            <p>Agentic AI makes that possible — systems that don't just surface the right answer but act on it, within guardrails that make autonomous execution something leaders can genuinely trust. Governance has always mattered to me; every decision an agent makes should be traceable and explainable, because accountability is what turns capability into confidence.</p>
+            <p>We built Optaro to make that vision real — a platform that doesn't just tell you what should happen, but makes it happen.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / Contact Section -->
+  <section class="section contact" id="contact">
+    <div class="section-container">
+      <div class="cta-wrapper animate-on-scroll">
+        <div class="cta-glow"></div>
+        <div class="cta-content">
+          <h2 class="cta-title">See Optaro <span class="gradient-text">Working</span></h2>
+          <p class="cta-desc">Experience autonomous supply chain intelligence. Book a personalized demo and see how Optaro agents can transform your operations.</p>
+          <form class="cta-form" id="ctaForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text" id="formName" name="name" placeholder="Your Name" required>
+                <i class="fas fa-user"></i>
+                <span class="form-error" id="errorName"></span>
+              </div>
+              <div class="form-group">
+                <input type="email" id="formEmail" name="email" placeholder="Work Email" required>
+                <i class="fas fa-envelope"></i>
+                <span class="form-error" id="errorEmail"></span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text" id="formCompany" name="company" placeholder="Company" required>
+                <i class="fas fa-building"></i>
+                <span class="form-error" id="errorCompany"></span>
+              </div>
+              <div class="form-group">
+                <select id="formSize" name="size" required>
+                  <option value="" disabled selected>Company Size</option>
+                  <option value="50-500">$50M – $500M Revenue</option>
+                  <option value="500-5000">$500M – $5B+ Revenue</option>
+                </select>
+                <i class="fas fa-chart-bar"></i>
+                <span class="form-error" id="errorSize"></span>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <textarea id="formMessage" name="message" placeholder="Tell us about your supply chain challenges" rows="3"></textarea>
+              <i class="fas fa-comment-dots"></i>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large">
+              <span>Request a Demo</span>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="assets/images/optaro-logo.png" alt="Optaro.ai" class="footer-logo logo-dark">
+          <img src="assets/images/optaro-logo-light.png" alt="Optaro.ai" class="footer-logo logo-light">
+          <p class="footer-tagline">AI-First Agentic Supply Chain Platform</p>
+          <div class="footer-social">
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="#about-platform">Features</a>
+            <a href="#use-cases">Use Cases</a>
+            <a href="#who-we-serve">Who We Serve</a>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Optaro.ai · All rights reserved · Confidential</p>
+        <div class="footer-partner">
+          <i class="fab fa-google"></i>
+          <span>Partnered with Google Cloud</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Use Case Popup Modal (DISABLED — uncomment to re-enable) -->
+  <!-- <div class="uc-modal-overlay" id="ucModalOverlay">
+    <div class="uc-modal" id="ucModal">
+      <button class="uc-modal-close" id="ucModalClose"><i class="fas fa-xmark"></i></button>
+      <div class="uc-modal-particles"></div>
+      <div class="uc-modal-topline"></div>
+      <div class="uc-modal-header">
+        <div class="uc-modal-icon" id="ucModalIcon"></div>
+        <h2 class="uc-modal-title" id="ucModalTitle"></h2>
+      </div>
+      <p class="uc-modal-desc" id="ucModalDesc"></p>
+      <div class="uc-modal-metrics">
+        <div class="uc-metric">
+          <div class="uc-metric-icon"><i class="fas fa-dollar-sign"></i></div>
+          <div class="uc-metric-value" id="ucMetricValue"></div>
+          <div class="uc-metric-label">Estimated Value Impact</div>
+        </div>
+        <div class="uc-metric">
+          <div class="uc-metric-icon"><i class="fas fa-rocket"></i></div>
+          <div class="uc-metric-value" id="ucMetricDeploy"></div>
+          <div class="uc-metric-label">Time to Deploy</div>
+        </div>
+        <div class="uc-metric">
+          <div class="uc-metric-icon"><i class="fas fa-robot"></i></div>
+          <div class="uc-metric-value" id="ucMetricAgents"></div>
+          <div class="uc-metric-label">AI Agents Involved</div>
+        </div>
+      </div>
+      <div class="uc-modal-features">
+        <h4><i class="fas fa-bolt"></i> Key Capabilities</h4>
+        <ul id="ucModalFeatures"></ul>
+      </div>
+      <div class="uc-modal-footer">
+        <span class="uc-modal-badge" id="ucModalBadge">STARTER v1</span>
+        <a href="#contact" class="uc-modal-cta" id="ucModalCta">
+          <span>Request This Use Case</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div> -->
+
+  <script src="script.js"></script>
+  <script src="form.js"></script>
+  <!-- <script src="modal.js"></script> -->
+</body>
+</html>
