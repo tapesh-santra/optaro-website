@@ -2122,8 +2122,7 @@ button, input, select, textarea {
   .agent-canvas-container { height: 400px; }
   .scenario-info { width: 240px; padding: 14px; }
   .recommendation-card { width: 260px; padding: 14px; }
-  .agent-network-embed { display: none; }
-  .agent-network-mobile { display: flex !important; }
+  .agent-network-embed iframe { max-height: 380px; min-height: 300px; }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   .agent-legend { flex-wrap: wrap; gap: 12px; justify-content: center; }

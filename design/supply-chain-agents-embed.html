@@ -221,6 +221,22 @@
   }
   .legend-item { font-size: 9px !important; }
 
+  /* ── Mobile: hide side panels, full-width nodes ── */
+  @media (max-width: 768px) {
+    .scenario-panel {
+      display: none !important;
+    }
+    .rec-output {
+      display: none !important;
+    }
+    .legend {
+      padding: 4px 10px !important;
+      gap: 8px !important;
+    }
+    .legend-item { font-size: 8px !important; }
+    .legend-dot { width: 7px !important; height: 7px !important; }
+  }
+
   /* ── Light Theme ── */
   [data-theme="light"] body { background: #f5f3ff; color: #1e1b4b; }
   [data-theme="light"] .scenario-card {
@@ -466,9 +482,10 @@ function resize() {
 // ══════════════════════════════════════════════
 
 function layoutNodes() {
-  // Center the network — leave space for side panels (260px left, 280px right)
-  var leftMargin = 260;
-  var rightMargin = 280;
+  // On mobile, use full width; on desktop, leave space for side panels
+  var isMobile = W < 768;
+  var leftMargin = isMobile ? 20 : 260;
+  var rightMargin = isMobile ? 20 : 280;
   var cx = leftMargin + (W - leftMargin - rightMargin) / 2;
 
   // Calculate total network height, then vertically center it
@@ -478,25 +495,28 @@ function layoutNodes() {
   var tierH = networkH / 3;
   var topY = (H - legendSpace - networkH) / 2;
 
-  agentMap.cmd.x = cx;         agentMap.cmd.y = topY;           agentMap.cmd.baseRadius = 36;
+  var scale = isMobile ? 0.65 : 1;
+  var orchSpread = isMobile ? 80 : 130;
 
-  agentMap.ppo.x = cx - 130;   agentMap.ppo.y = topY + tierH * 0.85; agentMap.ppo.baseRadius = 30;
-  agentMap.imo.x = cx + 130;   agentMap.imo.y = topY + tierH * 0.85; agentMap.imo.baseRadius = 30;
+  agentMap.cmd.x = cx;         agentMap.cmd.y = topY;           agentMap.cmd.baseRadius = 36 * scale;
+
+  agentMap.ppo.x = cx - orchSpread; agentMap.ppo.y = topY + tierH * 0.85; agentMap.ppo.baseRadius = 30 * scale;
+  agentMap.imo.x = cx + orchSpread; agentMap.imo.y = topY + tierH * 0.85; agentMap.imo.baseRadius = 30 * scale;
 
   var sy = topY + tierH * 1.7;
-  var sw = Math.min((W - leftMargin - rightMargin) * 0.8, 420);
-  agentMap.dss.x = cx - sw * 0.5;  agentMap.dss.y = sy; agentMap.dss.baseRadius = 27;
-  agentMap.srb.x = cx - sw * 0.17; agentMap.srb.y = sy; agentMap.srb.baseRadius = 27;
-  agentMap.prs.x = cx + sw * 0.17; agentMap.prs.y = sy; agentMap.prs.baseRadius = 27;
-  agentMap.exp.x = cx + sw * 0.5;  agentMap.exp.y = sy; agentMap.exp.baseRadius = 27;
+  var sw = Math.min((W - leftMargin - rightMargin) * 0.85, isMobile ? 300 : 420);
+  agentMap.dss.x = cx - sw * 0.5;  agentMap.dss.y = sy; agentMap.dss.baseRadius = 27 * scale;
+  agentMap.srb.x = cx - sw * 0.17; agentMap.srb.y = sy; agentMap.srb.baseRadius = 27 * scale;
+  agentMap.prs.x = cx + sw * 0.17; agentMap.prs.y = sy; agentMap.prs.baseRadius = 27 * scale;
+  agentMap.exp.x = cx + sw * 0.5;  agentMap.exp.y = sy; agentMap.exp.baseRadius = 27 * scale;
 
   var uy = topY + tierH * 2.5;
-  var uw = Math.min((W - leftMargin - rightMargin) * 0.9, 520);
+  var uw = Math.min((W - leftMargin - rightMargin) * 0.9, isMobile ? 340 : 520);
   var utilIds = ['tlt','moq','wba','pri','isc'];
   utilIds.forEach(function(id, i) {
     agentMap[id].x = cx - uw / 2 + (uw / (utilIds.length - 1)) * i;
     agentMap[id].y = uy;
-    agentMap[id].baseRadius = 22;
+    agentMap[id].baseRadius = 22 * scale;
   });
 }
 
@@ -686,13 +706,14 @@ function drawNode(agent, time) {
   ctx.globalAlpha = 1;
 
   // ── Icon ──
-  var iconSize = agent.tier === 'command' ? 20 : 16;
+  var mob = W < 768;
+  var iconSize = agent.tier === 'command' ? (mob ? 13 : 20) : (mob ? 10 : 16);
   ctx.font = iconSize + 'px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = c.text;
   ctx.globalAlpha = 0.8 + act * 0.2;
-  ctx.fillText(agent.icon, x, y - (r > 32 ? 8 : 5));
+  ctx.fillText(agent.icon, x, y - (r > 20 ? (mob ? 4 : 8) : (mob ? 2 : 5)));
   ctx.globalAlpha = 1;
 
   // ── Label ──
@@ -705,17 +726,19 @@ function drawNode(agent, time) {
     labelLines = [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
   }
 
-  ctx.font = '600 ' + (r > 32 ? '11' : '10') + 'px Inter, sans-serif';
+  var labelSize = mob ? (r > 20 ? 8 : 7) : (r > 32 ? 11 : 10);
+  var labelGap = mob ? 9 : 13;
+  ctx.font = '600 ' + labelSize + 'px Inter, sans-serif';
   ctx.fillStyle = isLightTheme() ? '#1e1b4b' : '#ffffff';
   ctx.globalAlpha = 0.85 + act * 0.15;
   labelLines.forEach(function(line, i) {
-    ctx.fillText(line, x, y + (r > 32 ? 7 : 4) + i * 13);
+    ctx.fillText(line, x, y + (r > 20 ? (mob ? 3 : 7) : (mob ? 2 : 4)) + i * labelGap);
   });
   ctx.globalAlpha = 1;
 
   // ── Tier badge below ──
   var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY AGENT' };
-  ctx.font = '700 8px Inter, sans-serif';
+  ctx.font = '700 ' + (mob ? '6' : '8') + 'px Inter, sans-serif';
   ctx.fillStyle = c.text;
   ctx.globalAlpha = 0.5 + act * 0.35;
   ctx.fillText(tierNames[agent.tier], x, y + r + 16);
@@ -968,6 +991,7 @@ function frame(t) {
 
   // ── Background ──
   var light = isLightTheme();
+  var isMobile = W < 768;
   var bgGrad = ctx.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, H * 0.9);
   if (light) {
     bgGrad.addColorStop(0, '#f0eefa');
@@ -1097,18 +1121,20 @@ function frame(t) {
     drawNode(agents[ni], t);
   }
 
-  // ── Tier labels (right side, very subtle) ──
-  ctx.font = '500 11px Inter, sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillStyle = light ? 'rgba(99,102,241,0.3)' : 'rgba(120,140,220,0.2)';
-  var tiers = [
-    { label: 'COMMAND', y: agentMap.cmd.y },
-    { label: 'ORCHESTRATORS', y: agentMap.ppo.y },
-    { label: 'SUPER AGENTS', y: agentMap.dss.y },
-    { label: 'UTILITY AGENTS', y: agentMap.tlt.y },
-  ];
-  for (var tii = 0; tii < tiers.length; tii++) {
-    ctx.fillText(tiers[tii].label, W - 30, tiers[tii].y + 4);
+  // ── Tier labels (right side, very subtle — hidden on mobile) ──
+  if (!isMobile) {
+    ctx.font = '500 11px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = light ? 'rgba(99,102,241,0.3)' : 'rgba(120,140,220,0.2)';
+    var tiers = [
+      { label: 'COMMAND', y: agentMap.cmd.y },
+      { label: 'ORCHESTRATORS', y: agentMap.ppo.y },
+      { label: 'SUPER AGENTS', y: agentMap.dss.y },
+      { label: 'UTILITY AGENTS', y: agentMap.tlt.y },
+    ];
+    for (var tii = 0; tii < tiers.length; tii++) {
+      ctx.fillText(tiers[tii].label, W - 30, tiers[tii].y + 4);
+    }
   }
 
   // ── Advance scenario ──
