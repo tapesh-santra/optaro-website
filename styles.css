@@ -334,11 +334,16 @@ button, input, select, textarea {
 .nav-toggle {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
   cursor: pointer;
+  width: 44px;
+  height: 44px;
   padding: 10px;
   z-index: 10;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .nav-toggle span {
   display: block;
