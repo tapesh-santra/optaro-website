@@ -40,7 +40,7 @@
         <span>Request Demo</span>
         <i class="fas fa-arrow-right"></i>
       </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" onclick="document.getElementById('navLinks').classList.toggle('open');this.classList.toggle('active');document.getElementById('menuBackdrop').classList.toggle('visible');">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" style="background:rgba(255,0,0,0.3);min-width:44px;min-height:44px;" onclick="document.getElementById('navLinks').classList.toggle('open');this.classList.toggle('active');document.getElementById('menuBackdrop').classList.toggle('visible');">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -299,6 +299,80 @@
       </div>
       <div class="agent-network-embed animate-on-scroll">
         <iframe src="design/supply-chain-agents-embed.html" id="agentNetworkFrame" title="Supply Chain Agent Network" frameborder="0" allowtransparency="true"></iframe>
+      </div>
+      <!-- Mobile: static agent hierarchy (iframe too complex for small screens) -->
+      <div class="agent-network-mobile animate-on-scroll">
+        <div class="agent-tier-mobile">
+          <div class="tier-label-mobile">Command</div>
+          <div class="tier-nodes-mobile">
+            <div class="agent-node-mobile" style="--node-color: #00ff87;">
+              <i class="fas fa-brain"></i>
+              <span>Command Centre</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-tier-connector"><i class="fas fa-chevron-down"></i></div>
+        <div class="agent-tier-mobile">
+          <div class="tier-label-mobile">Orchestrators</div>
+          <div class="tier-nodes-mobile">
+            <div class="agent-node-mobile" style="--node-color: #00ffcc;">
+              <i class="fas fa-cogs"></i>
+              <span>Planning Param</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #00ffcc;">
+              <i class="fas fa-arrows-rotate"></i>
+              <span>Inventory Mgmt</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-tier-connector"><i class="fas fa-chevron-down"></i></div>
+        <div class="agent-tier-mobile">
+          <div class="tier-label-mobile">Super Agents</div>
+          <div class="tier-nodes-mobile">
+            <div class="agent-node-mobile" style="--node-color: #bf5fff;">
+              <i class="fas fa-shield-halved"></i>
+              <span>Safety Stock</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #bf5fff;">
+              <i class="fas fa-arrows-rotate"></i>
+              <span>Rebalancing</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #bf5fff;">
+              <i class="fas fa-industry"></i>
+              <span>Production</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #bf5fff;">
+              <i class="fas fa-bolt"></i>
+              <span>Expedite</span>
+            </div>
+          </div>
+        </div>
+        <div class="agent-tier-connector"><i class="fas fa-chevron-down"></i></div>
+        <div class="agent-tier-mobile">
+          <div class="tier-label-mobile">Utility Agents</div>
+          <div class="tier-nodes-mobile">
+            <div class="agent-node-mobile" style="--node-color: #00d4ff;">
+              <i class="fas fa-route"></i>
+              <span>Transport</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #00d4ff;">
+              <i class="fas fa-calculator"></i>
+              <span>MOQ</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #00d4ff;">
+              <i class="fas fa-download"></i>
+              <span>Writeback</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #00d4ff;">
+              <i class="fas fa-chart-line"></i>
+              <span>Inventory</span>
+            </div>
+            <div class="agent-node-mobile" style="--node-color: #00d4ff;">
+              <i class="fas fa-triangle-exclamation"></i>
+              <span>Shortage</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>

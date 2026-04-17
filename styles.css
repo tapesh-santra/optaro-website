@@ -2122,6 +2122,8 @@ button, input, select, textarea {
   .agent-canvas-container { height: 400px; }
   .scenario-info { width: 240px; padding: 14px; }
   .recommendation-card { width: 260px; padding: 14px; }
+  .agent-network-embed { display: none; }
+  .agent-network-mobile { display: flex !important; }
   .footer-top { flex-direction: column; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
   .agent-legend { flex-wrap: wrap; gap: 12px; justify-content: center; }
@@ -2132,6 +2134,67 @@ button, input, select, textarea {
   .hero-subtitle { font-size: 15px; }
   .scenario-info { display: none; }
   .recommendation-card { width: calc(100% - 40px); left: 20px; right: 20px; bottom: 20px; }
+}
+
+/* ══════════════════════════════════════════════
+   AGENT NETWORK — MOBILE STATIC VIEW
+   ══════════════════════════════════════════════ */
+
+.agent-network-mobile {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.agent-tier-mobile {
+  width: 100%;
+  text-align: center;
+}
+.tier-label-mobile {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.tier-nodes-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.agent-node-mobile {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 50px;
+  background: var(--bg-card);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  backdrop-filter: blur(12px);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+.agent-node-mobile i {
+  color: var(--node-color);
+  font-size: 12px;
+  filter: drop-shadow(0 0 6px var(--node-color));
+}
+.agent-tier-connector {
+  color: var(--neon-indigo);
+  font-size: 12px;
+  opacity: 0.4;
+  padding: 6px 0;
+}
+
+/* Light theme overrides */
+[data-theme="light"] .agent-node-mobile {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* ══════════════════════════════════════════════
