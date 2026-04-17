@@ -331,6 +331,7 @@ button, input, select, textarea {
   box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
   transform: translateY(-1px);
 }
+.mobile-menu-backdrop { display: none; }
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -2050,17 +2051,57 @@ button, input, select, textarea {
   .nav-toggle { display: flex; }
   .nav-links.open {
     display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%; left: 0; right: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    top: auto;
     background: var(--bg-mobile-menu, rgba(6, 6, 15, 0.95));
-    backdrop-filter: blur(20px);
-    padding: 20px 32px;
-    border-bottom: 1px solid var(--border-subtle);
-    z-index: 999;
+    backdrop-filter: blur(24px);
+    padding: 14px 16px 20px;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    z-index: 9997;
+    animation: slideUpMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-links.open li { list-style: none; }
+  .nav-links.open .nav-link {
+    padding: 8px 14px;
+    font-size: 12px;
+    border-radius: 50px;
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid var(--border-subtle);
+    white-space: nowrap;
+  }
+  .nav-links.open .nav-link.active,
+  .nav-links.open .nav-link:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: var(--neon-indigo);
+    color: var(--neon-indigo);
+  }
+  @keyframes slideUpMenu {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
   .theme-toggle { order: 1; }
   .nav-toggle { order: 2; }
+  .mobile-menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 9996;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .mobile-menu-backdrop.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
   .hero { padding: 100px 20px 60px; }
   .hero-title { font-size: clamp(32px, 8vw, 52px); }
   .hero-stats { flex-direction: column; align-items: center; gap: 20px; }

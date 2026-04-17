@@ -40,11 +40,12 @@
         <span>Request Demo</span>
         <i class="fas fa-arrow-right"></i>
       </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" onclick="document.getElementById('navLinks').classList.toggle('open');this.classList.toggle('active');">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" onclick="document.getElementById('navLinks').classList.toggle('open');this.classList.toggle('active');document.getElementById('menuBackdrop').classList.toggle('visible');">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
+  <div class="mobile-menu-backdrop" id="menuBackdrop" onclick="document.getElementById('navLinks').classList.remove('open');document.getElementById('navToggle').classList.remove('active');this.classList.remove('visible');"></div>
 
   <!-- Hero Section -->
   <section class="hero" id="hero">

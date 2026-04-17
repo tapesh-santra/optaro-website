@@ -167,6 +167,8 @@
   links.forEach(l => l.addEventListener('click', () => {
     navLinks.classList.remove('open');
     navToggle.classList.remove('active');
+    const backdrop = document.getElementById('menuBackdrop');
+    if (backdrop) backdrop.classList.remove('visible');
   }));
 })();
 
