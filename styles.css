@@ -2064,7 +2064,7 @@ button, input, select, textarea {
     border-top: 1px solid var(--border-subtle);
     border-bottom: none;
     border-radius: 20px 20px 0 0;
-    z-index: 9997;
+    z-index: 1001;
     animation: slideUpMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .nav-links.open li { list-style: none; pointer-events: auto; }
@@ -2097,7 +2097,7 @@ button, input, select, textarea {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
-    z-index: 9996;
+    z-index: 998;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
