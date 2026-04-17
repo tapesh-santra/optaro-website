@@ -2056,16 +2056,16 @@ button, input, select, textarea {
     justify-content: center;
     gap: 6px;
     position: fixed;
-    bottom: 0; left: 0; right: 0;
-    top: auto;
+    top: 0; left: 0; right: 0;
+    bottom: auto;
     background: var(--bg-mobile-menu, rgba(6, 6, 15, 0.95));
     backdrop-filter: blur(24px);
-    padding: 14px 16px 20px;
-    border-top: 1px solid var(--border-subtle);
-    border-bottom: none;
-    border-radius: 20px 20px 0 0;
-    z-index: 9997;
-    animation: slideUpMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 80px 16px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    z-index: 999;
+    animation: slideDownMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .nav-links.open li { list-style: none; }
   .nav-links.open .nav-link {
@@ -2082,8 +2082,8 @@ button, input, select, textarea {
     border-color: var(--neon-indigo);
     color: var(--neon-indigo);
   }
-  @keyframes slideUpMenu {
-    from { transform: translateY(100%); opacity: 0; }
+  @keyframes slideDownMenu {
+    from { transform: translateY(-100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
   .theme-toggle { order: 1; }
