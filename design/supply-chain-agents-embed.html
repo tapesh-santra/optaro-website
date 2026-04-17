@@ -221,79 +221,64 @@
   }
   .legend-item { font-size: 9px !important; }
 
-  /* ── Mobile: stack panels below canvas ── */
+  /* ── Mobile: overlay panels on canvas ── */
   @media (max-width: 768px) {
-    body {
-      overflow-y: auto !important;
-      height: auto !important;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    canvas {
-      position: relative !important;
-      width: 100% !important;
-      height: 55vw !important;
-      min-height: 220px;
-      max-height: 280px;
-      flex-shrink: 0;
-    }
+    body { overflow: hidden !important; height: 100vh !important; }
+
+    /* Scenario panel: narrow strip on left */
     .scenario-panel {
-      position: relative !important;
-      left: auto !important;
-      top: auto !important;
-      bottom: auto !important;
-      width: 100% !important;
-      padding: 10px 12px !important;
-      flex-shrink: 0;
-      pointer-events: auto !important;
-      overflow-y: visible !important;
+      width: 130px !important;
+      left: 4px !important;
+      top: 4px !important;
+      bottom: 28px !important;
+      font-size: 9px !important;
     }
     .scenario-card {
-      padding: 10px 12px !important;
-      border-radius: 10px !important;
-      opacity: 1 !important;
-      transform: none !important;
+      padding: 6px 8px !important;
+      border-radius: 8px !important;
+      background: rgba(15,15,35,0.85) !important;
     }
-    .scenario-title { font-size: 12px !important; }
-    .scenario-desc { font-size: 9px !important; display: none !important; }
-    .step-timeline { max-height: 120px; overflow-y: auto; }
-    .step-text { font-size: 8px !important; }
-    .step-row { padding: 3px 0 !important; }
-    .step-dot { width: 7px !important; height: 7px !important; }
-    .step-line { height: 10px !important; }
+    .scenario-label { font-size: 7px !important; margin-bottom: 2px !important; }
+    .scenario-title { font-size: 10px !important; margin-bottom: 4px !important; }
+    .scenario-desc { display: none !important; }
+    .step-timeline { margin-top: 6px !important; }
+    .step-row { padding: 2px 0 !important; gap: 6px !important; }
+    .step-dot { width: 6px !important; height: 6px !important; }
+    .step-dot-wrapper { width: 14px !important; }
+    .step-line { height: 8px !important; }
+    .step-text { font-size: 7px !important; line-height: 1.2 !important; }
+    .step-agent-name { font-size: 7px !important; }
+    .step-row .step-text span[style] { display: none !important; }
+
+    /* Recommendation: top right corner */
     .rec-output {
-      position: relative !important;
-      right: auto !important;
+      right: 4px !important;
       bottom: auto !important;
-      width: 100% !important;
-      padding: 0 12px 10px !important;
-      pointer-events: auto !important;
-      flex-shrink: 0;
+      top: 4px !important;
+      width: 48% !important;
+      max-width: 200px !important;
     }
     .rec-card {
-      padding: 10px 12px !important;
-      border-radius: 10px !important;
-      width: 100% !important;
+      padding: 8px 10px !important;
+      border-radius: 8px !important;
+      background: rgba(15,15,35,0.85) !important;
     }
-    .rec-card-title { font-size: 11px !important; }
-    .rec-card-body { font-size: 9px !important; }
-    .rec-badge { font-size: 7px !important; padding: 2px 8px !important; }
-    .rec-chain-node { font-size: 7px !important; }
+    .rec-badge { font-size: 6px !important; padding: 2px 6px !important; margin-bottom: 4px !important; }
+    .rec-card-title { font-size: 9px !important; margin-bottom: 4px !important; }
+    .rec-card-body { font-size: 8px !important; line-height: 1.3 !important; }
+    .rec-card-body strong { font-size: 8px !important; }
+    .rec-chain { margin-top: 6px !important; padding-top: 6px !important; }
+    .rec-chain-node { font-size: 6px !important; padding: 1px 4px !important; }
+    .rec-chain-arrow { font-size: 7px !important; }
+
+    /* Legend: compact bottom bar */
     .legend {
-      position: relative !important;
-      left: auto !important;
-      bottom: auto !important;
-      transform: none !important;
-      justify-content: center;
-      padding: 6px 12px !important;
-      gap: 10px !important;
-      flex-shrink: 0;
-      border-radius: 0 !important;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 4px 8px !important;
+      gap: 6px !important;
     }
-    .legend-item { font-size: 8px !important; }
-    .legend-dot { width: 7px !important; height: 7px !important; }
+    .legend-item { font-size: 7px !important; gap: 4px !important; }
+    .legend-dot { width: 6px !important; height: 6px !important; }
+
     .tooltip { display: none !important; }
   }
 
@@ -542,10 +527,10 @@ function resize() {
 // ══════════════════════════════════════════════
 
 function layoutNodes() {
-  // On mobile, use full width; on desktop, leave space for side panels
+  // On mobile, leave narrow space for left panel; on desktop, leave space for both panels
   var isMobile = W < 768;
-  var leftMargin = isMobile ? 20 : 260;
-  var rightMargin = isMobile ? 20 : 280;
+  var leftMargin = isMobile ? 140 : 260;
+  var rightMargin = isMobile ? 10 : 280;
   var cx = leftMargin + (W - leftMargin - rightMargin) / 2;
 
   // Calculate total network height, then vertically center it
