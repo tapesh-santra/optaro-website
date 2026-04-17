@@ -714,7 +714,7 @@ function drawNode(agent, time) {
   ctx.globalAlpha = 1;
 
   // ── Tier badge below ──
-  var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY' };
+  var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY AGENT' };
   ctx.font = '700 8px Inter, sans-serif';
   ctx.fillStyle = c.text;
   ctx.globalAlpha = 0.5 + act * 0.35;
@@ -934,7 +934,7 @@ canvas.addEventListener('mousemove', function(e) {
     hoveredAgent = found;
     if (found) {
       document.getElementById('ttName').textContent = found.label;
-      var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY' };
+      var tierNames = { command: 'COMMAND', orchestrator: 'ORCHESTRATOR', super: 'SUPER AGENT', utility: 'UTILITY AGENT' };
       var ttTier = document.getElementById('ttTier');
       ttTier.textContent = tierNames[found.tier];
       ttTier.style.color = COLORS[found.tier].text;

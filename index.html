@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Optaro.ai — AI-First Agentic Supply Chain Platform</title>
-  <meta name="description" content="Optaro deploys AI agents across your supply chain — sensing demand, rightsizing inventory, and executing decisions to protect EBITDA and unlock growth.">
+  <meta name="description" content="Optaro deploys AI agents across your supply chain — sensing demand, rightsizing inventory, and executing decisions to improve EBITDA and unlock growth.">
   <link rel="icon" type="image/png" href="assets/images/optaro-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,7 @@
         <span class="text-glow">Now.</span>
       </h1>
       <p class="hero-subtitle animate-on-scroll">
-        Optaro, an AI first platform, deploys AI agents across your supply chain — sensing demand, rightsizing inventory, and executing decisions to protect EBITDA, release working capital, and unlock revenue growth.
+        Optaro, an AI first platform, deploys AI agents across your supply chain — sensing demand, rightsizing inventory, and executing decisions to improve EBITDA, release working capital, and unlock revenue growth.
       </p>
       <div class="hero-features animate-on-scroll">
         <div class="hero-feature">
@@ -145,8 +145,8 @@
           <div class="platform-card-glow"></div>
           <div class="platform-card-border"></div>
           <div class="platform-card-icon"><i class="fas fa-plug"></i></div>
-          <h3>ERP Integration</h3>
-          <p>Writeback agents close the loop — persisting approved recommendations directly back into your SAP, Oracle, NetSuite, or planning systems.</p>
+          <h3>ERP/Planning System Integration</h3>
+          <p>Writeback agents close the loop — incorporating approved recommendations directly back into your SAP, Oracle, NetSuite, and any specific planning systems.</p>
         </div>
         <div class="platform-card animate-on-scroll" data-neon="amber">
           <div class="platform-card-glow"></div>
@@ -203,7 +203,7 @@
               <i class="fas fa-chart-line"></i>
             </div>
             <h3 class="usecase-card-title">Projected Inventory Positions</h3>
-            <p class="usecase-card-desc">Build forward-looking inventory projections using current stock, inbound supply, demand forecasts, and planned production.</p>
+            <p class="usecase-card-desc">Build forward-looking inventory projections using current inventory, inbound supply, demand forecasts, and planned production.</p>
             <span class="usecase-card-badge">STARTER <span class="badge-version">v1</span></span>
           </div>
         </div>
@@ -346,7 +346,7 @@
       </div>
       <div class="partner-badge animate-on-scroll">
         <i class="fab fa-google"></i>
-        <span>Partnered with Google Cloud</span>
+        <span>Powered by Google Cloud</span>
       </div>
     </div>
   </section>
@@ -449,10 +449,10 @@
           <img src="assets/images/optaro-logo.png" alt="Optaro.ai" class="footer-logo logo-dark">
           <img src="assets/images/optaro-logo-light.png" alt="Optaro.ai" class="footer-logo logo-light">
           <p class="footer-tagline">AI-First Agentic Supply Chain Platform</p>
-          <div class="footer-social">
+          <!-- <div class="footer-social">
             <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-          </div>
+          </div> -->
         </div>
         <div class="footer-links-grid">
           <div class="footer-col">
@@ -465,11 +465,12 @@
             <h4>Company</h4>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
+            <a href="privacy-policy.html">Privacy & Cookie Policy</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Optaro.ai · All rights reserved · Confidential</p>
+        <p>&copy; 2026 Optaro.ai · All rights reserved</p>
         <div class="footer-partner">
           <i class="fab fa-google"></i>
           <span>Powered by Google Cloud</span>
@@ -520,8 +521,28 @@
     </div>
   </div> -->
 
+  <!-- Cookie/Privacy Consent Banner -->
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-banner-content">
+      <p>We respect your privacy. This site does not use tracking cookies. We use <strong>localStorage</strong> to remember your theme preference only. By submitting our contact form, you consent to processing of your data as described in our <a href="privacy-policy.html">Privacy & Cookie Policy</a>.</p>
+      <button class="cookie-banner-btn" id="cookieAccept">Got it</button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
   <script src="form.js"></script>
   <!-- <script src="modal.js"></script> -->
+  <script>
+  (function() {
+    if (localStorage.getItem('optaro-cookie-consent')) return;
+    var banner = document.getElementById('cookieBanner');
+    if (!banner) return;
+    banner.classList.add('visible');
+    document.getElementById('cookieAccept').addEventListener('click', function() {
+      banner.classList.remove('visible');
+      localStorage.setItem('optaro-cookie-consent', '1');
+    });
+  })();
+  </script>
 </body>
 </html>
