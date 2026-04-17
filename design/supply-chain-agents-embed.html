@@ -225,30 +225,30 @@
   @media (max-width: 768px) {
     body { overflow: hidden !important; height: 100vh !important; }
 
-    /* Scenario panel: narrow strip on left */
+    /* Scenario panel: very narrow strip on left */
     .scenario-panel {
-      width: 130px !important;
-      left: 4px !important;
-      top: 4px !important;
-      bottom: 28px !important;
-      font-size: 9px !important;
+      width: 65px !important;
+      left: 2px !important;
+      top: 2px !important;
+      bottom: 24px !important;
+      font-size: 7px !important;
     }
     .scenario-card {
-      padding: 6px 8px !important;
-      border-radius: 8px !important;
+      padding: 4px 5px !important;
+      border-radius: 6px !important;
       background: rgba(15,15,35,0.85) !important;
     }
-    .scenario-label { font-size: 7px !important; margin-bottom: 2px !important; }
-    .scenario-title { font-size: 10px !important; margin-bottom: 4px !important; }
+    .scenario-label { display: none !important; }
+    .scenario-title { font-size: 7px !important; margin-bottom: 3px !important; line-height: 1.2 !important; }
     .scenario-desc { display: none !important; }
-    .step-timeline { margin-top: 6px !important; }
-    .step-row { padding: 2px 0 !important; gap: 6px !important; }
-    .step-dot { width: 6px !important; height: 6px !important; }
-    .step-dot-wrapper { width: 14px !important; }
-    .step-line { height: 8px !important; }
-    .step-text { font-size: 7px !important; line-height: 1.2 !important; }
-    .step-agent-name { font-size: 7px !important; }
-    .step-row .step-text span[style] { display: none !important; }
+    .step-timeline { margin-top: 3px !important; }
+    .step-row { padding: 1px 0 !important; gap: 4px !important; }
+    .step-dot { width: 5px !important; height: 5px !important; border-width: 1px !important; }
+    .step-dot-wrapper { width: 10px !important; }
+    .step-line { height: 6px !important; }
+    .step-text { font-size: 6px !important; line-height: 1.1 !important; }
+    .step-text span[style] { display: none !important; }
+    .step-agent-name { font-size: 6px !important; }
 
     /* Recommendation: top right corner */
     .rec-output {
@@ -529,7 +529,7 @@ function resize() {
 function layoutNodes() {
   // On mobile, leave narrow space for left panel; on desktop, leave space for both panels
   var isMobile = W < 768;
-  var leftMargin = isMobile ? 140 : 260;
+  var leftMargin = isMobile ? 75 : 260;
   var rightMargin = isMobile ? 10 : 280;
   var cx = leftMargin + (W - leftMargin - rightMargin) / 2;
 
