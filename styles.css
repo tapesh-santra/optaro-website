@@ -288,10 +288,17 @@ button, input, select, textarea {
 .nav-logo { display: flex; align-items: center; gap: 10px; }
 .logo-img { height: 50px; width: auto; filter: brightness(1.1); }
 .nav-links {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 60px;
   display: flex;
   align-items: center;
   gap: 8px;
   list-style: none;
+  z-index: 1001;
+  pointer-events: auto;
 }
 .nav-link {
   padding: 8px 16px;
@@ -2048,6 +2055,7 @@ button, input, select, textarea {
 
 @media (max-width: 768px) {
   .nav-links, .nav-cta { display: none; }
+  .nav-links { position: static; transform: none; height: auto; }
   .nav-toggle { display: flex; }
   .nav-links.open {
     display: flex;
