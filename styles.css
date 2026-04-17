@@ -2067,14 +2067,18 @@ button, input, select, textarea {
     z-index: 9997;
     animation: slideUpMenu 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .nav-links.open li { list-style: none; }
+  .nav-links.open li { list-style: none; pointer-events: auto; }
   .nav-links.open .nav-link {
-    padding: 8px 14px;
-    font-size: 12px;
+    display: block;
+    padding: 10px 16px;
+    font-size: 13px;
     border-radius: 50px;
     background: rgba(99, 102, 241, 0.06);
     border: 1px solid var(--border-subtle);
     white-space: nowrap;
+    pointer-events: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(99, 102, 241, 0.2);
   }
   .nav-links.open .nav-link.active,
   .nav-links.open .nav-link:hover {
