@@ -1,0 +1,4130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Optaro — Agentic Supply Chain · Sense. Analyze. Execute.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F4EFE3;
+    --bg-2: #EBE5D3;
+    --bg-3: #E1D9C2;
+    --fg: #17171A;
+    --fg-dim: #5E5A52;
+    --fg-faint: #9A938A;
+    --line: #DDD5C0;
+    --line-bright: #BCB29A;
+    --amber: #B8651A;
+    --amber-soft: #8B4912;
+    --live: #4E7A33;
+  }
+  *{ margin:0; padding:0; box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Archivo', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  img{ display: block; max-width: 100%; }
+
+  /* ---------- Grain ---------- */
+  body::before{
+    content:"";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ---------- Loader ---------- */
+  .loader{
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 10000;
+    display: flex; align-items:center; justify-content:center;
+    flex-direction: column;
+    transition: opacity .8s ease, visibility .8s ease;
+  }
+  .loader.done{ opacity: 0; visibility: hidden; }
+  .loader-mark{
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.4em;
+  }
+  .loader-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-dim);
+    margin-top: 28px;
+    letter-spacing: 0.15em;
+  }
+  .loader-bar{
+    width: 200px; height: 1px;
+    background: var(--line-bright);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .loader-bar::after{
+    content:"";
+    position: absolute; top:0; left:-100%; width:100%; height:100%;
+    background: var(--fg);
+    animation: loadBar 1.8s cubic-bezier(.76,0,.24,1) forwards;
+  }
+  @keyframes loadBar{ to{ left:100%; } }
+
+  /* ---------- Nav ---------- */
+  nav.top{
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 22px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(244, 239, 227, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .4s;
+  }
+  nav.top.scrolled{ border-bottom-color: var(--line); }
+  nav.top .brand{
+    font-weight: 900;
+    font-size: 15px;
+    letter-spacing: 0.35em;
+  }
+  nav.top .links{
+    display: flex; gap: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  nav.top .links a{
+    color: var(--fg);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity .3s;
+  }
+  nav.top .links a:hover{ opacity: 1; }
+  nav.top .cta-small{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--fg);
+    padding: 9px 16px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: background .3s;
+  }
+  nav.top .cta-small:hover{ background: var(--amber); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 140px 40px 80px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .hero-eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 40px;
+  }
+  .hero-eyebrow .dot{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 12px rgba(78,122,51,0.5);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity: 1; transform: scale(1); }
+    50%{ opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero-display{
+    font-weight: 800;
+    font-size: clamp(80px, 14vw, 240px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+  /* Modifier for a fuller-sentence hero headline — top line static, verbs on line 2 ping sequentially */
+  .hero-display.long{
+    font-size: clamp(48px, 7.6vw, 120px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+  }
+  .hero-display.long .line span{
+    animation: none;
+    transform: none;
+  }
+  /* Sequential verb "ping" on line 2: each verb lifts and flashes amber in turn,
+     visually firing Senses → Analyzes → Executes like the platform's actual loop. */
+  .hero-display.long .verb{
+    display: inline-block;
+    animation: verbPing 1.2s cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  .hero-display.long .verb:nth-of-type(1){ animation-delay: 2.6s; }
+  .hero-display.long .verb:nth-of-type(2){ animation-delay: 3.0s; }
+  .hero-display.long .verb:nth-of-type(3){ animation-delay: 3.4s; }
+  @keyframes verbPing{
+    0%   { color: inherit; transform: translateY(0); }
+    18%  { color: var(--amber); transform: translateY(-3px); }
+    35%  { color: var(--amber); transform: translateY(0); }
+    100% { color: var(--fg); transform: translateY(0); }
+  }
+  .hero-display .line{ display: block; overflow: hidden; }
+  .hero-display .line span{
+    display: inline-block;
+    transform: translateY(110%);
+    animation: riseIn 1s cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  .hero-display .line:nth-child(1) span{ animation-delay: 1.9s; }
+  .hero-display .line:nth-child(2) span{ animation-delay: 2.1s; }
+  .hero-display .line:nth-child(3) span{ animation-delay: 2.3s; }
+  @keyframes riseIn{ to{ transform: translateY(0); } }
+  .hero-display em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber);
+  }
+
+  .hero-bottom{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: end;
+    margin-top: 60px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .hero-sub{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 2.2vw, 28px);
+    line-height: 1.3;
+    color: var(--fg);
+    max-width: 520px;
+    letter-spacing: -0.01em;
+  }
+  .hero-sub strong{
+    font-family: 'Archivo', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: normal;
+    color: var(--fg);
+  }
+  .hero-sub em{
+    color: var(--amber);
+    font-style: italic;
+  }
+  .hero-cta{
+    justify-self: end;
+  }
+  .hero-cta a{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--fg);
+    padding: 18px 28px;
+    border-radius: 100px;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: background .3s;
+  }
+  .hero-cta a:hover{ background: var(--amber); }
+
+  /* ---------- Full-bleed image ---------- */
+  .bleed{
+    position: relative;
+    width: 100%;
+    height: clamp(340px, 60vh, 640px);
+    overflow: hidden;
+    background: var(--bg-3);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .bleed img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.3) sepia(0.12) contrast(1.05) brightness(0.95);
+  }
+  .bleed::after{
+    content:"";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(244,239,227,0.15) 0%, transparent 20%, transparent 80%, rgba(244,239,227,0.35) 100%);
+    pointer-events: none;
+  }
+  .bleed-caption{
+    position: absolute;
+    left: 40px; bottom: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #F4EFE3;
+    display: flex; align-items: center; gap: 12px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  }
+  .bleed-caption::before{
+    content: ""; width: 28px; height: 1px;
+    background: rgba(255,255,255,0.6);
+  }
+
+  /* ---------- Proof strip ---------- */
+  .proof{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .proof-cell{
+    padding: 64px 40px;
+    border-right: 1px solid var(--line);
+  }
+  .proof-cell:last-child{ border-right: none; }
+  .proof-num{
+    font-weight: 500;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+  }
+  .proof-num em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .proof-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+
+  /* ---------- Manifesto single line ---------- */
+  .manifesto{
+    padding: 160px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .manifesto-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 48px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .manifesto-label::before{
+    content: "";
+    width: 24px; height: 1px;
+    background: var(--fg-faint);
+  }
+  .manifesto h2{
+    font-weight: 800;
+    font-size: clamp(56px, 10vw, 180px);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    max-width: 1600px;
+  }
+  .manifesto h2 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+
+  /* ---------- Agent network ---------- */
+  .network{
+    padding: 120px 40px 96px;
+    position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+  .network-head{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    margin-bottom: 60px;
+    align-items: end;
+  }
+  .network-head h2{
+    font-weight: 800;
+    font-size: clamp(48px, 7vw, 112px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+  .network-head h2 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .network-sub{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.9vw, 28px);
+    line-height: 1.4;
+    color: var(--fg-dim);
+    margin-top: 22px;
+    max-width: 720px;
+  }
+  .network-sub em{ color: var(--amber); }
+  .network-head-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--fg-dim);
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  /* Shared keyframes used by the in-motion stage */
+  @keyframes blink{
+    0%,100%{ opacity: 1; }
+    50%{ opacity: 0.3; }
+  }
+  @keyframes scan{
+    0%,100%{ transform: scaleY(1); }
+    50%{ transform: scaleY(0.2); }
+  }
+
+  /* ---------- SCENARIO HEADER (sits between .network-head and the stage) ---------- */
+  .scen-head{
+    padding: 32px 0 20px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: end;
+    border-top: 1px solid var(--line);
+  }
+  .scen-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .scen-label::before{ content: ""; width: 24px; height: 1px; background: var(--fg-faint); }
+  .scen-title{
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+  .scen-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .scen-right{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-dim);
+    text-align: right;
+    display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+  }
+  .scen-right .live-dot{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 10px rgba(78,122,51,0.5);
+    animation: pulse 1.5s infinite;
+  }
+
+  /* ---------- ANIMATION STAGE ---------- */
+  .stage{
+    position: relative;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    grid-template-rows: 540px auto 200px;
+  }
+  .stage::before{
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(23,23,26,0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(23,23,26,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* Narrative panel (left) */
+  .narrate{
+    grid-column: 1; grid-row: 1 / span 2;
+    border-right: 1px solid var(--line);
+    background: rgba(244, 239, 227, 0.7);
+    backdrop-filter: blur(4px);
+    padding: 28px 24px;
+    overflow-y: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .narrate-head{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--fg-dim);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+    display: flex; justify-content: space-between;
+  }
+  .narrate-head .clock{ color: var(--amber); }
+  .step{
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    opacity: 0.25;
+    transform: translateX(-6px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .step.active{ opacity: 1; transform: translateX(0); }
+  .step.done{ opacity: 0.55; transform: translateX(0); }
+  .step.done .step-title{ color: var(--fg-dim); }
+  .step-num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: var(--fg-faint);
+    margin-bottom: 6px;
+    display: flex; justify-content: space-between;
+  }
+  .step.active .step-num{ color: var(--amber); }
+  .step.done .step-num::after{ content: "✓"; color: var(--live); font-size: 11px; }
+  .step-title{
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--fg);
+    margin-bottom: 4px;
+  }
+  .step-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .step-body{
+    font-size: 12px;
+    color: var(--fg-dim);
+    line-height: 1.5;
+  }
+  .step-body strong{ color: var(--fg); font-weight: 600; }
+
+  .narrate-divider{
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--amber);
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity .4s ease;
+  }
+  .narrate-divider.visible{ opacity: 1; }
+  .narrate-divider.visible::before{ content: "╌╌ "; color: var(--fg-faint); }
+  .narrate-divider.visible::after{ content: " ╌╌"; color: var(--fg-faint); }
+
+  /* ---------- HORIZONTAL PROCESS FLOW (full width below the robots, replaces narrate) ---------- */
+  .flow{
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    border-top: 1px solid var(--line);
+    background: rgba(244, 239, 227, 0.7);
+    backdrop-filter: blur(4px);
+    padding: 28px 32px 32px;
+    position: relative;
+    z-index: 2;
+  }
+  .flow-head{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .flow-head .clock{ color: var(--amber); }
+  .flow-steps{
+    list-style: none;
+    margin: 0;
+    padding: 4px 4px;
+    display: flex; flex-direction: row;
+    gap: 28px;
+    align-items: stretch;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+  .flow-step{
+    position: relative;
+    flex: 0 0 178px;
+    display: flex; flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--line);
+    opacity: 0.45;
+    transition: opacity .5s ease, border-color .5s ease, box-shadow .4s ease;
+  }
+  .flow-step.active{
+    opacity: 1;
+    border-color: var(--line-bright);
+    border-top-color: var(--amber);
+    box-shadow: 0 4px 12px rgba(23,23,26,0.06);
+  }
+  .flow-step.done{
+    opacity: 0.78;
+    border-top-color: var(--live);
+  }
+  /* Right-arrow connector between adjacent cards (lives in the gap to the left of each card) */
+  .flow-step + .flow-step::before{
+    content: "→";
+    position: absolute;
+    left: -22px; top: 50%;
+    transform: translateY(-50%);
+    width: 16px; line-height: 16px;
+    text-align: center;
+    font-size: 16px;
+    color: var(--fg-faint);
+    transition: color .4s ease;
+  }
+  .flow-step.done + .flow-step::before,
+  .flow-step.done + .flow-step.active::before{ color: var(--amber); }
+  .flow-step-num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--fg-faint);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .flow-step.active .flow-step-num{ color: var(--amber); }
+  .flow-step.done .flow-step-num{ color: var(--live); }
+  .flow-step.done .flow-step-num::after{ content: " ✓"; color: var(--live); }
+  .flow-step-content{ display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .flow-step-title{
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.25;
+    color: var(--fg);
+  }
+  .flow-step-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .flow-step-time{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+  .flow-step-body{
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--fg-dim);
+    margin-top: 2px;
+  }
+  .flow-step-body strong{ color: var(--fg); font-weight: 600; }
+  .flow-step-body em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+  }
+  .flow-step.waiting::after{
+    content: "WAITING FOR HUMAN";
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--amber);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--amber);
+    text-align: center;
+    animation: blink 1.5s infinite;
+  }
+
+  /* ---------- ROBOT AGENTS ---------- */
+  .agents{
+    grid-column: 1; grid-row: 1;
+    position: relative;
+  }
+  .agents-svg{
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .tier-label{
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+
+  .agent{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: default;
+    z-index: 3;
+    transition: transform .3s ease;
+  }
+  .agent:hover{ z-index: 10; }
+  .agent-bot{
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(23,23,26,0.08));
+    animation: botFloat 6s ease-in-out infinite;
+    animation-delay: var(--float-delay, 0s);
+  }
+  @keyframes botFloat{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-4px); }
+  }
+  .agent-label{
+    margin-top: 6px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .agent.active .agent-label{ color: var(--amber); font-weight: 600; }
+
+  .agent-halo{
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 140%; height: 140%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,101,26,0.18) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity .5s ease;
+    pointer-events: none;
+  }
+  .agent.active .agent-halo{ opacity: 1; animation: haloPulse 2s ease-in-out infinite; }
+  @keyframes haloPulse{
+    0%,100%{ transform: translate(-50%,-50%) scale(1); opacity: 0.8; }
+    50%{ transform: translate(-50%,-50%) scale(1.15); opacity: 0.4; }
+  }
+
+  /* Robot SVG component styles */
+  .bot-antenna-stem{ stroke: var(--fg); stroke-width: 1.6; }
+  .bot-blinker{ fill: var(--line-bright); transition: fill .4s ease; }
+  .agent.active .bot-blinker{ fill: var(--amber); animation: blink .6s infinite; }
+  .bot-head{ fill: var(--bg); stroke: var(--fg); stroke-width: 2; transition: stroke .4s ease; }
+  .agent.active .bot-head{ stroke: var(--amber); stroke-width: 2.5; }
+  .bot-face{ fill: var(--fg); }
+  .bot-eye{ fill: var(--line-bright); transition: fill .3s ease; transform-origin: center; }
+  .agent.active .bot-eye{ fill: var(--amber); }
+  .agent.thinking .bot-eye{ animation: scan .8s infinite; }
+  .bot-grille{ stroke: var(--fg-dim); stroke-width: 0.9; }
+  .agent.active .bot-grille{ stroke: var(--amber); }
+  .bot-ear{ fill: var(--bg-3); stroke: var(--fg); stroke-width: 1.4; }
+  .bot-neck{ fill: var(--fg); }
+  .bot-body{ fill: var(--bg); stroke: var(--fg); stroke-width: 2; transition: stroke .4s ease; }
+  .agent.active .bot-body{ stroke: var(--amber); stroke-width: 2.5; }
+  .bot-plate{ fill: var(--bg-2); stroke: var(--line-bright); stroke-width: 1; }
+  .bot-plate-text{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 600;
+    fill: var(--fg);
+    letter-spacing: 0.1em;
+  }
+  .bot-status-light{ fill: var(--line-bright); transition: fill .4s ease; }
+  .agent.active .bot-status-light{ fill: var(--live); animation: pulse 1.2s infinite; }
+
+  .agent.tier-command .bot-head{ fill: var(--fg); }
+  .agent.tier-command .bot-body{ fill: var(--fg); }
+  .agent.tier-command .bot-face{ fill: var(--bg); }
+  .agent.tier-command .bot-eye{ fill: var(--fg); }
+  .agent.tier-command.active .bot-eye{ fill: var(--amber); }
+  .agent.tier-command .bot-plate{ fill: var(--fg); stroke: var(--amber); }
+  .agent.tier-command .bot-plate-text{ fill: var(--amber); }
+  .agent.tier-command .bot-neck{ fill: var(--amber); }
+  .agent.tier-command .bot-grille{ stroke: var(--bg-3); }
+
+  .agent.dim{ opacity: 0.45; }
+
+  /* Connection paths */
+  .conn{ stroke: var(--line-bright); stroke-width: 1; fill: none; transition: stroke .4s ease, stroke-width .4s ease; }
+  .conn.hot{
+    stroke: var(--amber);
+    stroke-width: 1.6;
+    stroke-dasharray: 5, 4;
+    animation: dashFlow .8s linear infinite;
+  }
+  .conn-dashed{
+    stroke: var(--amber);
+    stroke-width: 1;
+    stroke-dasharray: 4, 4;
+    fill: none;
+    opacity: 0;
+    animation: dashFlow 1.2s linear infinite;
+  }
+  .conn-dashed.on{ opacity: 0.7; }
+  @keyframes dashFlow{ to{ stroke-dashoffset: -16; } }
+
+  /* Traveling data packet */
+  .packet{
+    position: absolute;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--amber) 0%, rgba(184,101,26,0.3) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 0 6px var(--amber));
+  }
+  .packet::after{
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--amber);
+    transform: translate(-50%, -50%);
+  }
+  /* Ambient (live-green) telemetry pulse — small, continuous, between scripted packets */
+  .packet.ambient{
+    width: 9px; height: 9px;
+    background: radial-gradient(circle, var(--live) 0%, rgba(78,122,51,0.32) 55%, transparent 100%);
+    filter: drop-shadow(0 0 5px rgba(78,122,51,0.7));
+  }
+  .packet.ambient::after{
+    width: 3px; height: 3px;
+    background: var(--live);
+  }
+
+  /* ---------- Decision card (top-right) ---------- */
+  .dec-card{
+    grid-column: 2; grid-row: 1;
+    margin: 24px;
+    background: var(--bg);
+    border: 1px solid var(--line-bright);
+    border-left: 4px solid var(--amber);
+    padding: 22px;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity .6s ease, transform .6s ease;
+    align-self: start;
+    box-shadow: 0 4px 16px rgba(23,23,26,0.06);
+  }
+  .dec-card.visible{ opacity: 1; transform: translateX(0); }
+  .dec-card-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .dec-card-title{
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .dec-card-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .dec-card-desc{
+    font-size: 13px;
+    color: var(--fg-dim);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .dec-card-kv{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .dec-card-kv .k{ color: var(--fg-faint); }
+  .dec-card-kv .v{ color: var(--fg); text-align: right; }
+  .dec-card-kv .v.amber{ color: var(--amber); }
+  .dec-card-kv .v.live{ color: var(--live); }
+  .dec-card-status{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--fg-faint);
+    text-align: center;
+    padding: 10px 0;
+  }
+  .dec-card-status.pending{ color: var(--amber); animation: blink 1.5s infinite; }
+  .dec-card-status.done{ color: var(--live); }
+  .dec-card-status.done::before{ content: "✓ "; }
+
+  /* ---------- Human chat panel (bottom) ---------- */
+  .chat-panel{
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+  .chat-chrome{
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--fg-dim);
+    background: var(--bg-2);
+  }
+  .chat-chrome .dots{ display: flex; gap: 6px; }
+  .chat-chrome .dots span{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--line-bright);
+  }
+  .chat-chrome-status{
+    display: flex; align-items: center; gap: 8px;
+    color: var(--fg-dim);
+  }
+  .chat-chrome-status::before{
+    content: "";
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--line-bright);
+  }
+  .chat-chrome-status.waiting::before{
+    background: var(--amber);
+    animation: blink 1.2s infinite;
+  }
+  .chat-chrome-status.waiting{ color: var(--amber); }
+  .chat-chrome-status.acted::before{ background: var(--live); }
+  .chat-chrome-status.acted{ color: var(--live); }
+
+  .chat-body{
+    flex: 1;
+    padding: 14px 22px;
+    display: flex; flex-direction: column; gap: 10px;
+    overflow-y: auto;
+  }
+  .cmsg{
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .cmsg.visible{ opacity: 1; transform: translateY(0); }
+  .cmsg-av{
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    background: var(--amber);
+    color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .cmsg-av.human{
+    background: var(--bg-3);
+    color: var(--fg);
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .cmsg-head{
+    display: flex; align-items: baseline; gap: 8px;
+    margin-bottom: 3px;
+  }
+  .cmsg-name{ font-weight: 700; font-size: 13px; }
+  .cmsg-tag{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    padding: 1px 5px;
+    background: var(--bg-3);
+    color: var(--fg-dim);
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .cmsg-time{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--fg-faint);
+    letter-spacing: 0.1em;
+  }
+  .cmsg-body{
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--fg);
+  }
+  .cmsg-body strong{ color: var(--fg); font-weight: 600; }
+  .cmsg-body em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  .cmsg-actions{
+    display: flex; gap: 6px;
+    margin-top: 8px;
+  }
+  .cmsg-btn{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border: 1px solid var(--line-bright);
+    background: var(--bg);
+    color: var(--fg);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .cmsg-btn:hover{ border-color: var(--amber); color: var(--amber); }
+  .cmsg-btn.primary{
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+  .cmsg-btn.primary:hover{
+    background: var(--amber);
+    border-color: var(--amber);
+    color: var(--bg);
+  }
+  .cmsg-btn.primary.flash{
+    animation: flashBtn 1.5s ease-in-out infinite;
+  }
+  @keyframes flashBtn{
+    0%, 100%{ box-shadow: 0 0 0 0 rgba(184,101,26,0); }
+    50%{ box-shadow: 0 0 0 6px rgba(184,101,26,0.25); }
+  }
+  .cmsg-btn:disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .cmsg-confirm{
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: rgba(78,122,51,0.08);
+    border: 1px solid rgba(78,122,51,0.3);
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--live);
+  }
+  .cmsg-confirm::before{
+    content: "✓";
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Phase indicator at very bottom */
+  .phase-bar{
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--line);
+    z-index: 5;
+  }
+  .phase-bar-fill{
+    height: 100%;
+    background: var(--amber);
+    width: 0%;
+    transition: width .6s cubic-bezier(.2,.9,.2,1);
+  }
+
+  /* Replay button */
+  .replay-btn{
+    position: absolute;
+    top: 24px; right: 380px;
+    z-index: 20;
+    padding: 10px 18px;
+    background: var(--fg);
+    color: var(--bg);
+    border: none;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease, background .3s ease;
+  }
+  .replay-btn.visible{ opacity: 1; pointer-events: auto; }
+  .replay-btn:hover{ background: var(--amber); }
+
+  /* ---------- VALUE LEDGER (sits below the stage, inside .network) ---------- */
+  .value-ledger{
+    margin-top: 24px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .value-ledger-head{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+    margin-bottom: 32px;
+  }
+  .value-ledger-head h3{
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 48px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .value-ledger-head h3 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .value-ledger-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--fg-dim);
+    text-align: right;
+    text-transform: uppercase;
+  }
+  .value-tiles{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--line-bright);
+    background: var(--bg);
+  }
+  @media (max-width: 1180px){
+    .value-tiles{ grid-template-columns: 1fr 1fr; }
+    .value-tile:nth-child(3){ grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--line); }
+  }
+  .value-tile{
+    padding: 32px 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+  .value-tile + .value-tile{
+    border-left: 1px solid var(--line);
+  }
+  .value-tile-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--amber);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .value-tile-label::before{
+    content: "";
+    width: 18px; height: 1px;
+    background: var(--amber);
+  }
+  .value-tile-num{
+    font-weight: 800;
+    font-size: clamp(40px, 5.4vw, 76px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  .value-tile-num .unit{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--amber);
+    font-size: 0.55em;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+  .value-tile-headline{
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+  .value-tile-headline em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .value-tile-detail{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 0.05em;
+    color: var(--fg-dim);
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    text-transform: uppercase;
+  }
+  .value-tile-detail .row{ display: flex; justify-content: space-between; gap: 12px; }
+  .value-tile-detail .row .v{ color: var(--fg); }
+  .value-tile-detail .row .v.live{ color: var(--live); }
+  .value-tile-foot{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    margin-top: 24px;
+    text-align: center;
+  }
+  .value-tile-foot em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13px;
+  }
+
+  @media (max-width: 1100px){
+    .stage{ grid-template-columns: 1fr 320px; }
+    .replay-btn{ right: 340px; }
+  }
+
+  /* ---------- SPMD sections ---------- */
+  .scope-intro{
+    padding: 160px 40px 80px;
+    border-bottom: 1px solid var(--line);
+  }
+  .scope-intro .label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 48px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .scope-intro .label::before{
+    content: ""; width: 24px; height: 1px; background: var(--fg-faint);
+  }
+  .scope-intro h2{
+    font-weight: 800;
+    font-size: clamp(56px, 9vw, 160px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    max-width: 1400px;
+  }
+  .scope-intro h2 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .scope-intro .scope-tags{
+    margin-top: 48px;
+    display: flex; flex-wrap: wrap; gap: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+  .scope-intro .scope-tags span{ display: inline-flex; align-items: center; gap: 8px; }
+  .scope-intro .scope-tags span::before{
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--amber);
+  }
+
+  .phase{
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    min-height: 640px;
+  }
+  .phase.flip .phase-image{ order: 2; }
+  .phase.flip .phase-content{ border-right: 1px solid var(--line); border-left: none; }
+  .phase-image{
+    position: relative;
+    background: var(--bg-3);
+    overflow: hidden;
+  }
+  .phase-image img{
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.35) sepia(0.15) contrast(1.05) brightness(0.95);
+  }
+  .phase-image::after{
+    content:"";
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(184,101,26,0.04) 0%, rgba(244,239,227,0.08) 100%);
+    pointer-events: none;
+  }
+  .phase-image-meta{
+    position: absolute;
+    top: 24px; left: 24px; right: 24px;
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #F4EFE3;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  }
+  .phase-content{
+    padding: 72px 56px;
+    border-left: 1px solid var(--line);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .phase-num{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(32px, 3.5vw, 48px);
+    color: var(--amber);
+    margin-bottom: 24px;
+    line-height: 1;
+  }
+  .phase-title{
+    font-weight: 800;
+    font-size: clamp(64px, 8vw, 128px);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 28px;
+  }
+  .phase-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .phase-line{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.35;
+    color: var(--fg);
+    max-width: 420px;
+    margin-bottom: 48px;
+    letter-spacing: -0.005em;
+  }
+  .phase-tags{
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .phase-tags span{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--fg);
+    padding: 9px 14px;
+    border: 1px solid var(--line-bright);
+    border-radius: 100px;
+  }
+  /* Use-case modules + value callout inside each SPMD phase */
+  .phase-modules{
+    margin: 36px 0 28px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .phase-modules-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .phase-modules-label::before{
+    content: ""; width: 18px; height: 1px; background: var(--fg-faint);
+  }
+  .phase-modules-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .phase-modules-list li{
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-dim);
+    padding-left: 18px;
+    position: relative;
+  }
+  .phase-modules-list li::before{
+    content: "+";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--amber);
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .phase-modules-list li strong{
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .phase-modules-list li em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+  }
+  .phase-value{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: baseline;
+    padding: 14px 16px;
+    background: var(--bg-2);
+    border-left: 3px solid var(--amber);
+  }
+  .phase-value-num{
+    font-weight: 800;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .phase-value-line{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .phase-value-line em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 14px;
+  }
+
+  /* ---------- Command centre ---------- */
+  .command{
+    padding: 160px 40px 140px;
+    border-bottom: 1px solid var(--line);
+  }
+  .command-head{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 60px;
+    align-items: end;
+  }
+  .command-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .command-label::before{
+    content: ""; width: 24px; height: 1px; background: var(--fg-faint);
+  }
+  .command h2{
+    font-weight: 800;
+    font-size: clamp(48px, 6vw, 96px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+  }
+  .command h2 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .command-sub{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    color: var(--fg);
+    line-height: 1.35;
+    max-width: 480px;
+  }
+
+  .mode-toggle{
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    width: fit-content;
+    margin-bottom: 24px;
+  }
+  .mode-toggle button{
+    background: transparent;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .mode-toggle button.active{
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .command-ui{
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    min-height: 540px;
+    overflow: hidden;
+  }
+  .ui-chrome{
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--fg-dim);
+  }
+  .ui-chrome .dots{ display: flex; gap: 6px; }
+  .ui-chrome .dots span{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--line-bright);
+  }
+  .chat-col{
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    background: var(--bg);
+  }
+  .chat-messages{
+    padding: 24px 20px;
+    display: flex; flex-direction: column; gap: 16px;
+    flex: 1;
+  }
+  .msg{ font-size: 13px; line-height: 1.5; }
+  .msg-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .msg-agent .msg-label{ color: var(--amber); }
+  .msg-body{ color: var(--fg); }
+  .msg-user .msg-body{ color: var(--fg-dim); }
+  .msg-card{
+    background: var(--bg-2);
+    border: 1px solid var(--line-bright);
+    border-left: 3px solid var(--amber);
+    padding: 14px 16px;
+    margin-top: 8px;
+  }
+  .msg-card-title{ font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+  .msg-card-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--live);
+    margin-bottom: 10px;
+  }
+  .msg-card-actions{
+    display: flex; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .msg-card-actions span{
+    padding: 5px 9px;
+    border: 1px solid var(--line-bright);
+    color: var(--fg-dim);
+    background: var(--bg);
+  }
+  .msg-card-actions span.primary{
+    background: var(--fg); color: var(--bg); border-color: var(--fg);
+  }
+  .chat-input{
+    border-top: 1px solid var(--line);
+    padding: 16px 20px;
+    display: flex; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--fg-faint);
+  }
+  .chat-input .prompt{ color: var(--amber); margin-right: 10px; }
+  .network-col{
+    padding: 24px;
+    background:
+      linear-gradient(to right, rgba(23,23,26,0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(23,23,26,0.025) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-color: var(--bg-2);
+  }
+  .network-col-title{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex; justify-content: space-between;
+  }
+
+  /* ---------- NERVE CENTRE (replaces the static command-ui contents) ---------- */
+
+  /* Re-grid .command-ui: stack the KPI strip on top of a two-column main */
+  .command-ui.nc{
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 600px;
+  }
+  .nc-status{
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+  .nc-status .live{ color: var(--live); display: flex; align-items: center; gap: 8px; }
+  .nc-status .live::before{
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 8px rgba(78,122,51,0.5);
+    animation: pulse 1.5s infinite;
+  }
+
+  /* Inline bespoke chart inside an Optaro response — demonstrates "every answer rendered the way you need" */
+  .nc-answer{
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--amber);
+    padding: 14px 18px;
+    margin-top: 8px;
+  }
+  .nc-answer-text{
+    font-size: 13px; line-height: 1.55;
+    color: var(--fg);
+    margin-bottom: 12px;
+  }
+  .nc-answer-text strong{ color: var(--fg); font-weight: 600; }
+  .nc-answer-text em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+  }
+  .nc-answer-chart{
+    display: flex; align-items: end; gap: 16px;
+    height: 88px;
+    padding: 8px 4px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 8px 0 10px;
+  }
+  .nc-answer-bar{
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .nc-answer-bar .bar{
+    width: 100%;
+    background: var(--amber);
+    transition: transform .8s cubic-bezier(.2,.9,.2,1);
+    transform-origin: bottom;
+  }
+  .nc-answer-bar.dim .bar{ background: var(--line-bright); }
+  .nc-answer-bar .bar-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+  }
+  .nc-answer-bar .bar-num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--fg);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .nc-answer-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.12em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+  .nc-answer-actions{
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .nc-answer-action{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border: 1px solid var(--line-bright);
+    color: var(--fg-dim);
+    background: var(--bg);
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+  .nc-answer-action:hover{ border-color: var(--amber); color: var(--amber); }
+  .nc-answer-action.primary{
+    background: var(--fg); color: var(--bg); border-color: var(--fg);
+  }
+  .nc-answer-action.primary:hover{ background: var(--amber); border-color: var(--amber); color: var(--bg); }
+
+  /* Pre-built prompt library (right column) */
+  .nc-prompts{
+    background: var(--bg);
+    border-left: 1px solid var(--line);
+    padding: 24px 22px 22px;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .nc-prompts-head{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 2px;
+  }
+  .nc-prompts-head::before{
+    content: ""; width: 18px; height: 1px; background: var(--amber);
+  }
+  .nc-prompts-title{
+    font-weight: 700;
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .nc-prompts-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .nc-prompts-sub{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--fg-dim);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .nc-prompts-group{
+    display: flex; flex-direction: column; gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .nc-prompts-cat{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.22em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+  .nc-prompts-list{
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .nc-prompt-chip{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--fg);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 7px 11px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: border-color .2s ease, color .2s ease, background .2s ease;
+  }
+  .nc-prompt-chip:hover{
+    border-color: var(--amber);
+    color: var(--amber);
+    background: var(--bg);
+  }
+  .nc-prompts-foot{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.05em;
+    color: var(--fg-faint);
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    line-height: 1.5;
+    text-transform: none;
+  }
+  .nc-prompts-foot em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-size: 12px;
+  }
+
+  /* KPI strip — 4 live tiles across the top */
+  .nc-strip{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .nc-kpi{
+    padding: 22px 24px 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative;
+  }
+  .nc-kpi + .nc-kpi{ border-left: 1px solid var(--line); }
+  .nc-kpi-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--fg-faint);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nc-kpi-label.live::before{
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 8px rgba(78,122,51,0.5);
+    animation: pulse 1.5s infinite;
+  }
+  .nc-kpi-num{
+    font-weight: 800;
+    font-size: clamp(28px, 3.4vw, 44px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    transition: color .35s ease;
+  }
+  .nc-kpi-num.flash{ color: var(--amber); }
+  .nc-kpi-sub{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--fg-dim); text-transform: uppercase;
+  }
+  .nc-kpi-sub em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12px;
+  }
+
+  /* Main two-col area: console (left) + right column with fleet + outcomes */
+  .nc-main{
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    min-height: 0;
+  }
+
+  /* Operator console (left) */
+  .nc-console{
+    border-right: 1px solid var(--line);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .nc-console-head{
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; color: var(--fg-dim);
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--bg-2);
+  }
+  .nc-console-head .pending{ color: var(--amber); }
+  .nc-feed{
+    flex: 1;
+    padding: 18px 20px 4px;
+    display: flex; flex-direction: column; gap: 16px;
+    overflow-y: auto;
+    min-height: 280px;
+  }
+  .nc-msg{
+    font-size: 13px; line-height: 1.5;
+    opacity: 1;
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .nc-msg.entering{ opacity: 0; transform: translateY(6px); }
+  .nc-msg-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 5px;
+    display: flex; gap: 10px; align-items: center;
+  }
+  .nc-msg-meta .who{ color: var(--amber); }
+  .nc-msg-meta .at{ color: var(--fg-faint); }
+  .nc-msg-body{ color: var(--fg); }
+  .nc-msg-body em{ font-family: 'Instrument Serif', serif; font-style: italic; color: var(--amber); }
+  .nc-msg.you .nc-msg-meta .who{ color: var(--fg-dim); }
+  .nc-msg.you .nc-msg-body{ color: var(--fg-dim); }
+  .nc-card{
+    background: var(--bg-2);
+    border: 1px solid var(--line-bright);
+    border-left: 3px solid var(--amber);
+    padding: 12px 14px;
+    margin-top: 8px;
+  }
+  .nc-card.accepted{ border-left-color: var(--live); }
+  .nc-card.auto{ border-left-color: var(--fg-dim); }
+  .nc-card-title{ font-weight: 600; font-size: 13px; margin-bottom: 6px; line-height: 1.3; }
+  .nc-card-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em; color: var(--fg-dim);
+    margin-bottom: 10px; text-transform: uppercase;
+  }
+  .nc-card-meta.pending{ color: var(--amber); }
+  .nc-card-meta.accepted{ color: var(--live); }
+  .nc-card-meta.accepted::before{ content: "✓ "; }
+  .nc-card-meta.auto::before{ content: "⟳ "; }
+  .nc-card-actions{
+    display: flex; gap: 6px; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .nc-card-actions span{
+    padding: 5px 9px;
+    border: 1px solid var(--line-bright);
+    color: var(--fg-dim);
+    background: var(--bg);
+  }
+  .nc-card-actions span.primary{
+    background: var(--fg); color: var(--bg); border-color: var(--fg);
+  }
+  .nc-typing{
+    padding: 6px 20px 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; color: var(--fg-faint);
+    text-transform: uppercase;
+    height: 28px;
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .nc-typing.on{ opacity: 1; }
+  .nc-typing::before{
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--amber);
+    animation: blink .6s infinite;
+  }
+  .nc-typing em{ font-family: 'Instrument Serif', serif; font-style: italic; color: var(--amber); text-transform: none; letter-spacing: 0; font-size: 12px; }
+  .nc-input{
+    border-top: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex; align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--fg-faint);
+    background: var(--bg);
+  }
+  .nc-input .prompt{ color: var(--amber); margin-right: 10px; }
+
+  /* Right column — fleet on top, outcomes below */
+  .nc-right{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-width: 0;
+  }
+
+  /* Agent fleet health */
+  .nc-fleet{
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    padding: 18px 22px 22px;
+  }
+  .nc-fleet-head{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; color: var(--fg-dim);
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .nc-fleet-head .ok{ color: var(--live); display: flex; align-items: center; gap: 6px; }
+  .nc-fleet-head .ok::before{
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 8px rgba(78,122,51,0.5);
+    animation: pulse 1.5s infinite;
+  }
+  .nc-fleet-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .nc-pill{
+    display: grid;
+    grid-template-columns: 12px 1fr auto;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    align-items: center;
+  }
+  .nc-pill-dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 6px rgba(78,122,51,0.4);
+    animation: agentPulse 2.4s ease-in-out infinite;
+    animation-delay: var(--pulse-delay, 0s);
+    justify-self: center;
+  }
+  .nc-pill.working .nc-pill-dot{
+    background: var(--amber);
+    box-shadow: 0 0 6px rgba(184,101,26,0.5);
+  }
+  .nc-pill.idle .nc-pill-dot{
+    background: var(--line-bright);
+    box-shadow: none;
+    animation: none;
+  }
+  .nc-pill-id{
+    display: flex; flex-direction: column; gap: 2px;
+    min-width: 0;
+  }
+  .nc-pill-code{
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--fg);
+  }
+  .nc-pill-tier{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+  .nc-pill-time{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    color: var(--fg-faint);
+    text-align: right;
+  }
+  @keyframes agentPulse{
+    0%,100%{ opacity: 0.55; transform: scale(1); }
+    50%{ opacity: 1; transform: scale(1.25); }
+  }
+
+  /* Outcome analytics */
+  .nc-outcomes{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg);
+  }
+  .nc-outcome{
+    padding: 22px 22px 18px;
+    display: flex; flex-direction: column; gap: 8px;
+    position: relative;
+    min-width: 0;
+  }
+  .nc-outcome:nth-child(2){ border-left: 1px solid var(--line); }
+  .nc-outcome:nth-child(3){ border-top: 1px solid var(--line); }
+  .nc-outcome:nth-child(4){ border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .nc-outcome-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.2em; color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+  .nc-outcome-num{
+    font-weight: 800;
+    font-size: clamp(24px, 2.6vw, 32px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .nc-outcome-num .delta{
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--live);
+    letter-spacing: 0.08em;
+  }
+  .nc-outcome-num .delta.flat{ color: var(--fg-dim); }
+  .nc-outcome-headline{
+    font-size: 13px;
+    color: var(--fg-dim);
+    line-height: 1.4;
+  }
+  .nc-outcome-headline em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+  }
+  .nc-spark{
+    width: 100%;
+    height: 42px;
+    margin-top: 4px;
+  }
+  .nc-spark .baseline{
+    stroke: var(--line);
+    stroke-width: 1;
+    fill: none;
+  }
+  .nc-spark .trend{
+    fill: none;
+    stroke: var(--amber);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: var(--len, 320);
+    stroke-dashoffset: var(--len, 320);
+    transition: stroke-dashoffset 1.2s cubic-bezier(.2,.9,.2,1);
+  }
+  .nc-spark.revealed .trend{ stroke-dashoffset: 0; }
+  .nc-spark .area{
+    fill: rgba(184,101,26,0.08);
+    stroke: none;
+    opacity: 0;
+    transition: opacity .8s ease .6s;
+  }
+  .nc-spark.revealed .area{ opacity: 1; }
+  .nc-outcome-foot{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em; color: var(--fg-faint);
+    text-transform: uppercase;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .nc-outcome-foot .v{ color: var(--live); }
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    padding: 52px 0;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .marquee-track{
+    display: flex; gap: 60px;
+    white-space: nowrap;
+    animation: scroll 36s linear infinite;
+    font-weight: 800;
+    font-size: clamp(56px, 9vw, 120px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .marquee-track span{ display: inline-flex; align-items: center; gap: 60px; }
+  .marquee-track em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .marquee-track .sep{
+    color: var(--fg-faint);
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+  }
+  @keyframes scroll{ to{ transform: translateX(-50%); } }
+
+  /* ---------- Founder ---------- */
+  .founder{
+    padding: 180px 40px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .founder-inner{ max-width: 1200px; margin: 0 auto; }
+  .founder-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-bottom: 56px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .founder-label::before{
+    content: ""; width: 24px; height: 1px; background: var(--fg-faint);
+  }
+  .founder-quote{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(36px, 5vw, 72px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 56px;
+  }
+  .founder-quote::before{ content: "\201C"; color: var(--amber); }
+  .founder-quote::after{ content: "\201D"; color: var(--amber); }
+  .founder-quote em{ color: var(--amber); font-style: italic; }
+  .founder-attr{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px; align-items: center;
+  }
+  .founder-avatar{
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--amber), var(--amber-soft));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 22px; color: var(--bg);
+  }
+  .founder-name{ font-weight: 600; font-size: 16px; }
+  .founder-role{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    margin-top: 4px;
+  }
+  .founder-coda{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.4;
+    color: var(--fg-dim);
+    max-width: 760px;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .founder-coda em{ color: var(--amber); font-style: italic; }
+
+  /* ---------- Scale (built for every scale) ---------- */
+  .scale{
+    padding: 160px 40px 140px;
+    border-bottom: 1px solid var(--line);
+  }
+  .scale-head{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    max-width: 1100px;
+    margin-bottom: 64px;
+  }
+  .scale-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .scale-label::before{
+    content: ""; width: 24px; height: 1px; background: var(--fg-faint);
+  }
+  .scale h2{
+    font-weight: 800;
+    font-size: clamp(48px, 7vw, 112px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+  }
+  .scale h2 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .scale-sub{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.9vw, 28px);
+    color: var(--fg);
+    line-height: 1.4;
+    max-width: 760px;
+  }
+  .scale-sub em{ color: var(--amber); font-style: italic; }
+
+  .scale-tiles{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line-bright);
+    background: var(--bg);
+  }
+  .scale-tile{
+    padding: 36px 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: relative;
+  }
+  .scale-tile + .scale-tile{
+    border-left: 1px solid var(--line);
+  }
+  .scale-tile-tag{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--amber);
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .scale-tile-tag::before{
+    content: ""; width: 18px; height: 1px; background: var(--amber);
+  }
+  .scale-tile-range{
+    font-weight: 800;
+    font-size: clamp(36px, 4.6vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  .scale-tile-range em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .scale-tile-headline{
+    font-weight: 600;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    margin-top: 4px;
+  }
+  .scale-tile-headline em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .scale-tile-body{
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--fg-dim);
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .scale-tile-body strong{ color: var(--fg); font-weight: 600; }
+  .scale-tile-body em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+  }
+
+  /* ---------- CTA ---------- */
+  .cta{
+    padding: 180px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .cta h2{
+    font-weight: 800;
+    font-size: clamp(72px, 12vw, 200px);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+    margin-bottom: 40px;
+  }
+  .cta h2 em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .cta p{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.8vw, 26px);
+    color: var(--fg-dim);
+    margin-bottom: 48px;
+  }
+  .cta-button{
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 36px;
+    background: var(--amber);
+    color: var(--bg);
+    text-decoration: none;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: transform .3s, background .3s;
+  }
+  .cta-button:hover{
+    transform: translateY(-2px);
+    background: var(--fg);
+  }
+
+  /* ---------- Contact Optaro form (lives inside .cta) ---------- */
+  .cta-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    max-width: 1200px;
+    margin: 56px auto 0;
+    text-align: left;
+    align-items: start;
+  }
+  .cta-lead{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(20px, 1.9vw, 28px);
+    color: var(--fg);
+    line-height: 1.4;
+    max-width: 460px;
+  }
+  .cta-lead em{ color: var(--amber); }
+  .cta-form{
+    background: var(--bg);
+    border: 1px solid var(--line-bright);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .cta-form-head{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--amber);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
+  }
+  .cta-form-head::before{
+    content: ""; width: 18px; height: 1px; background: var(--amber);
+  }
+  .cta-form-title{
+    font-weight: 700;
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .cta-form-title em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  .cta-form .row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .cta-form .field{ display: flex; flex-direction: column; gap: 6px; }
+  .cta-form label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  .cta-form input,
+  .cta-form select,
+  .cta-form textarea{
+    font-family: 'Archivo', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--fg);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 11px 12px;
+    border-radius: 0;
+    outline: none;
+    transition: border-color .2s ease, background .2s ease;
+    width: 100%;
+  }
+  .cta-form textarea{
+    min-height: 84px;
+    resize: vertical;
+    font-family: 'Archivo', sans-serif;
+  }
+  .cta-form input:focus,
+  .cta-form select:focus,
+  .cta-form textarea:focus{
+    border-color: var(--amber);
+    background: var(--bg);
+  }
+  .cta-form select{
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--fg-dim) 50%), linear-gradient(135deg, var(--fg-dim) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 36px;
+  }
+  .cta-form-submit{
+    margin-top: 6px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--amber);
+    color: var(--bg);
+    padding: 16px 22px;
+    border-radius: 100px;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .cta-form-submit:hover{ background: var(--fg); transform: translateY(-1px); }
+  .cta-form-submit.done{ background: var(--live); cursor: default; transform: none; }
+  .cta-consent{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    color: var(--fg-faint);
+    text-transform: none;
+  }
+  .cta-consent a{
+    color: var(--fg-dim);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .cta-consent a:hover{ color: var(--amber); }
+
+  /* ---------- Mega logo + Footer ---------- */
+  .mega-logo{
+    padding: 48px 40px 0;
+    border-top: 1px solid var(--line);
+  }
+  .mega-logo-type{
+    font-weight: 900;
+    font-size: clamp(120px, 26vw, 420px);
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+    overflow: hidden;
+  }
+  .mega-logo-type em{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--amber);
+    font-weight: 400;
+  }
+  footer{ padding: 64px 40px 40px; background: var(--bg); }
+  .footer-top{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+  }
+  .footer-brand{ font-weight: 900; font-size: 16px; letter-spacing: 0.4em; }
+  .footer-meta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-dim);
+    margin-top: 12px;
+    letter-spacing: 0.1em;
+  }
+  .footer-col h4{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .footer-col ul{ list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a{ color: var(--fg); text-decoration: none; font-size: 14px; }
+  .footer-col a:hover{ color: var(--amber); }
+  .footer-bottom{
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--fg-faint);
+    text-transform: uppercase;
+  }
+
+  /* Reveal on scroll */
+  .reveal{
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s cubic-bezier(.2,.9,.2,1), transform 1s cubic-bezier(.2,.9,.2,1);
+  }
+  .reveal.visible{ opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 960px){
+    nav.top{ padding: 16px 20px; }
+    nav.top .links{ display: none; }
+    .hero, .manifesto, .network, .scope-intro, .command, .scale, .founder, .cta{ padding-left: 20px; padding-right: 20px; }
+    .cta-grid{ grid-template-columns: 1fr; gap: 36px; }
+    .cta-form{ padding: 22px; }
+    .cta-form .row{ grid-template-columns: 1fr; }
+    .scale-tiles{ grid-template-columns: 1fr; }
+    .scale-tile + .scale-tile{ border-left: none; border-top: 1px solid var(--line); }
+    .scale-tile{ padding: 28px 22px; }
+    .hero-bottom{ grid-template-columns: 1fr; }
+    .hero-cta{ justify-self: start; }
+    .proof{ grid-template-columns: 1fr; }
+    .proof-cell{ border-right: none; border-bottom: 1px solid var(--line); }
+    .network-head, .command-head{ grid-template-columns: 1fr; gap: 24px; }
+    .phase{ grid-template-columns: 1fr; min-height: auto; }
+    .phase.flip .phase-image{ order: 0; }
+    .phase.flip .phase-content{ border-right: none; border-left: none; border-top: 1px solid var(--line); }
+    .phase-content{ padding: 48px 24px; border-left: none; border-top: 1px solid var(--line); }
+    .phase-image{ aspect-ratio: 4/3; }
+    .command-ui{ grid-template-columns: 1fr; }
+    .chat-col{ border-right: none; border-bottom: 1px solid var(--line); }
+    .nc-strip{ grid-template-columns: 1fr 1fr; }
+    .nc-kpi:nth-child(2){ border-left: 1px solid var(--line); }
+    .nc-kpi:nth-child(3), .nc-kpi:nth-child(4){ border-top: 1px solid var(--line); }
+    .nc-kpi:nth-child(3){ border-left: none; }
+    .nc-main{ grid-template-columns: 1fr; }
+    .nc-console{ border-right: none; border-bottom: 1px solid var(--line); }
+    .nc-fleet-grid{ grid-template-columns: repeat(2, 1fr); }
+    .nc-outcomes{ grid-template-columns: 1fr; }
+    .nc-outcome:nth-child(2){ border-left: none; border-top: 1px solid var(--line); }
+    .nc-outcome:nth-child(3), .nc-outcome:nth-child(4){ border-left: none; }
+    .scen-head{ grid-template-columns: 1fr; gap: 12px; text-align: left; }
+    .scen-title{ text-align: left; }
+    .scen-right{ justify-content: flex-start; text-align: left; }
+    .value-ledger-head{ grid-template-columns: 1fr; gap: 16px; }
+    .value-ledger-meta{ text-align: left; }
+    .value-tiles{ grid-template-columns: 1fr; }
+    .value-tile + .value-tile{ border-left: none; border-top: 1px solid var(--line); }
+    .value-tile{ padding: 24px 20px; }
+    .stage{ grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; min-height: auto; }
+    .agents{ grid-column: 1; grid-row: 1; min-height: 520px; }
+    .dec-card{ grid-column: 1; grid-row: 2; margin: 20px; max-width: none; justify-self: stretch; }
+    .flow{ grid-column: 1; grid-row: 3; padding: 22px 18px 28px; }
+    .flow-steps{ gap: 18px; }
+    .chat-panel{ grid-column: 1; grid-row: 4; border-left: none; }
+    .phase-bar{ left: 0; }
+    .replay-btn{ top: 12px; right: 12px; }
+    .footer-top{ grid-template-columns: 1fr 1fr; }
+    .bleed-caption{ left: 20px; bottom: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="loader-mark">OPTARO</div>
+  <div class="loader-meta">INITIALISING AGENT NETWORK</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- Nav -->
+<nav class="top" id="topNav">
+  <div class="brand">OPTARO</div>
+  <div class="links">
+    <a href="#network">Network</a>
+    <a href="#scope">Scope</a>
+    <a href="#platform">Platform</a>
+  </div>
+  <a href="#cta" class="cta-small">Book a walkthrough</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      <span>PRE-TRAINED AGENTIC SUPPLY CHAIN PLATFORM · LIVE</span>
+    </div>
+    <h1 class="hero-display long">
+      <span class="line"><span>Your Agentic Supply Chain :</span></span>
+      <span class="line"><span><span class="verb">Senses</span>, <span class="verb">Analyzes</span> &amp; <span class="verb"><em>Executes</em></span></span></span>
+    </h1>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-sub">
+      A pre-trained agentic platform that <em>executes</em> critical actions in your supply chain to deliver your intended outcomes at speed &mdash; deployed in <strong>days rather than months.</strong>
+    </div>
+    <div class="hero-cta">
+      <a href="#network">See the agents <span>→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Full-bleed hero image -->
+<section class="bleed">
+  <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2000&q=80" alt="Operations team reviewing live supply chain data on laptops in a warehouse" onerror="this.style.display='none'"/>
+  <div class="bleed-caption">Your supply chain, in real time</div>
+</section>
+
+<!-- Scale (audience: who this is for) -->
+<section class="scale reveal">
+  <div class="scale-head">
+    <div class="scale-label">01 / SCALE</div>
+    <h2>Built for complexity at <em>every</em> scale.</h2>
+    <p class="scale-sub">
+      One agentic platform &mdash; configured to your data, your ERP, your guardrails. From the mid-market floor to enterprise breadth, deployed in days rather than months.
+    </p>
+  </div>
+
+  <div class="scale-tiles">
+
+    <div class="scale-tile">
+      <div class="scale-tile-tag">Mid-Market &middot; Operators</div>
+      <div class="scale-tile-range">$10M &ndash; $500M</div>
+      <div class="scale-tile-headline">Enterprise-grade AI. <em>Without</em> enterprise overhead.</div>
+      <div class="scale-tile-body">
+        Our <strong>fit-to-standard</strong> approach matures your supply chain operations <em>at speed</em> as your business scales up.
+      </div>
+    </div>
+
+    <div class="scale-tile">
+      <div class="scale-tile-tag">Enterprise &middot; Operators</div>
+      <div class="scale-tile-range">$500M &ndash; $5B+</div>
+      <div class="scale-tile-headline">Complexity, <em>handled.</em></div>
+      <div class="scale-tile-body">
+        Optimize your enterprise ecosystem by delivering agentic solutions that <em>replace</em> manual work and larger enterprise-grade platforms.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Manifesto single line -->
+<section class="manifesto reveal">
+  <div class="manifesto-label">02 / BELIEF</div>
+  <h2>Not dashboards.<br/><em>Decisions.</em></h2>
+</section>
+
+<!-- The Human-Agentic Network -->
+<section class="network reveal" id="network">
+  <div class="network-head">
+    <div>
+      <h2>Your Agentic Supply Chain Team at <em>Work</em></h2>
+      <p class="network-sub">Freeing your (<em>Human</em>) Team to make critical decisions and build key relationships.</p>
+    </div>
+    <div class="network-head-meta">
+      COMMAND &rarr; ORCHESTRATORS<br/>
+      &rarr; SUPER-AGENTS &rarr; UTILITY
+    </div>
+  </div>
+
+  <!-- Scenario header -->
+  <div class="scen-head">
+    <div class="scen-label">SCENARIO · 01 · AN ILLUSTRATION OF OPTARO IN ACTION</div>
+    <div class="scen-title">Lane <em>DE-07</em> · transport drift triggers safety stock recalibration</div>
+    <div class="scen-right"><span class="live-dot"></span> AUTO-PLAYING</div>
+  </div>
+
+  <!-- Animation stage -->
+  <div class="stage" id="stage">
+
+    <!-- AGENTS (middle) -->
+    <div class="agents" id="agents">
+
+      <!-- Tier labels -->
+      <div class="tier-label" style="top: 18px; left: 24px;">COMMAND</div>
+      <div class="tier-label" style="top: 130px; left: 24px;">ORCHESTRATORS</div>
+      <div class="tier-label" style="top: 250px; left: 24px;">SUPER AGENTS</div>
+      <div class="tier-label" style="top: 370px; left: 24px;">UTILITY</div>
+
+      <!-- Connection SVG (drawn first, below agents) -->
+      <svg class="agents-svg" id="connSvg" viewBox="0 0 900 620" preserveAspectRatio="none"></svg>
+
+      <!-- Robot agents -->
+      <div class="agent tier-command" id="ag-cmd" style="left: 50%; top: 70px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="108" height="140" viewBox="0 0 108 140">
+          <line class="bot-antenna-stem" x1="54" y1="14" x2="54" y2="26"/>
+          <circle class="bot-blinker" cx="54" cy="10" r="4"/>
+          <rect class="bot-head" x="22" y="26" width="64" height="48" rx="10"/>
+          <rect class="bot-ear" x="14" y="44" width="8" height="16" rx="2"/>
+          <rect class="bot-ear" x="86" y="44" width="8" height="16" rx="2"/>
+          <rect class="bot-face" x="30" y="34" width="48" height="22" rx="3"/>
+          <rect class="bot-eye" x="38" y="40" width="7" height="10" rx="1"/>
+          <rect class="bot-eye" x="63" y="40" width="7" height="10" rx="1"/>
+          <line class="bot-grille" x1="40" y1="62" x2="68" y2="62"/>
+          <line class="bot-grille" x1="40" y1="66" x2="68" y2="66"/>
+          <rect class="bot-neck" x="46" y="74" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="80" width="56" height="48" rx="7"/>
+          <rect class="bot-plate" x="34" y="92" width="40" height="18" rx="2"/>
+          <text class="bot-plate-text" x="54" y="104" text-anchor="middle">CMD</text>
+          <circle class="bot-status-light" cx="54" cy="119" r="3"/>
+        </svg>
+        <div class="agent-label">Command Center</div>
+      </div>
+
+      <div class="agent tier-orchestrator" id="ag-ppo" style="left: 30%; top: 185px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="88" height="118" viewBox="0 0 100 130" style="--float-delay: 0.4s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">PPO</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Planning Parameter<br/>Orchestrator</div>
+      </div>
+
+      <div class="agent tier-orchestrator dim" id="ag-imo" style="left: 70%; top: 185px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="88" height="118" viewBox="0 0 100 130" style="--float-delay: 1.2s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">IMO</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Inventory Orch.</div>
+      </div>
+
+      <div class="agent tier-super" id="ag-dss" style="left: 22%; top: 305px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="80" height="108" viewBox="0 0 100 130" style="--float-delay: 0.8s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">DSS</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Dynamic <em style="font-family: 'Instrument Serif', serif; font-style: italic; color: var(--amber);">Safety Stock</em></div>
+      </div>
+
+      <div class="agent tier-super dim" id="ag-srb" style="left: 42%; top: 305px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="80" height="108" viewBox="0 0 100 130" style="--float-delay: 1.6s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">SRB</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Rebalance</div>
+      </div>
+
+      <div class="agent tier-super dim" id="ag-exp" style="left: 62%; top: 305px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="80" height="108" viewBox="0 0 100 130" style="--float-delay: 2.2s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">EXP</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Expedite</div>
+      </div>
+
+      <div class="agent tier-super dim" id="ag-prs" style="left: 82%; top: 305px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="80" height="108" viewBox="0 0 100 130" style="--float-delay: 2.8s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">PRS</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Production</div>
+      </div>
+
+      <div class="agent tier-utility" id="ag-tlt" style="left: 12%; top: 425px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="68" height="94" viewBox="0 0 100 130" style="--float-delay: 0.2s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">TLT</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Transport <em style="font-family: 'Instrument Serif', serif; font-style: italic; color: var(--amber);">LT</em></div>
+      </div>
+
+      <div class="agent tier-utility" id="ag-pri" style="left: 30%; top: 425px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="68" height="94" viewBox="0 0 100 130" style="--float-delay: 1.0s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">PRI</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Projected Inv.</div>
+      </div>
+
+      <div class="agent tier-utility dim" id="ag-isc" style="left: 48%; top: 425px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="68" height="94" viewBox="0 0 100 130" style="--float-delay: 1.8s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">MOQ</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">MOQ</div>
+      </div>
+
+      <div class="agent tier-utility dim" id="ag-sho" style="left: 66%; top: 425px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="68" height="94" viewBox="0 0 100 130" style="--float-delay: 2.4s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">SHO</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Shortage</div>
+      </div>
+
+      <div class="agent tier-utility" id="ag-wba" style="left: 84%; top: 425px;">
+        <div class="agent-halo"></div>
+        <svg class="agent-bot" width="68" height="94" viewBox="0 0 100 130" style="--float-delay: 3.0s;">
+          <line class="bot-antenna-stem" x1="50" y1="14" x2="50" y2="24"/>
+          <circle class="bot-blinker" cx="50" cy="10" r="3.5"/>
+          <rect class="bot-head" x="22" y="24" width="56" height="44" rx="8"/>
+          <rect class="bot-ear" x="14" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-ear" x="78" y="40" width="8" height="14" rx="2"/>
+          <rect class="bot-face" x="28" y="32" width="44" height="20" rx="3"/>
+          <rect class="bot-eye" x="35" y="38" width="6" height="8" rx="1"/>
+          <rect class="bot-eye" x="59" y="38" width="6" height="8" rx="1"/>
+          <line class="bot-grille" x1="38" y1="58" x2="62" y2="58"/>
+          <line class="bot-grille" x1="38" y1="62" x2="62" y2="62"/>
+          <rect class="bot-neck" x="42" y="68" width="16" height="6"/>
+          <rect class="bot-body" x="26" y="74" width="48" height="42" rx="6"/>
+          <rect class="bot-plate" x="32" y="84" width="36" height="16" rx="2"/>
+          <text class="bot-plate-text" x="50" y="95" text-anchor="middle">WBA</text>
+          <circle class="bot-status-light" cx="50" cy="108" r="2.5"/>
+        </svg>
+        <div class="agent-label">Writeback</div>
+      </div>
+    </div>
+
+    <!-- DECISION CARD (right) -->
+    <div class="dec-card" id="decCard">
+      <div class="dec-card-label">
+        <span>DECISION · PENDING</span>
+        <span id="decTime">09:42:18</span>
+      </div>
+      <div class="dec-card-title">Reduce safety stock on Lane <em>DE-07</em> — 14 SKUs.</div>
+      <div class="dec-card-desc">Transport LT observed at 5 days actual vs 7 days planned &mdash; sustained over 14 shipments. Safety Stock recalibrated from 620 to 480 units per SKU. Service level maintained at 98.5%.</div>
+      <div class="dec-card-kv">
+        <span class="k">Working capital</span><span class="v amber">+ $142K</span>
+        <span class="k">Service impact</span><span class="v live">None</span>
+        <span class="k">SKUs affected</span><span class="v">14</span>
+        <span class="k">Target system</span><span class="v">SAP ECC</span>
+      </div>
+      <div class="dec-card-status pending" id="decStatus">AWAITING HUMAN APPROVAL</div>
+    </div>
+
+    <!-- VERTICAL PROCESS FLOW (below agents) -->
+    <section class="flow" id="flow">
+      <div class="flow-head">
+        <span>SCENARIO PROCESS &middot; 9 STEPS</span>
+        <span class="clock" id="clock">09:42:00</span>
+      </div>
+      <ol class="flow-steps">
+
+        <li class="flow-step" id="flow-step-0">
+          <div class="flow-step-num">01</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Observation.</div>
+            <div class="flow-step-time">09:42:00 &middot; Transport LT</div>
+            <div class="flow-step-body">Lane <strong>DE-07</strong> actual at <strong>5 days</strong> vs 7 planned &mdash; sustained 14 shipments. Lead time has improved.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-1">
+          <div class="flow-step-num">02</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Signal <em>down.</em></div>
+            <div class="flow-step-time">09:42:02 &middot; TLT &rarr; DSS</div>
+            <div class="flow-step-body">Transport LT feeds the new lead-time pattern directly into <strong>Dynamic Safety Stock.</strong> "Plan can recalibrate."</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-2">
+          <div class="flow-step-num">03</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title"><em>Recalibrate.</em></div>
+            <div class="flow-step-time">09:42:05 &middot; Dynamic Safety Stock</div>
+            <div class="flow-step-body">14 SKUs on this lane. Under the shorter LT, safety stock can drop from <strong>620</strong> to <strong>480 units</strong>. Service level held at <strong>98.5%.</strong> Working capital release: $142K.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-3">
+          <div class="flow-step-num">04</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Validate downstream.</div>
+            <div class="flow-step-time">09:42:09 &middot; DSS &rarr; Shortage</div>
+            <div class="flow-step-body">Safety Stock pings <strong>Shortage</strong> with the new buffer. No exposure risk &mdash; the lower buffer holds across all DCs.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-4">
+          <div class="flow-step-num">05</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Orchestrate.</div>
+            <div class="flow-step-time">09:42:12 &middot; PPO &rarr; Command</div>
+            <div class="flow-step-body"><strong>Planning Parameter Orchestrator</strong> validates the change. <strong>Command Center</strong> compiles the decision bundle.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-5">
+          <div class="flow-step-num">06</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Surface to <em>human.</em></div>
+            <div class="flow-step-time">09:42:16 &middot; Team chat</div>
+            <div class="flow-step-body">Decision card prepared. Posted to <strong>#supply-chain-ops</strong> in team chat. Agents pause.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-6">
+          <div class="flow-step-num">07</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title"><em>Approved.</em></div>
+            <div class="flow-step-time">09:42:34 &middot; Maria R.</div>
+            <div class="flow-step-body">Maria R. clicked <strong>Accept &amp; Writeback.</strong> Agents resume.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-7">
+          <div class="flow-step-num">08</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Writeback.</div>
+            <div class="flow-step-time">09:42:35 &middot; Writeback &rarr; SAP</div>
+            <div class="flow-step-body"><strong>Writeback Agent</strong> persists safety stock parameters to <strong>SAP ECC.</strong> All 14 SKUs updated.</div>
+          </div>
+        </li>
+
+        <li class="flow-step" id="flow-step-8">
+          <div class="flow-step-num">09</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Loop closed.</div>
+            <div class="flow-step-time">09:42:36 &middot; Network</div>
+            <div class="flow-step-body">$142K working capital released. Total cycle: <strong>36 seconds.</strong> Network returns to watching.</div>
+          </div>
+        </li>
+
+      </ol>
+    </section>
+
+    <!-- CHAT PANEL (bottom) -->
+    <div class="chat-panel">
+      <div class="chat-chrome">
+        <div style="display:flex; align-items: center; gap: 12px;">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span>TEAM CHAT · #supply-chain-ops</span>
+        </div>
+        <div class="chat-chrome-status" id="chatStatus">STANDING BY</div>
+      </div>
+      <div class="chat-body" id="chatBody"></div>
+    </div>
+
+    <!-- Replay button -->
+    <button class="replay-btn" id="replayBtn">↻ Replay Scenario</button>
+
+    <!-- Phase bar -->
+    <div class="phase-bar"><div class="phase-bar-fill" id="phaseFill"></div></div>
+  </div>
+
+  <!-- Value ledger: the perspective behind a single loop -->
+  <div class="value-ledger">
+    <div class="value-ledger-head">
+      <h3>Near Autonomous Execution.<br/>Real Value <em>Realized.</em></h3>
+      <div class="value-ledger-meta">
+        VALUE LEDGER · LIVE<br/>
+        &rarr; OUTCOMES, NOT INTENTIONS
+      </div>
+    </div>
+
+    <div class="value-tiles">
+
+      <!-- Tile 1 — Transport Lane optimization -->
+      <div class="value-tile">
+        <div class="value-tile-label">Transport Lane Optimization</div>
+        <div class="value-tile-num">$1.8M<span class="unit">/ year</span></div>
+        <div class="value-tile-headline">Catch every drift. Recover <em>every</em> time.</div>
+        <div class="value-tile-detail">
+          <div class="row"><span>Lanes sensed continuously</span><span class="v">73</span></div>
+          <div class="row"><span>Drifting beyond plan today</span><span class="v">12</span></div>
+          <div class="row"><span>Recalibrations YTD</span><span class="v">186</span></div>
+          <div class="row"><span>Avg working capital / loop</span><span class="v">$118K</span></div>
+        </div>
+        <div class="value-tile-foot">This loop &middot; Lane <em>DE-07</em> &middot; +$142K</div>
+      </div>
+
+      <!-- Tile 2 — Safety Stock rebalancing -->
+      <div class="value-tile">
+        <div class="value-tile-label">Safety Stock Rebalancing</div>
+        <div class="value-tile-num">10–15%<span class="unit">released</span></div>
+        <div class="value-tile-headline">Working capital, <em>unfrozen.</em></div>
+        <div class="value-tile-detail">
+          <div class="row"><span>SKUs under dynamic policy</span><span class="v">1,240</span></div>
+          <div class="row"><span>DCs in scope</span><span class="v">8</span></div>
+          <div class="row"><span>Working capital floating</span><span class="v">$4.2M</span></div>
+          <div class="row"><span>Released YTD</span><span class="v live">$620K</span></div>
+        </div>
+        <div class="value-tile-foot">This loop &middot; 14 SKUs &middot; service held at <em>98.5%</em></div>
+      </div>
+
+      <!-- Tile 3 — Revenue Growth (service held = demand captured) -->
+      <div class="value-tile">
+        <div class="value-tile-label">Revenue Growth</div>
+        <div class="value-tile-num">+1.4%<span class="unit">net uplift</span></div>
+        <div class="value-tile-headline">Service held. Demand <em>captured.</em></div>
+        <div class="value-tile-detail">
+          <div class="row"><span>Stockouts avoided / month</span><span class="v">86</span></div>
+          <div class="row"><span>On-shelf availability</span><span class="v">98.7%</span></div>
+          <div class="row"><span>Recovered demand / month</span><span class="v">$268K</span></div>
+          <div class="row"><span>Recovered YTD</span><span class="v live">$2.1M</span></div>
+        </div>
+        <div class="value-tile-foot">This loop &middot; revenue at risk on DE-07 <em>cleared</em></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Command Center -->
+<section class="command reveal" id="platform">
+  <div class="command-head">
+    <div>
+      <div class="command-label">03 / SURFACE</div>
+      <h2>One <em>Command Center.</em></h2>
+    </div>
+    <div class="command-sub">
+      Skip the dashboard. Pre-built prompts when you know the question &mdash; open-ended when you don't. <em>Every</em> answer rendered the way you need to see it.
+    </div>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="active">Operate</button>
+    <button>Build</button>
+  </div>
+
+  <div class="command-ui nc">
+
+    <!-- ═════════ Status line ═════════ -->
+    <div class="nc-status">
+      <span class="live">12 / 12 AGENTS LIVE &middot; ALL HEALTHY</span>
+      <span>SESSION &middot; 09:42</span>
+    </div>
+
+    <!-- ═════════ Main: conversation (left) + pre-built prompt library (right) ═════════ -->
+    <div class="nc-main">
+
+      <!-- ─── Conversation: prompt → bespoke answer ─── -->
+      <div class="nc-console">
+        <div class="nc-console-head">
+          <span>CONVERSATION &middot; OPERATE</span>
+          <span class="pending">ASK ANYTHING</span>
+        </div>
+        <div class="nc-feed" id="ncFeed">
+
+          <div class="nc-msg you">
+            <div class="nc-msg-meta">
+              <span class="who">YOU</span>
+              <span class="at">15:38</span>
+            </div>
+            <div class="nc-msg-body">Show me lanes drifting beyond plan, by region, last 14 days.</div>
+          </div>
+
+          <div class="nc-msg">
+            <div class="nc-msg-meta">
+              <span class="who">OPTARO</span>
+              <span class="at">15:38 &middot; rendered for you</span>
+            </div>
+            <div class="nc-msg-body"><strong>12 lanes</strong> drifting beyond plan over the last 14 days. <em>EMEA</em> leading at 5, then APAC at 4, Americas at 3. Worst single lane: <em>DE-07</em> at 9d actual vs 7d planned.</div>
+            <div class="nc-answer">
+              <div class="nc-answer-text">Drift counts &mdash; <em>your</em> question, your shape:</div>
+              <div class="nc-answer-chart">
+                <div class="nc-answer-bar"><span class="bar-num">5</span><div class="bar" style="height: 78%;"></div><span class="bar-label">EMEA</span></div>
+                <div class="nc-answer-bar"><span class="bar-num">4</span><div class="bar" style="height: 62%;"></div><span class="bar-label">APAC</span></div>
+                <div class="nc-answer-bar"><span class="bar-num">3</span><div class="bar" style="height: 46%;"></div><span class="bar-label">Americas</span></div>
+                <div class="nc-answer-bar dim"><span class="bar-num">0</span><div class="bar" style="height: 6%;"></div><span class="bar-label">LATAM</span></div>
+              </div>
+              <div class="nc-answer-meta">Generated 0.4s ago &middot; source: Transport LT &middot; reshape with: by lane, by SKU, by carrier</div>
+              <div class="nc-answer-actions">
+                <span class="nc-answer-action primary">Recalibrate top 3</span>
+                <span class="nc-answer-action">Drill into EMEA</span>
+                <span class="nc-answer-action">Explain DE-07</span>
+                <span class="nc-answer-action">Set alert</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="nc-typing" id="ncTyping">Optaro is <em>drafting</em>&hellip;</div>
+        <div class="nc-input">
+          <span class="prompt">&gt;</span>
+          <span>Ask anything &mdash; or pick a prompt &rarr;</span>
+        </div>
+      </div>
+
+      <!-- ─── Pre-built prompt library (right) ─── -->
+      <aside class="nc-prompts">
+        <div class="nc-prompts-head">Prompt library</div>
+        <div class="nc-prompts-title">Pick &amp; <em>go.</em></div>
+        <div class="nc-prompts-sub">Curated for your area &mdash; click to ask, edit before you do.</div>
+
+        <div class="nc-prompts-group">
+          <div class="nc-prompts-cat">Source</div>
+          <div class="nc-prompts-list">
+            <span class="nc-prompt-chip">Supplier LT trending hot</span>
+            <span class="nc-prompt-chip">MOQ release candidates</span>
+          </div>
+        </div>
+
+        <div class="nc-prompts-group">
+          <div class="nc-prompts-cat">Plan</div>
+          <div class="nc-prompts-list">
+            <span class="nc-prompt-chip">Safety stock candidates</span>
+            <span class="nc-prompt-chip">Forecast accuracy by SKU class</span>
+            <span class="nc-prompt-chip">Service holds, last 30d</span>
+          </div>
+        </div>
+
+        <div class="nc-prompts-group">
+          <div class="nc-prompts-cat">Make</div>
+          <div class="nc-prompts-list">
+            <span class="nc-prompt-chip">OEE by line, last 7d</span>
+            <span class="nc-prompt-chip">WIP buffers to free</span>
+          </div>
+        </div>
+
+        <div class="nc-prompts-group">
+          <div class="nc-prompts-cat">Deliver</div>
+          <div class="nc-prompts-list">
+            <span class="nc-prompt-chip">Lane drift today</span>
+            <span class="nc-prompt-chip">Expedites avoided this week</span>
+            <span class="nc-prompt-chip">OTIF by lane</span>
+          </div>
+        </div>
+
+        <div class="nc-prompts-foot">
+          Don't see it? <em>Just ask.</em> Every answer is rendered on demand &mdash; never a stale dashboard.
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- SPMD intro -->
+<section class="scope-intro reveal" id="scope">
+  <div class="label">04 / SCOPE</div>
+  <h2>Across <em>every</em> phase of the value chain.</h2>
+  <div class="scope-tags">
+    <span>Source</span>
+    <span>Plan</span>
+    <span>Make</span>
+    <span>Deliver</span>
+  </div>
+</section>
+
+<!-- I. SOURCE -->
+<section class="phase">
+  <div class="phase-image">
+    <div class="phase-image-meta">
+      <span>I / SOURCE</span>
+      <span>MATERIALS · SUPPLIERS</span>
+    </div>
+    <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1600&q=80" alt="Warehouse shelves with materials" onerror="this.style.display='none'"/>
+  </div>
+  <div class="phase-content">
+    <div>
+      <div class="phase-num">I.</div>
+      <h3 class="phase-title">Source<em>.</em></h3>
+      <p class="phase-line">Right materials. Right place. Right time.</p>
+    </div>
+    <div class="phase-modules">
+      <div class="phase-modules-label">Modules &middot; in motion</div>
+      <ul class="phase-modules-list">
+        <li><strong>MOQ Optimization</strong> &mdash; right-sized buys against vendor minimums, not blanket cadences.</li>
+        <li><strong>Supplier Lead Time</strong> &mdash; sense supplier drift before it becomes a stockout risk.</li>
+        <li><strong>Risk-Aware Buy Triggers</strong> &mdash; <em>act</em> when the signal warrants, defer when it doesn't.</li>
+      </ul>
+      <div class="phase-value">
+        <span class="phase-value-num">$420K</span>
+        <span class="phase-value-line">Working capital reclaimed from <em>over-buys</em> &middot; 18% fewer expedited POs</span>
+      </div>
+    </div>
+    <div class="phase-tags">
+      <span>Material management planning</span>
+    </div>
+  </div>
+</section>
+
+<!-- II. PLAN -->
+<section class="phase flip">
+  <div class="phase-image">
+    <div class="phase-image-meta">
+      <span>II / PLAN</span>
+      <span>DEMAND · SUPPLY · PARAMETERS</span>
+    </div>
+    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80" alt="Demand planning dashboard with metrics, forecasts, and trend charts" onerror="this.style.display='none'"/>
+  </div>
+  <div class="phase-content">
+    <div>
+      <div class="phase-num">II.</div>
+      <h3 class="phase-title">Plan<em>.</em></h3>
+      <p class="phase-line">Forecast demand. Balance with supply. Tune the parameters that drive both.</p>
+    </div>
+    <div class="phase-modules">
+      <div class="phase-modules-label">Modules &middot; in motion</div>
+      <ul class="phase-modules-list">
+        <li><strong>Dynamic Safety Stock</strong> &mdash; recalibrates as lead times move, not on a quarterly cycle.</li>
+        <li><strong>Projected Inventory</strong> &mdash; stockout exposure flagged days ahead, by SKU and DC.</li>
+        <li><strong>Demand Sensing</strong> &mdash; signal shifts captured before they hit your reports.</li>
+        <li><strong>Parameter Tuning</strong> &mdash; safety stock, ROP, EOQ kept honest <em>continuously.</em></li>
+      </ul>
+      <div class="phase-value">
+        <span class="phase-value-num">10–15%</span>
+        <span class="phase-value-line">Safety stock <em>released</em> &middot; service held at 98.5% through volatility</span>
+      </div>
+    </div>
+    <div class="phase-tags">
+      <span>Demand management</span>
+      <span>Supply-demand balancing</span>
+      <span>Parameter optimisation</span>
+    </div>
+  </div>
+</section>
+
+<!-- III. MAKE -->
+<section class="phase">
+  <div class="phase-image">
+    <div class="phase-image-meta">
+      <span>III / MAKE</span>
+      <span>PRODUCTION · INVENTORY</span>
+    </div>
+    <img src="https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=1600&q=80" alt="Production line in operation" onerror="this.style.display='none'"/>
+  </div>
+  <div class="phase-content">
+    <div>
+      <div class="phase-num">III.</div>
+      <h3 class="phase-title">Make<em>.</em></h3>
+      <p class="phase-line">Production, inventory, and positioning — as one system.</p>
+    </div>
+    <div class="phase-modules">
+      <div class="phase-modules-label">Modules &middot; in motion</div>
+      <ul class="phase-modules-list">
+        <li><strong>Production Sequencing</strong> &mdash; aligned with live demand, not last week's plan.</li>
+        <li><strong>Inventory Positioning</strong> &mdash; right SKU, right DC, right day &mdash; <em>continuously</em> reshaped.</li>
+        <li><strong>Make-vs-Buy Triggers</strong> &mdash; flex the line or outsource, with the cost case attached.</li>
+      </ul>
+      <div class="phase-value">
+        <span class="phase-value-num">+6 pts</span>
+        <span class="phase-value-line">OEE <em>recovered</em> &middot; $640K WIP and finished-goods buffer freed</span>
+      </div>
+    </div>
+    <div class="phase-tags">
+      <span>Inventory management</span>
+    </div>
+  </div>
+</section>
+
+<!-- IV. DELIVER -->
+<section class="phase flip">
+  <div class="phase-image">
+    <div class="phase-image-meta">
+      <span>IV / DELIVER</span>
+      <span>ORDERS · LOGISTICS</span>
+    </div>
+    <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1600&q=80" alt="Logistics truck on highway" onerror="this.style.display='none'"/>
+  </div>
+  <div class="phase-content">
+    <div>
+      <div class="phase-num">IV.</div>
+      <h3 class="phase-title">Deliver<em>.</em></h3>
+      <p class="phase-line">Orders flow. Lanes adapt. Service holds.</p>
+    </div>
+    <div class="phase-modules">
+      <div class="phase-modules-label">Modules &middot; in motion</div>
+      <ul class="phase-modules-list">
+        <li><strong>Transport Lead Time</strong> &mdash; every lane sensed continuously, drift caught the moment it persists.</li>
+        <li><strong>Expedite Avoidance</strong> &mdash; rebalance inbound before paying premium freight.</li>
+        <li><strong>Order Orchestration</strong> &mdash; promise dates that <em>hold</em>, not promises that hope.</li>
+      </ul>
+      <div class="phase-value">
+        <span class="phase-value-num">$1.8M</span>
+        <span class="phase-value-line">Annual lane-optimization recovery &middot; <em>34</em> expedites avoided ($210K) / quarter</span>
+      </div>
+    </div>
+    <div class="phase-tags">
+      <span>Order management</span>
+      <span>Logistics</span>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<section class="marquee">
+  <div class="marquee-track">
+    <span>Sense. Analyze. <em>Execute.</em> <span class="sep">◆</span></span>
+    <span>Sense. Analyze. <em>Execute.</em> <span class="sep">◆</span></span>
+    <span>Sense. Analyze. <em>Execute.</em> <span class="sep">◆</span></span>
+  </div>
+</section>
+
+<!-- Founder -->
+<section class="founder reveal">
+  <div class="founder-inner">
+    <div class="founder-label">05 / BELIEF</div>
+    <div class="founder-quote">
+      Supply chain has always had the data. Now it has an agentic team that <em>acts</em> on it &mdash; every signal, every loop, every day. That&rsquo;s why we built Optaro.
+    </div>
+    <div class="founder-attr">
+      <div class="founder-avatar">MR</div>
+      <div>
+        <div class="founder-name">Mark Robinson</div>
+        <div class="founder-role">FOUNDER &amp; CEO</div>
+      </div>
+    </div>
+    <div class="founder-coda">
+      Agentic AI lets the network <em>act</em> on the right answer &mdash; within guardrails leaders can genuinely trust. That&rsquo;s the line between a dashboard and a decision.
+    </div>
+  </div>
+</section>
+
+<!-- Contact Optaro -->
+<section class="cta" id="cta">
+  <h2>See it<br/>on <em>your</em> data.</h2>
+  <p>One risk. One lane. Live.</p>
+
+  <div class="cta-grid">
+
+    <!-- Editorial lead (left) -->
+    <div class="cta-lead">
+      Experience autonomous supply chain intelligence. Book a personalized demo &mdash; see how Optaro agents can <em>transform</em> your operations.
+    </div>
+
+    <!-- Demo request form (right) -->
+    <form class="cta-form" id="contactForm" action="#" method="post" novalidate>
+      <div class="cta-form-head">Contact &middot; Optaro</div>
+      <div class="cta-form-title"><em>Request</em> a demo</div>
+
+      <div class="row">
+        <div class="field">
+          <label for="cf-name">Name</label>
+          <input id="cf-name" name="name" type="text" required autocomplete="name"/>
+        </div>
+        <div class="field">
+          <label for="cf-email">Work email</label>
+          <input id="cf-email" name="email" type="email" required autocomplete="email"/>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="cf-company">Company</label>
+          <input id="cf-company" name="company" type="text" required autocomplete="organization"/>
+        </div>
+        <div class="field">
+          <label for="cf-size">Company size</label>
+          <select id="cf-size" name="size" required>
+            <option value="" disabled selected>Select revenue range</option>
+            <option value="mid">$10M &ndash; $500M revenue</option>
+            <option value="ent">$500M &ndash; $5B+ revenue</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="cf-msg">What you want to see (optional)</label>
+        <textarea id="cf-msg" name="message" placeholder="One risk. One lane. One loop &mdash; on your data."></textarea>
+      </div>
+
+      <button type="submit" class="cta-form-submit" id="cfSubmit">Request a Demo</button>
+
+      <p class="cta-consent">
+        By submitting, you consent to processing of your data as described in our <a href="privacy-policy.html">Privacy &amp; Cookie Policy</a>.
+      </p>
+    </form>
+
+  </div>
+</section>
+
+<!-- Mega logo -->
+<div class="mega-logo">
+  <div class="mega-logo-type">OPT<em>A</em>RO</div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">OPTARO</div>
+      <div class="footer-meta">AI-FIRST AGENTIC<br/>SUPPLY CHAIN</div>
+      <div class="footer-meta" style="margin-top: 18px;">
+        OPTARO INC.<br/>
+        169 MADISON AVE, STE 31764<br/>
+        NEW YORK, NY 10016
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="#platform">Command Center</a></li>
+        <li><a href="#scope">Scope</a></li>
+        <li><a href="#network">Network</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#cta">Contact</a></li>
+        <li><a href="privacy-policy.html">Privacy &amp; Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="mailto:hello@optaro.ai">hello@optaro.ai</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 OPTARO INC. · ALL RIGHTS RESERVED</span>
+    <span>NO TRACKING COOKIES · LOCALSTORAGE ONLY</span>
+    <span>POWERED BY GOOGLE CLOUD</span>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('done');
+    }, 1600);
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  const topNav = document.getElementById('topNav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) topNav.classList.add('scrolled');
+    else topNav.classList.remove('scrolled');
+  });
+
+  document.querySelectorAll('.mode-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // ═══════════════════════════════════════════════════
+  //   AGENT NETWORK SCENARIO (in-motion)
+  // ═══════════════════════════════════════════════════
+
+  // Stable bot centre measurement: read the .agent wrapper's rect (only the
+  // static translate is applied) and add half the bot's laid-out height. This
+  // is invariant to the floating bot animation, so connection lanes and
+  // packets stay anchored to each robot's resting centre.
+  function getAgentCenter(id) {
+    const el = document.getElementById('ag-' + id);
+    const bot = el.querySelector('.agent-bot');
+    const agentsEl = document.getElementById('agents');
+    const agRect = agentsEl.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    return {
+      x: elRect.left + elRect.width / 2 - agRect.left,
+      y: elRect.top + bot.offsetHeight / 2 - agRect.top + 2
+    };
+  }
+
+  // Network connection list — shared by drawConnections (lines) and the
+  // ambient green-pulse generator (which sends telemetry along the same paths).
+  const NETWORK_CONNECTIONS = [
+    ['cmd', 'ppo'], ['cmd', 'imo'],
+    ['ppo', 'dss'], ['ppo', 'srb'],
+    ['imo', 'srb'], ['imo', 'exp'], ['imo', 'prs'],
+    ['dss', 'tlt'], ['dss', 'pri'], ['dss', 'sho'],
+    ['srb', 'pri'], ['srb', 'isc'],
+    ['exp', 'sho'], ['prs', 'pri'],
+    ['dss', 'wba'], ['srb', 'wba'], ['exp', 'wba'], ['prs', 'wba']
+  ];
+
+  function drawConnections() {
+    const svg = document.getElementById('connSvg');
+    const agentsEl = document.getElementById('agents');
+    const rect = agentsEl.getBoundingClientRect();
+    svg.setAttribute('viewBox', '0 0 ' + rect.width + ' ' + rect.height);
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    NETWORK_CONNECTIONS.forEach(([fromId, toId]) => {
+      const from = getAgentCenter(fromId);
+      const to = getAgentCenter(toId);
+      const mx = (from.x + to.x) / 2;
+      const my = (from.y + to.y) / 2 - Math.abs(to.x - from.x) * 0.08;
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${from.x} ${from.y} Q ${mx} ${my} ${to.x} ${to.y}`);
+      path.setAttribute('class', 'conn');
+      path.setAttribute('id', 'conn-' + fromId + '-' + toId);
+      svg.appendChild(path);
+    });
+  }
+
+  function spawnPacket(fromId, toId, duration = 1200, onArrive = null) {
+    const from = getAgentCenter(fromId);
+    const to = getAgentCenter(toId);
+    const mx = (from.x + to.x) / 2;
+    const my = (from.y + to.y) / 2 - Math.abs(to.x - from.x) * 0.08;
+
+    const packet = document.createElement('div');
+    packet.className = 'packet';
+    document.getElementById('agents').appendChild(packet);
+
+    const conn = document.getElementById('conn-' + fromId + '-' + toId) || document.getElementById('conn-' + toId + '-' + fromId);
+    if (conn) conn.classList.add('hot');
+
+    const start = performance.now();
+    function step(t) {
+      const elapsed = t - start;
+      const p = Math.min(elapsed / duration, 1);
+      const eased = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+      const u = 1 - eased;
+      const x = u*u*from.x + 2*u*eased*mx + eased*eased*to.x;
+      const y = u*u*from.y + 2*u*eased*my + eased*eased*to.y;
+      packet.style.left = x + 'px';
+      packet.style.top = y + 'px';
+      if (p < 1) requestAnimationFrame(step);
+      else {
+        packet.remove();
+        if (conn) setTimeout(() => conn.classList.remove('hot'), 400);
+        if (onArrive) onArrive();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function activate(id) {
+    document.getElementById('ag-' + id).classList.remove('dim');
+    document.getElementById('ag-' + id).classList.add('active');
+  }
+  function thinking(id, on = true) {
+    if (on) document.getElementById('ag-' + id).classList.add('thinking');
+    else document.getElementById('ag-' + id).classList.remove('thinking');
+  }
+  function resetAllAgents() {
+    ['cmd','ppo','imo','dss','srb','exp','prs','tlt','pri','isc','sho','wba'].forEach(id => {
+      const el = document.getElementById('ag-' + id);
+      el.classList.remove('active');
+      el.classList.remove('thinking');
+    });
+    ['imo','srb','exp','prs','isc','sho'].forEach(id => {
+      document.getElementById('ag-' + id).classList.add('dim');
+    });
+  }
+
+  const steps = [
+    { n: '01', time: '09:42:00', title: 'Observation.',
+      body: 'Transport LT agent watching Lane <strong>DE-07</strong>. Actual running <strong>5 days</strong>. Planned is 7. Fourteen consecutive shipments &mdash; lead time has improved. Enough signal.' },
+    { n: '02', time: '09:42:02', title: 'Signal <em>down.</em>',
+      body: 'Transport LT feeds the new lead-time pattern directly into <strong>Dynamic Safety Stock.</strong> "Plan can recalibrate."' },
+    { n: '03', time: '09:42:05', title: '<em>Recalibrate.</em>',
+      body: '14 SKUs on this lane. Under the shorter LT, safety stock can drop from <strong>620</strong> to <strong>480 units</strong>. Service level <strong>held at 98.5%.</strong> Working capital release: $142K.' },
+    { n: '04', time: '09:42:09', title: 'Validate downstream.',
+      body: 'Safety Stock pings <strong>Shortage</strong> with the new buffer. No exposure risk &mdash; the lower buffer holds across all DCs.' },
+    { n: '05', time: '09:42:12', title: 'Orchestrate.',
+      body: '<strong>Planning Parameter Orchestrator</strong> validates the change. <strong>Command Center</strong> compiles the decision bundle.' },
+    { n: '06', time: '09:42:16', title: 'Surface to <em>human.</em>',
+      body: 'Decision card prepared. Posted to <strong>#supply-chain-ops</strong> in team chat. Agents pause.' },
+  ];
+
+  const stepsAfter = [
+    { n: '07', time: '09:42:34', title: '<em>Approved.</em>',
+      body: 'Maria R. clicked <strong>Accept & Writeback.</strong> Agents resume.' },
+    { n: '08', time: '09:42:35', title: 'Writeback.',
+      body: '<strong>Writeback Agent</strong> persists safety stock parameters to <strong>SAP ECC.</strong> All 14 SKUs updated.' },
+    { n: '09', time: '09:42:36', title: 'Loop closed.',
+      body: '$142K working capital released. Total cycle: <strong>36 seconds.</strong> Network returns to watching.' },
+  ];
+
+  // Drive the vertical process flow below the robots: each scripted step
+  // activates one pre-rendered card (turning the prior card .done) and
+  // updates the flow header clock. The step number drives which card to
+  // light up — steps[] uses '01'..'06', stepsAfter[] uses '07'..'09'.
+  function addNarrative(step) {
+    const idx = parseInt(step.n, 10) - 1;
+    const cards = document.querySelectorAll('#flow .flow-step');
+    cards.forEach((c, i) => {
+      if (i < idx) { c.classList.add('done'); c.classList.remove('active', 'waiting'); }
+      else if (i === idx) { c.classList.add('active'); c.classList.remove('done', 'waiting'); }
+    });
+    document.getElementById('clock').textContent = step.time;
+    // Keep the active card in view on the horizontal flow
+    const active = document.querySelector('#flow .flow-step.active');
+    if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  function addDivider() {
+    // Mark the currently active step as awaiting human input — visual
+    // pulse below its body. The next addNarrative() will clear this.
+    const active = document.querySelector('#flow .flow-step.active');
+    if (active) active.classList.add('waiting');
+  }
+
+  function setPhaseProgress(pct) {
+    document.getElementById('phaseFill').style.width = pct + '%';
+  }
+
+  function addChatMsg({ who, av, tag, time, body, actions, confirm }) {
+    const body_el = document.getElementById('chatBody');
+    const msg = document.createElement('div');
+    msg.className = 'cmsg';
+    const avClass = av === 'human' ? 'cmsg-av human' : 'cmsg-av';
+    const avLetter = av === 'human' ? 'MR' : 'O';
+    let actionsHtml = '';
+    if (actions) {
+      actionsHtml = '<div class="cmsg-actions">' +
+        actions.map(a => `<button class="cmsg-btn ${a.primary ? 'primary flash' : ''}" ${a.id ? `id="${a.id}"` : ''}>${a.label}</button>`).join('') +
+      '</div>';
+    }
+    let confirmHtml = confirm ? `<div class="cmsg-confirm">${confirm}</div>` : '';
+    msg.innerHTML = `
+      <div class="${avClass}">${avLetter}</div>
+      <div>
+        <div class="cmsg-head">
+          <span class="cmsg-name">${who}</span>
+          ${tag ? `<span class="cmsg-tag">${tag}</span>` : ''}
+          <span class="cmsg-time">${time}</span>
+        </div>
+        <div class="cmsg-body">${body}</div>
+        ${actionsHtml}
+        ${confirmHtml}
+      </div>
+    `;
+    body_el.appendChild(msg);
+    requestAnimationFrame(() => msg.classList.add('visible'));
+    body_el.scrollTop = body_el.scrollHeight;
+    return msg;
+  }
+
+  function setChatStatus(text, state = '') {
+    const s = document.getElementById('chatStatus');
+    s.textContent = text;
+    s.className = 'chat-chrome-status' + (state ? ' ' + state : '');
+  }
+
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+  function resetScenario() {
+    document.querySelectorAll('#flow .flow-step').forEach(c => {
+      c.classList.remove('active', 'done', 'waiting');
+    });
+    document.getElementById('clock').textContent = '09:42:00';
+    document.getElementById('chatBody').innerHTML = '';
+    document.getElementById('decCard').classList.remove('visible');
+    document.getElementById('decStatus').className = 'dec-card-status pending';
+    document.getElementById('decStatus').textContent = 'AWAITING HUMAN APPROVAL';
+    document.getElementById('replayBtn').classList.remove('visible');
+    resetAllAgents();
+    setChatStatus('STANDING BY');
+    setPhaseProgress(0);
+  }
+
+  async function startScenario() {
+    resetScenario();
+    drawConnections();
+
+    // Phase 1 — Observation: TLT senses lead-time improvement
+    await wait(600);
+    setPhaseProgress(8);
+    activate('tlt');
+    thinking('tlt', true);
+    addNarrative(steps[0]);
+
+    await wait(2000);
+    thinking('tlt', false);
+
+    // Phase 2 — Signal: TLT feeds the new LT pattern directly into DSS
+    setPhaseProgress(20);
+    addNarrative(steps[1]);
+    await wait(400);
+    spawnPacket('tlt', 'dss', 1400);
+    await wait(1500);
+    activate('dss');
+
+    // Phase 3 — Recalibrate: DSS computes new buffer from the LT signal alone
+    setPhaseProgress(38);
+    addNarrative(steps[2]);
+    thinking('dss', true);
+    await wait(2400);
+    thinking('dss', false);
+
+    // Phase 4 — Validate downstream: DSS pings SHO (excess/shortage check)
+    setPhaseProgress(52);
+    addNarrative(steps[3]);
+    await wait(400);
+    spawnPacket('dss', 'sho', 1100);
+    await wait(900);
+    activate('sho');
+    thinking('sho', true);
+    await wait(1200);
+    thinking('sho', false);
+
+    // Phase 5 — Orchestrate: DSS → PPO → CMD
+    setPhaseProgress(66);
+    addNarrative(steps[4]);
+    spawnPacket('dss', 'ppo', 1200);
+    await wait(1300);
+    activate('ppo');
+    thinking('ppo', true);
+    await wait(800);
+    spawnPacket('ppo', 'cmd', 1200);
+    await wait(1300);
+    activate('cmd');
+    thinking('cmd', true);
+    await wait(1400);
+    thinking('cmd', false);
+    thinking('ppo', false);
+
+    // Phase 6 — Surface to human
+    setPhaseProgress(78);
+    addNarrative(steps[5]);
+
+    document.getElementById('decCard').classList.add('visible');
+
+    await wait(700);
+    addChatMsg({
+      who: 'Optaro',
+      tag: 'APP',
+      time: '9:42 AM',
+      body: 'Lane <strong>DE-07</strong> transport LT improved from 7 to 5 days. Safety stock can drop &mdash; <em>$142K working capital release,</em> no service impact.',
+    });
+    await wait(1200);
+    addChatMsg({
+      who: 'Optaro',
+      tag: 'APP',
+      time: '9:42 AM',
+      body: '<strong>Decision card ready.</strong> Pending your approval.',
+      actions: [
+        { label: 'Accept & Writeback', primary: true, id: 'btn-accept' },
+        { label: 'Review each SKU' },
+        { label: 'Explain' },
+        { label: 'Defer' }
+      ]
+    });
+    addDivider();
+    setChatStatus('WAITING FOR HUMAN', 'waiting');
+    document.getElementById('decStatus').textContent = 'AWAITING HUMAN APPROVAL';
+    setPhaseProgress(82);
+
+    await waitForApproval();
+
+    setChatStatus('HUMAN APPROVED', 'acted');
+    document.getElementById('decStatus').className = 'dec-card-status done';
+    document.getElementById('decStatus').textContent = 'APPROVED · EXECUTING';
+
+    addChatMsg({
+      who: 'Maria R.',
+      av: 'human',
+      time: '9:42 AM',
+      body: 'Accept & writeback.'
+    });
+
+    await wait(900);
+    addNarrative(stepsAfter[0]);
+
+    setPhaseProgress(92);
+    await wait(600);
+    spawnPacket('cmd', 'wba', 1400);
+    await wait(1500);
+    activate('wba');
+    thinking('wba', true);
+    addNarrative(stepsAfter[1]);
+    await wait(2000);
+
+    addChatMsg({
+      who: 'Optaro',
+      tag: 'APP',
+      time: '9:42 AM',
+      body: 'Writing to SAP ECC...',
+      confirm: 'Updated at 09:42:36. Safety stock parameters persisted for 14 SKUs on Lane DE-07. $142K released.'
+    });
+    thinking('wba', false);
+
+    await wait(800);
+    setPhaseProgress(100);
+    addNarrative(stepsAfter[2]);
+    document.getElementById('decStatus').textContent = 'EXECUTED · LOOP CLOSED';
+
+    // Final card flips to done after a beat so the whole flow reads complete
+    await wait(1500);
+    document.querySelectorAll('#flow .flow-step.active').forEach(c => {
+      c.classList.remove('active');
+      c.classList.add('done');
+    });
+    await wait(1500);
+    document.getElementById('replayBtn').classList.add('visible');
+  }
+
+  function waitForApproval() {
+    return new Promise((resolve) => {
+      const timeout = setTimeout(() => resolve(), 9000);
+      const checkBtn = setInterval(() => {
+        const btn = document.getElementById('btn-accept');
+        if (btn) {
+          clearInterval(checkBtn);
+          btn.addEventListener('click', () => {
+            clearTimeout(timeout);
+            btn.disabled = true;
+            btn.textContent = '✓ Accepted';
+            btn.classList.remove('flash');
+            resolve();
+          });
+        }
+      }, 100);
+    });
+  }
+
+  document.getElementById('replayBtn').addEventListener('click', () => startScenario());
+
+  // ─── Ambient green telemetry: continuous activity between robots ───
+  // Distinct from scripted scenario packets — smaller, green, linear-eased,
+  // does NOT light up the connection line (`.conn.hot` is reserved for
+  // scripted moves). Hard-capped to keep DOM bounded on idle tabs.
+  const AMBIENT_MAX_IN_FLIGHT = 6;
+  let ambientInFlight = 0;
+
+  function spawnAmbientPulse() {
+    if (ambientInFlight >= AMBIENT_MAX_IN_FLIGHT) return;
+    const conn = NETWORK_CONNECTIONS[Math.floor(Math.random() * NETWORK_CONNECTIONS.length)];
+    const reverse = Math.random() > 0.5;
+    const fromId = reverse ? conn[1] : conn[0];
+    const toId = reverse ? conn[0] : conn[1];
+
+    const from = getAgentCenter(fromId);
+    const to = getAgentCenter(toId);
+    const mx = (from.x + to.x) / 2;
+    const my = (from.y + to.y) / 2 - Math.abs(to.x - from.x) * 0.08;
+
+    const packet = document.createElement('div');
+    packet.className = 'packet ambient';
+    document.getElementById('agents').appendChild(packet);
+    ambientInFlight++;
+
+    const duration = 1500 + Math.random() * 600;
+    const start = performance.now();
+    function step(t) {
+      const p = Math.min((t - start) / duration, 1);
+      // Linear easing — telemetry, not a decisive move
+      const u = 1 - p;
+      packet.style.left = (u*u*from.x + 2*u*p*mx + p*p*to.x) + 'px';
+      packet.style.top  = (u*u*from.y + 2*u*p*my + p*p*to.y) + 'px';
+      if (p < 1) requestAnimationFrame(step);
+      else { packet.remove(); ambientInFlight--; }
+    }
+    requestAnimationFrame(step);
+  }
+
+  let ambientTimer = null;
+  function startAmbientPulses() {
+    if (ambientTimer) return;
+    // Hold off ~3s so the first scripted phase reads cleanly without ambient noise
+    setTimeout(() => {
+      // Light jitter on cadence so packets don't all start in phase
+      ambientTimer = setInterval(() => {
+        if (Math.random() > 0.15) spawnAmbientPulse();
+      }, 1500);
+    }, 3000);
+  }
+
+  // Trigger the scenario the first time the stage scrolls into view, so the
+  // user sees it from step 01 rather than mid-flight. Ambient pulses kick off
+  // alongside it and continue independently after the scripted run finishes.
+  let scenarioStarted = false;
+  const stageEl = document.getElementById('stage');
+  const stageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !scenarioStarted) {
+        scenarioStarted = true;
+        stageObserver.disconnect();
+        startScenario();
+        startAmbientPulses();
+      }
+    });
+  }, { threshold: 0.25 });
+  stageObserver.observe(stageEl);
+
+  // Redraw connection lanes on resize
+  window.addEventListener('resize', () => {
+    if (scenarioStarted) drawConnections();
+  });
+
+  // ═══════════════════════════════════════════════════
+  //   COMMAND CENTER — quiet liveliness
+  // ═══════════════════════════════════════════════════
+
+  // Pre-built prompt chip → drop into the input bar (visual cue only — no backend).
+  // Clicking a chip should feel like the prompt was queued up to ask.
+  document.querySelectorAll('.nc-prompt-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const input = document.querySelector('.nc-input span:not(.prompt)');
+      if (input) {
+        input.textContent = chip.textContent;
+        input.style.color = 'var(--fg)';
+      }
+      const typing = document.getElementById('ncTyping');
+      if (typing) {
+        typing.classList.add('on');
+        setTimeout(() => typing.classList.remove('on'), 1400);
+      }
+    });
+  });
+
+  // Contact-form passive submit: validate, then flip the button to a
+  // confirmation state. No backend wired in this mockup.
+  (function ncContactForm() {
+    const form = document.getElementById('contactForm');
+    const btn = document.getElementById('cfSubmit');
+    if (!form || !btn) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Native validity check using the form's required fields
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      btn.disabled = true;
+      btn.textContent = '✓ Request received';
+      btn.classList.add('done');
+      form.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+    });
+  })();
+</script>
+</body>
+</html>
