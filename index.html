@@ -2620,62 +2620,96 @@
     .value-tiles{ grid-template-columns: 1fr; }
     .value-tile + .value-tile{ border-left: none; border-top: 1px solid var(--line); }
     .value-tile{ padding: 24px 20px; }
-    .stage{ grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; min-height: auto; }
-    .agents{ grid-column: 1; grid-row: 1; min-height: 460px; overflow: hidden; }
-    .dec-card{ grid-column: 1; grid-row: 2; margin: 20px; max-width: none; justify-self: stretch; }
-    .flow{ grid-column: 1; grid-row: 3; padding: 22px 18px 28px; }
-    .flow-steps{ gap: 18px; }
-    .chat-panel{ grid-column: 1; grid-row: 4; border-left: none; }
-    .phase-bar{ left: 0; }
-    .replay-btn{ top: 12px; right: 12px; }
-    .footer-top{ grid-template-columns: 1fr 1fr; }
-    .bleed-caption{ left: 20px; bottom: 20px; }
-
-    /* ── Agent network: compact mobile layout ── */
+    /* ── Mobile 3-column overlay layout ── */
+    .stage{
+      display: grid !important;
+      grid-template-columns: 24% 52% 24% !important;
+      grid-template-rows: 360px auto !important;
+      grid-template-areas:
+        "flow agents dec"
+        "chat chat chat" !important;
+      min-height: auto !important;
+    }
+    .flow{
+      grid-area: flow !important;
+      padding: 8px 4px !important;
+      border-right: 1px solid var(--line) !important;
+      overflow: hidden !important;
+    }
     .agents{
+      grid-area: agents !important;
+      height: 360px !important;
       min-height: 360px !important;
       max-height: 360px !important;
-      height: 360px !important;
       padding: 0 !important;
       overflow: hidden !important;
       position: relative !important;
     }
+    .dec-card{
+      grid-area: dec !important;
+      margin: 4px !important;
+      max-width: none !important;
+      padding: 8px !important;
+      font-size: 9px !important;
+      align-self: start !important;
+    }
+    .dec-card *{ font-size: inherit !important; }
+    .dec-card .dec-eyebrow{ font-size: 7px !important; margin-bottom: 4px !important; }
+    .dec-card .dec-title, .dec-card h3{ font-size: 11px !important; line-height: 1.2 !important; margin-bottom: 6px !important; }
+    .dec-card .dec-body, .dec-card p{ font-size: 9px !important; line-height: 1.3 !important; }
+    .dec-card .dec-meta, .dec-card .dec-stats{ font-size: 7px !important; margin-top: 4px !important; }
+    .chat-panel{ grid-area: chat !important; border-left: none !important; border-top: 1px solid var(--line) !important; }
 
-    /* Force dim agents to be visible (subtle) */
+    /* Flow steps stacked vertically as pills in narrow left column */
+    .flow-head{ display: none !important; }
+    .flow-steps{
+      flex-direction: column !important;
+      gap: 4px !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 0 !important;
+      max-height: 344px !important;
+    }
+    .flow-step{
+      flex: 0 0 auto !important;
+      min-width: auto !important;
+      padding: 4px 6px !important;
+      font-size: 8px !important;
+      border-radius: 4px !important;
+    }
+    .flow-step .flow-step-num{ font-size: 8px !important; margin-bottom: 0 !important; }
+    .flow-step .flow-step-title{ font-size: 8px !important; line-height: 1.1 !important; }
+    .flow-step .flow-step-time{ display: none !important; }
+    .flow-step .flow-step-body{ display: none !important; }
+    .flow-step.active .flow-step-body{ display: none !important; }
+    .flow-step + .flow-step::before{ display: none !important; }
+
+    .replay-btn{ display: none !important; }
+    .phase-bar{ display: none !important; }
+
+    /* Agent network: compact 4-tier inside center column */
     .agent.dim{ opacity: 0.7 !important; }
-
-    /* Tiny robots and labels */
-    .agent .agent-bot{ width: 30px !important; height: 40px !important; }
-    .agent-halo{ width: 30px !important; height: 30px !important; }
+    .agent .agent-bot{ width: 26px !important; height: 34px !important; }
+    .agent-halo{ width: 26px !important; height: 26px !important; }
     .agent .agent-label{
       font-size: 6px !important;
       line-height: 1 !important;
       margin-top: 2px !important;
-      max-width: 52px !important;
+      max-width: 44px !important;
       white-space: normal !important;
       word-break: break-word !important;
       letter-spacing: 0 !important;
     }
     .agent .agent-label br{ display: none !important; }
 
-    /* Tier labels — tiny, top-left of each row */
-    .tier-label{
-      font-size: 6px !important;
-      left: 4px !important;
-      letter-spacing: 0.04em !important;
-    }
-    .agents .tier-label:nth-of-type(1){ top: 4px !important; }
-    .agents .tier-label:nth-of-type(2){ top: 84px !important; }
-    .agents .tier-label:nth-of-type(3){ top: 168px !important; }
-    .agents .tier-label:nth-of-type(4){ top: 252px !important; }
+    .tier-label{ display: none !important; }
 
-    /* Vertical positions — 4 tiers stacked, 80px apart */
-    #ag-cmd{ top: 32px !important; }
-    #ag-ppo, #ag-imo{ top: 112px !important; }
-    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 196px !important; }
-    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 282px !important; }
+    /* Agents centered within the 52% middle column */
+    #ag-cmd{ top: 30px !important; left: 50% !important; }
+    #ag-ppo, #ag-imo{ top: 110px !important; }
+    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 195px !important; }
+    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 280px !important; }
 
-    /* Horizontal positions */
     #ag-ppo{ left: 28% !important; }
     #ag-imo{ left: 72% !important; }
 
@@ -2691,6 +2725,9 @@
     #ag-wba{ left: 90% !important; }
 
     .agents-svg{ height: 100% !important; }
+
+    .footer-top{ grid-template-columns: 1fr 1fr; }
+    .bleed-caption{ left: 20px; bottom: 20px; }
   }
 </style>
 </head>
