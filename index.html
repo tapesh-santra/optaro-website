@@ -2623,7 +2623,7 @@
     /* ── Mobile 3-column overlay layout ── */
     .stage{
       display: grid !important;
-      grid-template-columns: 24% 52% 24% !important;
+      grid-template-columns: 20% 48% 32% !important;
       grid-template-rows: 360px auto !important;
       grid-template-areas:
         "flow agents dec"
@@ -2725,6 +2725,19 @@
     #ag-wba{ left: 90% !important; }
 
     .agents-svg{ height: 100% !important; }
+
+    /* Chat action buttons: wrap so DEFER doesn't get cut off */
+    .cmsg-actions{
+      flex-wrap: wrap !important;
+      gap: 4px !important;
+    }
+    .cmsg-btn{
+      font-size: 8px !important;
+      padding: 6px 8px !important;
+      letter-spacing: 0.05em !important;
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+    }
 
     .footer-top{ grid-template-columns: 1fr 1fr; }
     .bleed-caption{ left: 20px; bottom: 20px; }
