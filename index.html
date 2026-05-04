@@ -2620,15 +2620,16 @@
     .value-tiles{ grid-template-columns: 1fr; }
     .value-tile + .value-tile{ border-left: none; border-top: 1px solid var(--line); }
     .value-tile{ padding: 24px 20px; }
-    /* ── Mobile 3-column overlay layout ── */
+    /* ── Mobile 2-column overlay layout (pyramid + rec card top-right) ── */
     .stage{
       display: grid !important;
-      grid-template-columns: 20% 48% 32% !important;
+      grid-template-columns: 20% 80% !important;
       grid-template-rows: 360px auto !important;
       grid-template-areas:
-        "flow agents dec"
-        "chat chat chat" !important;
+        "flow agents"
+        "chat chat" !important;
       min-height: auto !important;
+      position: relative !important;
     }
     .flow{
       grid-area: flow !important;
@@ -2645,19 +2646,25 @@
       overflow: hidden !important;
       position: relative !important;
     }
+    /* Rec card overlays top-right corner of stage */
     .dec-card{
-      grid-area: dec !important;
-      margin: 4px !important;
-      max-width: none !important;
-      padding: 8px !important;
-      font-size: 9px !important;
-      align-self: start !important;
+      position: absolute !important;
+      top: 4px !important;
+      right: 4px !important;
+      width: 32% !important;
+      max-width: 130px !important;
+      margin: 0 !important;
+      padding: 6px 8px !important;
+      font-size: 8px !important;
+      z-index: 5 !important;
+      max-height: 140px !important;
+      overflow: hidden !important;
     }
     .dec-card *{ font-size: inherit !important; }
-    .dec-card .dec-eyebrow{ font-size: 7px !important; margin-bottom: 4px !important; }
-    .dec-card .dec-title, .dec-card h3{ font-size: 11px !important; line-height: 1.2 !important; margin-bottom: 6px !important; }
-    .dec-card .dec-body, .dec-card p{ font-size: 9px !important; line-height: 1.3 !important; }
-    .dec-card .dec-meta, .dec-card .dec-stats{ font-size: 7px !important; margin-top: 4px !important; }
+    .dec-card .dec-eyebrow{ font-size: 7px !important; margin-bottom: 3px !important; letter-spacing: 0.05em !important; line-height: 1.1 !important; }
+    .dec-card .dec-title, .dec-card h3{ font-size: 10px !important; line-height: 1.15 !important; margin-bottom: 4px !important; }
+    .dec-card .dec-body, .dec-card p{ font-size: 8px !important; line-height: 1.25 !important; }
+    .dec-card .dec-meta, .dec-card .dec-stats{ display: none !important; }
     .chat-panel{ grid-area: chat !important; border-left: none !important; border-top: 1px solid var(--line) !important; }
 
     /* Flow steps stacked vertically as pills in narrow left column */
@@ -2704,25 +2711,23 @@
 
     .tier-label{ display: none !important; }
 
-    /* Agents centered within the 52% middle column */
-    #ag-cmd{ top: 30px !important; left: 50% !important; }
-    #ag-ppo, #ag-imo{ top: 110px !important; }
-    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 195px !important; }
-    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 280px !important; }
-
-    #ag-ppo{ left: 28% !important; }
-    #ag-imo{ left: 72% !important; }
-
-    #ag-dss{ left: 14% !important; }
-    #ag-srb{ left: 38% !important; }
-    #ag-exp{ left: 62% !important; }
-    #ag-prs{ left: 86% !important; }
-
-    #ag-tlt{ left: 10% !important; }
-    #ag-pri{ left: 30% !important; }
-    #ag-isc{ left: 50% !important; }
-    #ag-sho{ left: 70% !important; }
-    #ag-wba{ left: 90% !important; }
+    /* Pyramid layout: narrower top (clears rec card), wider bottom */
+    /* Top row: CMD slightly left of center to leave rec card air */
+    #ag-cmd{ top: 30px !important; left: 35% !important; }
+    /* Orchestrators: clustered left of rec card zone (rec card occupies right ~45% top) */
+    #ag-ppo{ top: 110px !important; left: 18% !important; }
+    #ag-imo{ top: 110px !important; left: 50% !important; }
+    /* Super agents: spread wider, below rec card */
+    #ag-dss{ top: 195px !important; left: 10% !important; }
+    #ag-srb{ top: 195px !important; left: 32% !important; }
+    #ag-exp{ top: 195px !important; left: 56% !important; }
+    #ag-prs{ top: 195px !important; left: 80% !important; }
+    /* Utility: full width pyramid base */
+    #ag-tlt{ top: 282px !important; left: 8% !important; }
+    #ag-pri{ top: 282px !important; left: 28% !important; }
+    #ag-isc{ top: 282px !important; left: 48% !important; }
+    #ag-sho{ top: 282px !important; left: 68% !important; }
+    #ag-wba{ top: 282px !important; left: 90% !important; }
 
     .agents-svg{ height: 100% !important; }
 
