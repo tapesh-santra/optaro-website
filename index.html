@@ -2632,62 +2632,94 @@
     .bleed-caption{ left: 20px; bottom: 20px; }
 
     /* ── Agent network: ultra-compact mobile layout ── */
+    /* Override absolute positioning — let agents flow as a CSS grid by tier */
     .agents{
-      padding-top: 18px !important;
-      padding-bottom: 8px !important;
+      display: grid !important;
+      grid-template-rows: 22px 78px 78px 78px 78px !important;
+      grid-template-columns: 1fr !important;
+      padding: 0 !important;
       min-height: 360px !important;
+      max-height: 360px !important;
+      position: relative !important;
       overflow: hidden !important;
     }
 
-    /* Robots — small, fixed size */
-    .agent .agent-bot{ width: 32px !important; height: 42px !important; }
-    .agent-halo{ width: 32px !important; height: 32px !important; }
+    /* Hide tier labels (we'll add row backgrounds instead) */
+    .tier-label{ display: none !important; }
 
-    /* Labels — short codes only, single line */
+    /* Reset all agents to participate in flex rows */
+    .agent{
+      position: static !important;
+      transform: none !important;
+    }
+
+    /* Build tier rows using ::before pseudo via wrapping — instead, use absolute with flex per row */
+    /* Easier: place each agent in its row with grid-row + flex within row */
+    #ag-cmd{ grid-row: 2 !important; justify-self: center !important; }
+
+    /* Orchestrators — split row into 2 cols */
+    #ag-ppo, #ag-imo{
+      grid-row: 3 !important;
+      position: absolute !important;
+      top: 100px !important;
+    }
+    #ag-ppo{ left: 28% !important; transform: translateX(-50%) !important; }
+    #ag-imo{ left: 72% !important; transform: translateX(-50%) !important; }
+
+    /* Super agents — 4 across */
+    #ag-dss, #ag-srb, #ag-exp, #ag-prs{
+      grid-row: 4 !important;
+      position: absolute !important;
+      top: 178px !important;
+    }
+    #ag-dss{ left: 14% !important; transform: translateX(-50%) !important; }
+    #ag-srb{ left: 38% !important; transform: translateX(-50%) !important; }
+    #ag-exp{ left: 62% !important; transform: translateX(-50%) !important; }
+    #ag-prs{ left: 86% !important; transform: translateX(-50%) !important; }
+
+    /* Utility — 5 across */
+    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{
+      grid-row: 5 !important;
+      position: absolute !important;
+      top: 256px !important;
+    }
+    #ag-tlt{ left: 10% !important; transform: translateX(-50%) !important; }
+    #ag-pri{ left: 30% !important; transform: translateX(-50%) !important; }
+    #ag-isc{ left: 50% !important; transform: translateX(-50%) !important; }
+    #ag-sho{ left: 70% !important; transform: translateX(-50%) !important; }
+    #ag-wba{ left: 90% !important; transform: translateX(-50%) !important; }
+
+    /* Command stays absolute too for consistency */
+    #ag-cmd{
+      position: absolute !important;
+      top: 22px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+    }
+
+    /* Tiny robots and labels */
+    .agent .agent-bot{ width: 30px !important; height: 40px !important; }
+    .agent-halo{ width: 30px !important; height: 30px !important; }
     .agent .agent-label{
       font-size: 6px !important;
       line-height: 1 !important;
-      margin-top: 1px !important;
-      max-width: 56px !important;
+      margin-top: 2px !important;
+      max-width: 52px !important;
       white-space: normal !important;
       word-break: break-word !important;
       letter-spacing: 0 !important;
     }
     .agent .agent-label br{ display: none !important; }
 
-    /* Tier labels — tiny, top-left of each row */
-    .tier-label{
-      font-size: 6px !important;
-      left: 4px !important;
-      letter-spacing: 0.04em !important;
+    /* Force dim agents to be visible (subtle) */
+    .agent.dim{ opacity: 0.7 !important; }
+
+    .agents-svg{
+      position: absolute !important;
+      inset: 0 !important;
+      height: 100% !important;
+      width: 100% !important;
     }
-    .agents .tier-label:nth-of-type(1){ top: 4px !important; }
-    .agents .tier-label:nth-of-type(2){ top: 84px !important; }
-    .agents .tier-label:nth-of-type(3){ top: 168px !important; }
-    .agents .tier-label:nth-of-type(4){ top: 252px !important; }
-
-    /* Vertical: 4 tiers stacked tightly, 80px apart */
-    #ag-cmd{ top: 32px !important; }
-    #ag-ppo, #ag-imo{ top: 112px !important; }
-    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 196px !important; }
-    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 282px !important; }
-
-    /* Horizontal positions */
-    #ag-ppo{ left: 28% !important; }
-    #ag-imo{ left: 72% !important; }
-
-    #ag-dss{ left: 14% !important; }
-    #ag-srb{ left: 38% !important; }
-    #ag-exp{ left: 62% !important; }
-    #ag-prs{ left: 86% !important; }
-
-    #ag-tlt{ left: 10% !important; }
-    #ag-pri{ left: 30% !important; }
-    #ag-isc{ left: 50% !important; }
-    #ag-sho{ left: 70% !important; }
-    #ag-wba{ left: 90% !important; }
-
-    .agents-svg{ height: 100% !important; }
   }
 </style>
 </head>
