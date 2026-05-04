@@ -2523,8 +2523,9 @@
   }
   .mega-logo-type{
     font-weight: 900;
-    /* Calc ensures text always fits viewport width; capped on huge screens */
-    font-size: min(380px, calc((100vw - 32px) / 3.5));
+    /* Width/font ratio ~6 because italic 'A' in Instrument Serif is wide.
+       Formula guarantees text fits viewport with margin on every screen. */
+    font-size: min(420px, calc((100vw - 48px) / 6));
     line-height: 0.82;
     letter-spacing: -0.06em;
     white-space: nowrap;
@@ -2532,7 +2533,7 @@
   }
   @media (min-width: 720px){
     .mega-logo{ padding: 48px 40px 0; }
-    .mega-logo-type{ font-size: min(420px, calc((100vw - 80px) / 3.5)); }
+    .mega-logo-type{ font-size: min(420px, calc((100vw - 96px) / 6)); }
   }
   .mega-logo-type em{
     font-family: 'Instrument Serif', serif;
