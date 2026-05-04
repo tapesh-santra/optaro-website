@@ -2654,10 +2654,11 @@
       width: 48% !important;
       max-width: 200px !important;
       margin: 0 !important;
-      padding: 8px 10px !important;
+      padding: 8px 10px 6px !important;
       z-index: 5 !important;
-      max-height: 180px !important;
-      overflow: hidden !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
     }
     /* Header row: hide timestamp on mobile (it overlapped DECISION text) */
     .dec-card-label{
@@ -2686,12 +2687,7 @@
       margin-top: 4px !important;
     }
     .dec-card-kv .k, .dec-card-kv .v{ font-size: 6px !important; line-height: 1.3 !important; }
-    .dec-card-status{
-      font-size: 6px !important;
-      margin-top: 4px !important;
-      padding-top: 4px !important;
-      letter-spacing: 0.05em !important;
-    }
+    .dec-card-status{ display: none !important; }
     .chat-panel{ grid-area: chat !important; border-left: none !important; border-top: 1px solid var(--line) !important; }
 
     /* Flow steps stacked vertically as pills in narrow left column */
