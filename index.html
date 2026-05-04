@@ -2646,25 +2646,52 @@
       overflow: hidden !important;
       position: relative !important;
     }
-    /* Rec card overlays top-right corner of stage */
+    /* Rec card overlays top-right corner of stage, stretched left ~48% wide */
     .dec-card{
       position: absolute !important;
       top: 4px !important;
       right: 4px !important;
-      width: 32% !important;
-      max-width: 130px !important;
+      width: 48% !important;
+      max-width: 200px !important;
       margin: 0 !important;
-      padding: 6px 8px !important;
-      font-size: 8px !important;
+      padding: 8px 10px !important;
       z-index: 5 !important;
-      max-height: 140px !important;
+      max-height: 180px !important;
       overflow: hidden !important;
     }
-    .dec-card *{ font-size: inherit !important; }
-    .dec-card .dec-eyebrow{ font-size: 7px !important; margin-bottom: 3px !important; letter-spacing: 0.05em !important; line-height: 1.1 !important; }
-    .dec-card .dec-title, .dec-card h3{ font-size: 10px !important; line-height: 1.15 !important; margin-bottom: 4px !important; }
-    .dec-card .dec-body, .dec-card p{ font-size: 8px !important; line-height: 1.25 !important; }
-    .dec-card .dec-meta, .dec-card .dec-stats{ display: none !important; }
+    /* Header row: hide timestamp on mobile (it overlapped DECISION text) */
+    .dec-card-label{
+      font-size: 7px !important;
+      letter-spacing: 0.08em !important;
+      margin-bottom: 4px !important;
+    }
+    .dec-card-label #decTime{ display: none !important; }
+    .dec-card-title{
+      font-size: 10px !important;
+      line-height: 1.2 !important;
+      margin-bottom: 4px !important;
+    }
+    .dec-card-desc{
+      font-size: 7px !important;
+      line-height: 1.3 !important;
+      margin-bottom: 6px !important;
+    }
+    .dec-card-kv{
+      grid-template-columns: 1fr auto !important;
+      row-gap: 1px !important;
+      column-gap: 6px !important;
+      font-size: 6px !important;
+      letter-spacing: 0.04em !important;
+      padding-top: 4px !important;
+      margin-top: 4px !important;
+    }
+    .dec-card-kv .k, .dec-card-kv .v{ font-size: 6px !important; line-height: 1.3 !important; }
+    .dec-card-status{
+      font-size: 6px !important;
+      margin-top: 4px !important;
+      padding-top: 4px !important;
+      letter-spacing: 0.05em !important;
+    }
     .chat-panel{ grid-area: chat !important; border-left: none !important; border-top: 1px solid var(--line) !important; }
 
     /* Flow steps stacked vertically as pills in narrow left column */
@@ -2711,23 +2738,24 @@
 
     .tier-label{ display: none !important; }
 
-    /* Pyramid layout: narrower top (clears rec card), wider bottom */
-    /* Top row: CMD slightly left of center to leave rec card air */
-    #ag-cmd{ top: 30px !important; left: 35% !important; }
-    /* Orchestrators: clustered left of rec card zone (rec card occupies right ~45% top) */
-    #ag-ppo{ top: 110px !important; left: 18% !important; }
-    #ag-imo{ top: 110px !important; left: 50% !important; }
-    /* Super agents: spread wider, below rec card */
-    #ag-dss{ top: 195px !important; left: 10% !important; }
-    #ag-srb{ top: 195px !important; left: 32% !important; }
-    #ag-exp{ top: 195px !important; left: 56% !important; }
-    #ag-prs{ top: 195px !important; left: 80% !important; }
+    /* Pyramid layout: top half pushed LEFT (rec card occupies top-right ~50%),
+       bottom half spreads full width (below rec card vertically) */
+    /* Top row: CMD pushed left to clear wider rec card */
+    #ag-cmd{ top: 30px !important; left: 22% !important; }
+    /* Orchestrators: clustered on left side */
+    #ag-ppo{ top: 110px !important; left: 12% !important; }
+    #ag-imo{ top: 110px !important; left: 36% !important; }
+    /* Super agents: full width spread (below rec card vertically) */
+    #ag-dss{ top: 200px !important; left: 10% !important; }
+    #ag-srb{ top: 200px !important; left: 32% !important; }
+    #ag-exp{ top: 200px !important; left: 56% !important; }
+    #ag-prs{ top: 200px !important; left: 80% !important; }
     /* Utility: full width pyramid base */
-    #ag-tlt{ top: 282px !important; left: 8% !important; }
-    #ag-pri{ top: 282px !important; left: 28% !important; }
-    #ag-isc{ top: 282px !important; left: 48% !important; }
-    #ag-sho{ top: 282px !important; left: 68% !important; }
-    #ag-wba{ top: 282px !important; left: 90% !important; }
+    #ag-tlt{ top: 285px !important; left: 8% !important; }
+    #ag-pri{ top: 285px !important; left: 28% !important; }
+    #ag-isc{ top: 285px !important; left: 48% !important; }
+    #ag-sho{ top: 285px !important; left: 68% !important; }
+    #ag-wba{ top: 285px !important; left: 90% !important; }
 
     .agents-svg{ height: 100% !important; }
 
