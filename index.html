@@ -3788,9 +3788,14 @@
       else if (i === idx) { c.classList.add('active'); c.classList.remove('done', 'waiting'); }
     });
     document.getElementById('clock').textContent = step.time;
-    // Keep the active card in view on the horizontal flow
+    // Keep the active card in view — scroll the horizontal flow container only
+    // (NOT scrollIntoView, which would also scroll the page vertically)
     const active = document.querySelector('#flow .flow-step.active');
-    if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    const scroller = document.querySelector('#flow .flow-steps');
+    if (active && scroller) {
+      const targetLeft = active.offsetLeft - (scroller.clientWidth / 2) + (active.offsetWidth / 2);
+      scroller.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    }
   }
 
   function addDivider() {
