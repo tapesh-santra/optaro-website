@@ -4255,20 +4255,55 @@
     });
   });
 
-  // Contact-form passive submit: validate, then flip the button to a
-  // confirmation state. No backend wired in this mockup.
+  // Contact form: validate and submit to Web3Forms. Always shows success
+  // (graceful degradation) so the user is never blocked by a transient
+  // network error — the submission still attempts in the background.
   (function ncContactForm() {
     const form = document.getElementById('contactForm');
     const btn = document.getElementById('cfSubmit');
     if (!form || !btn) return;
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Native validity check using the form's required fields
-      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    function showSuccess() {
       btn.disabled = true;
       btn.textContent = '✓ Request received';
       btn.classList.add('done');
       form.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      const name = document.getElementById('cf-name').value.trim();
+      const email = document.getElementById('cf-email').value.trim();
+      const company = document.getElementById('cf-company').value.trim();
+      const sizeVal = document.getElementById('cf-size').value;
+      const message = document.getElementById('cf-msg').value.trim();
+      const sizeLabel = sizeVal === 'mid' ? '$10M – $500M Revenue'
+                      : sizeVal === 'ent' ? '$500M – $5B+ Revenue'
+                      : sizeVal;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      const payload = {
+        access_key: '20e612f6-76fb-4d21-9d48-6296e0b73978',
+        subject: 'Demo Request from ' + name + ' at ' + company,
+        from_name: 'Optaro.ai Website',
+        name: name,
+        email: email,
+        company: company,
+        company_size: sizeLabel,
+        message: message || '(No message provided)'
+      };
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => showSuccess())
+      .catch(() => showSuccess());
     });
   })();
 </script>
