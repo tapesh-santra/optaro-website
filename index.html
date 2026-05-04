@@ -2517,15 +2517,22 @@
 
   /* ---------- Mega logo + Footer ---------- */
   .mega-logo{
-    padding: 48px 40px 0;
+    padding: 48px 16px 0;
     border-top: 1px solid var(--line);
+    overflow: hidden;
   }
   .mega-logo-type{
     font-weight: 900;
-    font-size: clamp(120px, 26vw, 420px);
+    /* Calc ensures text always fits viewport width; capped on huge screens */
+    font-size: min(380px, calc((100vw - 32px) / 3.5));
     line-height: 0.82;
     letter-spacing: -0.06em;
-    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+  }
+  @media (min-width: 720px){
+    .mega-logo{ padding: 48px 40px 0; }
+    .mega-logo-type{ font-size: min(420px, calc((100vw - 80px) / 3.5)); }
   }
   .mega-logo-type em{
     font-family: 'Instrument Serif', serif;
