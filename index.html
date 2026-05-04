@@ -2631,57 +2631,63 @@
     .footer-top{ grid-template-columns: 1fr 1fr; }
     .bleed-caption{ left: 20px; bottom: 20px; }
 
-    /* ── Agent network: re-layout for mobile ── */
-    .agents{ padding-top: 36px !important; padding-bottom: 12px !important; }
+    /* ── Agent network: ultra-compact mobile layout ── */
+    .agents{
+      padding-top: 18px !important;
+      padding-bottom: 8px !important;
+      min-height: 360px !important;
+      overflow: hidden !important;
+    }
 
-    .agent .agent-bot{ width: 40px !important; height: auto !important; }
-    .agent-halo{ width: 40px !important; height: 40px !important; }
+    /* Robots — small, fixed size */
+    .agent .agent-bot{ width: 32px !important; height: 42px !important; }
+    .agent-halo{ width: 32px !important; height: 32px !important; }
 
-    /* Compact labels: hide on bots, replaced by chip badge already inside SVG */
+    /* Labels — short codes only, single line */
     .agent .agent-label{
-      font-size: 7px !important;
-      line-height: 1.05 !important;
-      margin-top: 2px !important;
-      max-width: 70px !important;
+      font-size: 6px !important;
+      line-height: 1 !important;
+      margin-top: 1px !important;
+      max-width: 56px !important;
       white-space: normal !important;
       word-break: break-word !important;
+      letter-spacing: 0 !important;
     }
     .agent .agent-label br{ display: none !important; }
 
-    /* Tier labels — small caps in left margin */
+    /* Tier labels — tiny, top-left of each row */
     .tier-label{
-      font-size: 7px !important;
+      font-size: 6px !important;
       left: 4px !important;
       letter-spacing: 0.04em !important;
     }
     .agents .tier-label:nth-of-type(1){ top: 4px !important; }
-    .agents .tier-label:nth-of-type(2){ top: 96px !important; }
-    .agents .tier-label:nth-of-type(3){ top: 196px !important; }
-    .agents .tier-label:nth-of-type(4){ top: 296px !important; }
+    .agents .tier-label:nth-of-type(2){ top: 84px !important; }
+    .agents .tier-label:nth-of-type(3){ top: 168px !important; }
+    .agents .tier-label:nth-of-type(4){ top: 252px !important; }
 
-    /* Agent vertical positions — tighter */
-    #ag-cmd{ top: 38px !important; }
-    #ag-ppo, #ag-imo{ top: 130px !important; }
-    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 230px !important; }
-    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 330px !important; }
+    /* Vertical: 4 tiers stacked tightly, 80px apart */
+    #ag-cmd{ top: 32px !important; }
+    #ag-ppo, #ag-imo{ top: 112px !important; }
+    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 196px !important; }
+    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 282px !important; }
 
-    /* Horizontal: keep all agents within container with padding for labels */
+    /* Horizontal positions */
     #ag-ppo{ left: 28% !important; }
     #ag-imo{ left: 72% !important; }
 
-    #ag-dss{ left: 16% !important; }
+    #ag-dss{ left: 14% !important; }
     #ag-srb{ left: 38% !important; }
-    #ag-exp{ left: 60% !important; }
-    #ag-prs{ left: 84% !important; }
+    #ag-exp{ left: 62% !important; }
+    #ag-prs{ left: 86% !important; }
 
-    #ag-tlt{ left: 12% !important; }
+    #ag-tlt{ left: 10% !important; }
     #ag-pri{ left: 30% !important; }
     #ag-isc{ left: 50% !important; }
     #ag-sho{ left: 70% !important; }
-    #ag-wba{ left: 88% !important; }
+    #ag-wba{ left: 90% !important; }
 
     .agents-svg{ height: 100% !important; }
-    .agents{ min-height: 400px !important; }
   }
 </style>
 </head>
