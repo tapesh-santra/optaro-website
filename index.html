@@ -2621,7 +2621,7 @@
     .value-tile + .value-tile{ border-left: none; border-top: 1px solid var(--line); }
     .value-tile{ padding: 24px 20px; }
     .stage{ grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; min-height: auto; }
-    .agents{ grid-column: 1; grid-row: 1; min-height: 520px; }
+    .agents{ grid-column: 1; grid-row: 1; min-height: 460px; overflow: hidden; }
     .dec-card{ grid-column: 1; grid-row: 2; margin: 20px; max-width: none; justify-self: stretch; }
     .flow{ grid-column: 1; grid-row: 3; padding: 22px 18px 28px; }
     .flow-steps{ gap: 18px; }
@@ -2630,6 +2630,40 @@
     .replay-btn{ top: 12px; right: 12px; }
     .footer-top{ grid-template-columns: 1fr 1fr; }
     .bleed-caption{ left: 20px; bottom: 20px; }
+
+    /* ── Agent network: re-layout for mobile ── */
+    .agent .agent-bot{ width: 52px !important; height: auto !important; }
+    .agent .agent-label{ font-size: 9px !important; line-height: 1.1 !important; margin-top: 2px !important; }
+    .agent-halo{ width: 52px !important; height: 52px !important; }
+    .tier-label{ font-size: 8px !important; left: 6px !important; }
+
+    /* Tier label positions tightened */
+    .agents .tier-label:nth-of-type(1){ top: 8px !important; }
+    .agents .tier-label:nth-of-type(2){ top: 110px !important; }
+    .agents .tier-label:nth-of-type(3){ top: 220px !important; }
+    .agents .tier-label:nth-of-type(4){ top: 330px !important; }
+
+    /* Agent vertical positions */
+    #ag-cmd{ top: 50px !important; }
+    #ag-ppo, #ag-imo{ top: 150px !important; }
+    #ag-dss, #ag-srb, #ag-exp, #ag-prs{ top: 260px !important; }
+    #ag-tlt, #ag-pri, #ag-isc, #ag-sho, #ag-wba{ top: 380px !important; }
+
+    /* Super agents (4 across) — wider spread */
+    #ag-dss{ left: 14% !important; }
+    #ag-srb{ left: 38% !important; }
+    #ag-exp{ left: 62% !important; }
+    #ag-prs{ left: 86% !important; }
+
+    /* Utility agents (5 across) — full width spread */
+    #ag-tlt{ left: 10% !important; }
+    #ag-pri{ left: 30% !important; }
+    #ag-isc{ left: 50% !important; }
+    #ag-sho{ left: 70% !important; }
+    #ag-wba{ left: 90% !important; }
+
+    /* Connection SVG reuses viewBox; preserveAspectRatio: none stretches it */
+    .agents-svg{ height: 100% !important; }
   }
 </style>
 </head>
