@@ -3677,33 +3677,34 @@
 
       <div class="row">
         <div class="field">
-          <label for="cf-name">Name</label>
-          <input id="cf-name" name="name" type="text" required autocomplete="name"/>
+          <label for="cf-first">First Name</label>
+          <input id="cf-first" name="first_name" type="text" autocomplete="given-name"/>
         </div>
         <div class="field">
-          <label for="cf-email">Work email</label>
-          <input id="cf-email" name="email" type="email" required autocomplete="email"/>
+          <label for="cf-last">Last Name</label>
+          <input id="cf-last" name="last_name" type="text" autocomplete="family-name"/>
         </div>
       </div>
 
       <div class="row">
         <div class="field">
-          <label for="cf-company">Company</label>
-          <input id="cf-company" name="company" type="text" required autocomplete="organization"/>
+          <label for="cf-email">Email</label>
+          <input id="cf-email" name="email" type="email" required autocomplete="email"/>
         </div>
         <div class="field">
-          <label for="cf-size">Company size</label>
-          <select id="cf-size" name="size" required>
-            <option value="" disabled selected>Select revenue range</option>
-            <option value="mid">$10M &ndash; $500M revenue</option>
-            <option value="ent">$500M &ndash; $5B+ revenue</option>
-          </select>
+          <label for="cf-company">Company</label>
+          <input id="cf-company" name="company" type="text" required autocomplete="organization"/>
         </div>
       </div>
 
       <div class="field">
-        <label for="cf-msg">What you want to see (optional)</label>
-        <textarea id="cf-msg" name="message" placeholder="One risk. One lane. One loop &mdash; on your data."></textarea>
+        <label for="cf-title">Title</label>
+        <input id="cf-title" name="title" type="text" autocomplete="organization-title"/>
+      </div>
+
+      <div class="field">
+        <label for="cf-problem">Supply Chain Problem You're Trying To Solve</label>
+        <textarea id="cf-problem" name="message" placeholder="Briefly describe the problem you want to solve."></textarea>
       </div>
 
       <button type="submit" class="cta-form-submit" id="cfSubmit">Request a Demo</button>
@@ -4282,27 +4283,28 @@
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
-      const name = document.getElementById('cf-name').value.trim();
+      const first = document.getElementById('cf-first').value.trim();
+      const last = document.getElementById('cf-last').value.trim();
       const email = document.getElementById('cf-email').value.trim();
       const company = document.getElementById('cf-company').value.trim();
-      const sizeVal = document.getElementById('cf-size').value;
-      const message = document.getElementById('cf-msg').value.trim();
-      const sizeLabel = sizeVal === 'mid' ? '$10M – $500M Revenue'
-                      : sizeVal === 'ent' ? '$500M – $5B+ Revenue'
-                      : sizeVal;
+      const title = document.getElementById('cf-title').value.trim();
+      const problem = document.getElementById('cf-problem').value.trim();
+      const fullName = (first + ' ' + last).trim();
 
       btn.disabled = true;
       btn.textContent = 'Sending…';
 
       const payload = {
-        access_key: '20e612f6-76fb-4d21-9d48-6296e0b73978',
-        subject: 'Demo Request from ' + name + ' at ' + company,
+        access_key: 'a307bbb3-2ed2-4fc0-ba48-0c3748eeccf9',
+        subject: 'Demo Request from ' + (fullName || email) + ' at ' + company,
         from_name: 'Optaro.ai Website',
-        name: name,
+        first_name: first || '(not provided)',
+        last_name: last || '(not provided)',
+        name: fullName || '(not provided)',
         email: email,
         company: company,
-        company_size: sizeLabel,
-        message: message || '(No message provided)'
+        title: title || '(not provided)',
+        message: problem || '(No problem description provided)'
       };
 
       fetch('https://api.web3forms.com/submit', {
