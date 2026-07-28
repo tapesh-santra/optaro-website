@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Optaro — The Autonomous Supply Chain</title>
+<meta name="description" content="A pre-trained agentic platform that senses, analyzes and executes critical supply-chain actions — deployed in days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f=clash-display@500,600,700&f=general-sans@400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0F0C0A; --bg-2:#16110D; --bg-3:#1E1711;
+  --ink:#F4ECDE; --muted:#A6957F; --faint:#6B5E4E;
+  --line:#2A2119; --line-2:#3A2E22;
+  --ember:#E8935A; --ember-deep:#C97B2E; --ember-soft:#F5CC8A;
+  --jade:#5CBB8B;
+  --disp:'Clash Display','Space Grotesk',sans-serif;
+  --body:'General Sans','Inter',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --maxw:1240px; --ease:cubic-bezier(.16,.84,.44,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--body);
+  font-size:17px; line-height:1.6; font-weight:400;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+::selection{background:var(--ember);color:#160f09;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px;}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;}
+
+/* soft warm grain/glow layer */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 700px at 82% -8%, rgba(232,147,90,.14), transparent 60%),
+    radial-gradient(900px 600px at 6% 108%, rgba(201,123,46,.10), transparent 55%);}
+.layer{position:relative;z-index:1;}
+
+h1,h2,h3{font-family:var(--disp);font-weight:600;line-height:1.02;letter-spacing:-.02em;}
+
+/* ---------- accent chip / eyebrow ---------- */
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ember);}
+.live{width:7px;height:7px;border-radius:50%;background:var(--jade);position:relative;}
+.live::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--jade);opacity:.5;animation:ring 2.4s var(--ease) infinite;}
+@keyframes ring{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.9);opacity:0}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;
+  letter-spacing:.1em;text-transform:uppercase;padding:16px 24px;border-radius:2px;cursor:pointer;
+  border:1px solid transparent;transition:transform .2s var(--ease),background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease);}
+.btn-primary{background:var(--ember);color:#160f09;}
+.btn-primary:hover{background:var(--ember-soft);transform:translateY(-2px);}
+.btn-ghost{border-color:var(--line-2);color:var(--ink);}
+.btn-ghost:hover{border-color:var(--ember);color:var(--ember);}
+.btn:active{transform:translateY(0);}
+
+/* ---------- nav ---------- */
+nav.top{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+  padding:20px 40px;transition:background .4s var(--ease),border-color .4s var(--ease),padding .4s var(--ease);
+  border-bottom:1px solid transparent;}
+nav.top.scrolled{background:rgba(15,12,10,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line);padding:14px 40px;}
+nav.top .brand{font-family:var(--disp);font-weight:700;font-size:20px;letter-spacing:.02em;}
+nav.top .brand b{color:var(--ember);}
+nav.top .links{display:flex;gap:34px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
+nav.top .links a{color:var(--muted);position:relative;padding:4px 0;transition:color .2s var(--ease);}
+nav.top .links a:hover{color:var(--ink);}
+nav.top .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;}
+nav.top .burger span{width:22px;height:2px;background:var(--ink);transition:.25s var(--ease);}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;
+  padding:150px 40px 90px;max-width:var(--maxw);margin:0 auto;}
+.hero-eyebrow{margin-bottom:30px;}
+.hero h1{font-size:clamp(46px,6.4vw,92px);font-weight:600;letter-spacing:-.035em;}
+.hero h1 .verb{color:var(--ember);}
+.hero h1 .serif{font-family:var(--disp);}
+.hero-sub{font-size:clamp(17px,1.5vw,20px);color:var(--muted);max-width:44ch;margin:30px 0 40px;}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-meta{display:flex;gap:36px;margin-top:52px;flex-wrap:wrap;}
+.hero-meta .m .n{font-family:var(--disp);font-weight:600;font-size:24px;}
+.hero-meta .m .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:4px;}
+
+/* live decision card */
+.decision{background:linear-gradient(180deg,var(--bg-2),var(--bg));border:1px solid var(--line);border-radius:10px;
+  padding:22px;box-shadow:0 40px 80px -40px rgba(0,0,0,.8);position:relative;overflow:hidden;}
+.decision::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ember),transparent);}
+.decision .d-head{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-bottom:16px;border-bottom:1px solid var(--line);}
+.decision .d-lane{color:var(--ember);}
+.decision .d-status{display:flex;align-items:center;gap:8px;color:var(--jade);}
+.decision .d-body{padding:18px 0;}
+.decision .d-title{font-family:var(--disp);font-weight:600;font-size:20px;letter-spacing:-.01em;margin-bottom:8px;}
+.decision .d-desc{font-size:14px;color:var(--muted);line-height:1.55;}
+.decision .d-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:18px 0;}
+.decision .d-cell{background:var(--bg-2);padding:13px 15px;}
+.decision .d-cell .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);}
+.decision .d-cell .v{font-family:var(--disp);font-weight:600;font-size:17px;margin-top:5px;}
+.decision .d-cell .v.pos{color:var(--jade);}
+.decision .d-actions{display:flex;gap:10px;}
+.decision .d-actions .btn{flex:1;justify-content:center;padding:13px;font-size:11px;}
+.decision .d-foot{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:14px;text-align:center;}
+
+/* ---------- ticker ---------- */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;overflow:hidden;white-space:nowrap;background:var(--bg-2);}
+.ticker-track{display:inline-flex;gap:0;animation:scroll 40s linear infinite;}
+.ticker-track span{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 26px;position:relative;}
+.ticker-track span::after{content:"·";position:absolute;right:-4px;color:var(--ember);}
+.ticker-track span b{color:var(--ink);font-weight:500;}
+@keyframes scroll{to{transform:translateX(-50%);}}
+
+/* ---------- section scaffolding ---------- */
+section{position:relative;z-index:1;}
+.sec{padding:130px 0;}
+.sec-tag{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:12px;margin-bottom:26px;}
+.sec-tag::before{content:"";width:30px;height:1px;background:var(--ember);}
+.sec-tag b{color:var(--ember);font-weight:400;}
+
+/* ---------- belief (full-bleed statement) ---------- */
+.belief{padding:120px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;position:relative;}
+.belief h2{font-size:clamp(52px,10vw,150px);line-height:.94;letter-spacing:-.04em;}
+.belief h2 .b2{color:var(--ember);display:block;}
+.belief p{color:var(--muted);max-width:52ch;margin:34px auto 0;font-size:clamp(16px,1.4vw,19px);}
+
+/* ---------- scale panels ---------- */
+.scale-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px;}
+.panel{position:relative;border:1px solid var(--line);border-radius:12px;padding:44px;overflow:hidden;background:linear-gradient(180deg,var(--bg-2),transparent);transition:border-color .3s var(--ease),transform .3s var(--ease);}
+.panel:hover{border-color:var(--line-2);transform:translateY(-4px);}
+.panel .p-tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);}
+.panel .p-range{font-family:var(--disp);font-weight:600;font-size:clamp(34px,4vw,52px);letter-spacing:-.03em;margin:16px 0 20px;}
+.panel h3{font-size:23px;font-weight:600;margin-bottom:12px;}
+.panel h3 em{font-style:normal;color:var(--ember);}
+.panel p{color:var(--muted);font-size:15px;}
+.panel p em{font-style:normal;color:var(--ink);font-weight:500;}
+.panel .glow{position:absolute;right:-60px;bottom:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(232,147,90,.14),transparent 70%);}
+
+/* ---------- the loop (value chain) ---------- */
+.loop-head{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;margin-bottom:52px;}
+.loop-head h2{font-size:clamp(34px,4.4vw,58px);letter-spacing:-.03em;max-width:15ch;}
+.loop-head p{color:var(--muted);max-width:38ch;font-size:16px;}
+.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.stage{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-2);display:flex;flex-direction:column;transition:transform .3s var(--ease),border-color .3s var(--ease);}
+.stage:hover{transform:translateY(-6px);border-color:var(--line-2);}
+.stage .s-img{position:relative;height:150px;overflow:hidden;}
+.stage .s-img img{width:100%;height:130%;position:absolute;top:-15%;left:0;object-fit:cover;filter:grayscale(100%) contrast(1.05) brightness(1.15);will-change:transform;}
+.stage .s-img::after{content:"";position:absolute;inset:0;background:linear-gradient(150deg,rgba(232,147,90,.5),rgba(18,13,9,.86) 88%);mix-blend-mode:multiply;}
+.stage .s-img::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 50%,rgba(15,12,10,.72));}
+.stage .s-num{position:absolute;top:14px;left:16px;z-index:2;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ember-soft);}
+.stage .s-name{position:absolute;bottom:12px;left:16px;z-index:2;font-family:var(--disp);font-weight:600;font-size:22px;letter-spacing:.01em;}
+.stage .s-body{padding:22px 20px 24px;flex:1;}
+.stage .s-lead{font-size:14px;color:var(--muted);margin-bottom:18px;line-height:1.5;}
+.stage .s-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.stage .s-list li b{display:block;font-size:13px;font-weight:600;margin-bottom:3px;}
+.stage .s-list li span{font-size:12.5px;color:var(--faint);line-height:1.45;}
+
+/* ---------- outcomes ---------- */
+.outcomes{border-top:1px solid var(--line);}
+.out-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:52px;}
+.out{background:var(--bg);padding:48px 40px;transition:background .3s var(--ease);}
+.out:hover{background:var(--bg-2);}
+.out .o-num{font-family:var(--disp);font-weight:600;font-size:clamp(46px,5.4vw,72px);letter-spacing:-.03em;line-height:1;color:var(--ember);}
+.out .o-num .u{font-size:.32em;color:var(--muted);margin-left:8px;letter-spacing:0;}
+.out .o-name{font-size:15px;font-weight:600;margin:18px 0 8px;}
+.out .o-desc{color:var(--muted);font-size:14px;}
+
+/* ---------- command ---------- */
+.command{display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center;}
+.command h2{font-size:clamp(34px,4.2vw,54px);letter-spacing:-.03em;margin:20px 0 20px;}
+.command p{color:var(--muted);max-width:40ch;}
+.console{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 40px 90px -50px rgba(0,0,0,.9);}
+.console .c-bar{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);}
+.console .c-bar i{width:9px;height:9px;border-radius:50%;background:var(--line-2);}
+.console .c-bar .c-title{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-left:8px;}
+.console .c-body{padding:20px;}
+.console .prompt{display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:13px;padding:13px 15px;border:1px solid var(--line);border-radius:6px;margin-bottom:10px;color:var(--muted);cursor:pointer;transition:border-color .2s var(--ease),color .2s var(--ease),background .2s var(--ease);}
+.console .prompt .arrow{color:var(--ember);flex:none;}
+.console .prompt span:last-child{flex:1;min-width:0;}
+.console .prompt:hover{border-color:var(--ember);color:var(--ink);background:var(--bg-3);}
+.console .prompt.on{border-color:var(--ember-deep);color:var(--ink);background:var(--bg-3);}
+
+/* ---------- founder ---------- */
+.founder{border-top:1px solid var(--line);}
+.founder blockquote{font-family:var(--disp);font-weight:500;font-size:clamp(28px,4vw,52px);line-height:1.16;letter-spacing:-.02em;max-width:20ch;}
+.founder blockquote em{font-style:normal;color:var(--ember);}
+.founder .who{display:flex;align-items:center;gap:16px;margin-top:40px;}
+.founder .who .av{width:52px;height:52px;border-radius:50%;background:var(--bg-3);border:1px solid var(--line-2);display:grid;place-items:center;font-family:var(--mono);font-size:14px;color:var(--ember);}
+.founder .who .nm{font-weight:600;}
+.founder .who .rl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:3px;}
+
+/* ---------- CTA + form ---------- */
+.cta{border-top:1px solid var(--line);position:relative;overflow:hidden;}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start;position:relative;z-index:1;}
+.cta h2{font-size:clamp(40px,5.6vw,82px);letter-spacing:-.04em;line-height:.98;}
+.cta h2 em{font-style:normal;color:var(--ember);}
+.cta .cta-sub{color:var(--muted);margin-top:24px;max-width:34ch;}
+.form{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:34px;}
+.form .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.field{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.field input,.field textarea{font-family:var(--body);font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:6px;padding:13px 15px;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--ember);box-shadow:0 0 0 3px rgba(232,147,90,.15);}
+.field textarea{min-height:92px;resize:vertical;}
+.form .submit{width:100%;justify-content:center;margin-top:6px;}
+.form .submit.done{background:var(--jade);color:#08130c;}
+.form .consent{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:16px;line-height:1.6;letter-spacing:.04em;}
+.form .consent a{color:var(--muted);text-decoration:underline;}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:70px 0 80px;}
+.foot{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;}
+.foot .brand{font-family:var(--disp);font-weight:700;font-size:22px;}
+.foot .brand b{color:var(--ember);}
+.foot .brand p{font-family:var(--body);font-size:13px;color:var(--faint);margin-top:12px;max-width:26ch;font-weight:400;}
+.foot .cols{display:flex;gap:60px;flex-wrap:wrap;}
+.foot h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;}
+.foot a{display:block;color:var(--muted);font-size:14px;margin-bottom:11px;transition:color .2s var(--ease);}
+.foot a:hover{color:var(--ember);}
+.foot-base{margin-top:56px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+
+/* ---------- reveal (only hidden when JS is active, so no-JS still shows) ---------- */
+.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+.js .reveal.in{opacity:1;transform:none;}
+
+/* ---------- responsive ---------- */
+@media (max-width:1040px){
+  .hero{grid-template-columns:1fr;gap:48px;min-height:auto;padding:130px 40px 70px;}
+  .command{grid-template-columns:1fr;gap:36px;}
+  .cta-grid{grid-template-columns:1fr;gap:40px;}
+  .stages{grid-template-columns:1fr 1fr;}
+  .loop-head{grid-template-columns:1fr;gap:18px;}
+}
+@media (max-width:720px){
+  .wrap{padding:0 22px;}
+  nav.top,nav.top.scrolled{padding:14px 22px;}
+  nav.top .links{display:none;}
+  nav.top .burger{display:flex;}
+  .hero{padding:120px 22px 60px;}
+  .sec{padding:88px 0;}
+  .scale-grid,.out-grid,.stages{grid-template-columns:1fr;}
+  .out-grid{border-radius:12px;}
+  .form .row{grid-template-columns:1fr;}
+  .decision .d-grid{grid-template-columns:1fr 1fr;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;}
+  .reveal{opacity:1;transform:none;}
+  html{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+<div class="layer">
+
+<!-- NAV -->
+<nav class="top" id="nav">
+  <div class="brand">OPT<b>A</b>RO</div>
+  <div class="links">
+    <a href="#scale">Scale</a><a href="#loop">The Loop</a><a href="#command">Command</a><a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="btn btn-primary" style="padding:12px 18px">Request a demo</a>
+  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div>
+    <div class="eyebrow hero-eyebrow"><span class="live"></span>Pre-trained agentic supply chain · Live</div>
+    <h1>Your supply chain, <span class="serif">now</span> <span class="verb">autonomous</span>.</h1>
+    <p class="hero-sub">A pre-trained agentic platform that <strong style="color:var(--ink);font-weight:600">senses, analyzes &amp; executes</strong> critical actions in your supply chain — delivering your intended outcomes at speed, deployed in days rather than months.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary">Request a demo</a>
+      <a href="#loop" class="btn btn-ghost">See the agents →</a>
+    </div>
+    <div class="hero-meta">
+      <div class="m"><div class="n">Days</div><div class="l">To deploy, not months</div></div>
+      <div class="m"><div class="n">$10M–$5B+</div><div class="l">Revenue range served</div></div>
+      <div class="m"><div class="n">98.5%</div><div class="l">Service level held</div></div>
+    </div>
+  </div>
+
+  <!-- live decision card (real scenario) -->
+  <div class="decision reveal">
+    <div class="d-head">
+      <span class="d-lane">Lane DE-07</span>
+      <span class="d-status"><span class="live"></span>Decision · Pending</span>
+    </div>
+    <div class="d-body">
+      <div class="d-title">Reduce safety stock — 14 SKUs</div>
+      <div class="d-desc">Transport lead time observed at 5 days actual vs 7 planned, sustained over 14 shipments. Safety stock recalibrated 620 → 480 units per SKU. Service level held at 98.5%.</div>
+      <div class="d-grid">
+        <div class="d-cell"><div class="k">Working capital</div><div class="v pos">+ $142K</div></div>
+        <div class="d-cell"><div class="k">Service impact</div><div class="v">None</div></div>
+        <div class="d-cell"><div class="k">SKUs affected</div><div class="v">14</div></div>
+        <div class="d-cell"><div class="k">Target system</div><div class="v">SAP ECC</div></div>
+      </div>
+      <div class="d-actions">
+        <span class="btn btn-primary">Accept &amp; writeback</span>
+        <span class="btn btn-ghost">Modify</span>
+      </div>
+      <div class="d-foot">Cycle 36s · awaiting human approval</div>
+    </div>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="ticker">
+    <span><b>Demand Sensing</b></span><span><b>Dynamic Safety Stock</b></span><span><b>Transport Lead Time</b></span><span><b>MOQ Optimization</b></span><span><b>Expedite Avoidance</b></span><span><b>Production Sequencing</b></span><span><b>Order Orchestration</b></span><span><b>Projected Inventory</b></span><span><b>Make-vs-Buy Triggers</b></span><span><b>Supplier Lead Time</b></span>
+    <span><b>Demand Sensing</b></span><span><b>Dynamic Safety Stock</b></span><span><b>Transport Lead Time</b></span><span><b>MOQ Optimization</b></span><span><b>Expedite Avoidance</b></span><span><b>Production Sequencing</b></span><span><b>Order Orchestration</b></span><span><b>Projected Inventory</b></span><span><b>Make-vs-Buy Triggers</b></span><span><b>Supplier Lead Time</b></span>
+  </div>
+</div>
+
+<!-- BELIEF -->
+<section class="belief">
+  <div class="wrap reveal">
+    <h2>Not dashboards.<span class="b2">Decisions.</span></h2>
+    <p>Agentic AI lets the network act on the right answer — within guardrails leaders can genuinely trust. That's the line between a dashboard and a decision.</p>
+  </div>
+</section>
+
+<!-- SCALE -->
+<section class="sec" id="scale">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-tag"><b>01</b> Scale</div>
+      <h2 style="font-size:clamp(34px,4.6vw,60px);letter-spacing:-.03em;max-width:18ch">Built for complexity at every scale.</h2>
+      <p style="color:var(--muted);max-width:60ch;margin-top:20px;font-size:17px">One agentic platform — configured to your data, your ERP, your guardrails. From the mid-market floor to enterprise breadth, deployed in days rather than months.</p>
+    </div>
+    <div class="scale-grid">
+      <div class="panel reveal">
+        <div class="glow"></div>
+        <div class="p-tag">Mid-market operators</div>
+        <div class="p-range">$10M – $500M</div>
+        <h3>Enterprise-grade AI. <em>Without</em> enterprise overhead.</h3>
+        <p>Our <em>fit-to-standard</em> approach matures your supply chain operations at speed as your business scales up.</p>
+      </div>
+      <div class="panel reveal">
+        <div class="glow"></div>
+        <div class="p-tag">Enterprise operators</div>
+        <div class="p-range">$500M – $5B+</div>
+        <h3>Complexity, <em>handled</em>.</h3>
+        <p>Optimize your enterprise ecosystem with agentic solutions that <em>replace</em> manual work and larger enterprise-grade platforms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE LOOP -->
+<section class="sec" id="loop">
+  <div class="wrap">
+    <div class="loop-head reveal">
+      <div>
+        <div class="sec-tag"><b>02</b> The Loop</div>
+        <h2>Across every phase of the value chain.</h2>
+      </div>
+      <p>Your agentic supply chain team at work — freeing your human team to make critical decisions and build key relationships.</p>
+    </div>
+    <div class="stages">
+      <div class="stage reveal">
+        <div class="s-img"><img data-parallax="0.1" src="https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=70" alt="Sourcing" onerror="this.closest('.s-img').style.background='var(--bg-3)'"><span class="s-num">01</span><span class="s-name">Source</span></div>
+        <div class="s-body">
+          <div class="s-lead">Right materials. Right place. Right time.</div>
+          <ul class="s-list">
+            <li><b>MOQ Optimization</b><span>Right-sized buys against vendor minimums.</span></li>
+            <li><b>Supplier Lead Time</b><span>Sense drift before it becomes a stockout.</span></li>
+            <li><b>Risk-Aware Buy Triggers</b><span>Act when the signal warrants.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="stage reveal">
+        <div class="s-img"><img data-parallax="0.1" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=70" alt="Planning" onerror="this.closest('.s-img').style.background='var(--bg-3)'"><span class="s-num">02</span><span class="s-name">Plan</span></div>
+        <div class="s-body">
+          <div class="s-lead">Forecast demand. Balance with supply.</div>
+          <ul class="s-list">
+            <li><b>Demand Sensing</b><span>Signal shifts captured before your reports.</span></li>
+            <li><b>Dynamic Safety Stock</b><span>Recalibrates as lead times move.</span></li>
+            <li><b>Projected Inventory</b><span>Stockout exposure flagged days ahead.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="stage reveal">
+        <div class="s-img"><img data-parallax="0.1" src="https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=800&q=70" alt="Making" onerror="this.closest('.s-img').style.background='var(--bg-3)'"><span class="s-num">03</span><span class="s-name">Make</span></div>
+        <div class="s-body">
+          <div class="s-lead">Production &amp; positioning — one system.</div>
+          <ul class="s-list">
+            <li><b>Production Sequencing</b><span>Aligned with live demand.</span></li>
+            <li><b>Inventory Positioning</b><span>Right SKU, right DC, right day.</span></li>
+            <li><b>Make-vs-Buy Triggers</b><span>Flex the line or outsource.</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="stage reveal">
+        <div class="s-img"><img data-parallax="0.1" src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=70" alt="Delivering" onerror="this.closest('.s-img').style.background='var(--bg-3)'"><span class="s-num">04</span><span class="s-name">Deliver</span></div>
+        <div class="s-body">
+          <div class="s-lead">Orders flow. Lanes adapt. Service holds.</div>
+          <ul class="s-list">
+            <li><b>Transport Lead Time</b><span>Every lane sensed continuously.</span></li>
+            <li><b>Expedite Avoidance</b><span>Rebalance before premium freight.</span></li>
+            <li><b>Order Orchestration</b><span>Promise dates that hold.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section class="sec outcomes">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-tag"><b>03</b> Value</div>
+      <h2 style="font-size:clamp(34px,4.6vw,60px);letter-spacing:-.03em;max-width:18ch">Near-autonomous execution. Real value realized.</h2>
+    </div>
+    <div class="out-grid">
+      <div class="out reveal"><div class="o-num" data-count="1.8" data-prefix="$" data-suffix="M" data-dec="1"></div><div class="o-name">Transport lane optimization</div><div class="o-desc">Catch every drift. Recover every time. <span style="color:var(--faint)">/ per year</span></div></div>
+      <div class="out reveal"><div class="o-num"><span data-count="10" data-dec="0"></span>–<span data-count="15" data-dec="0"></span><span class="u">% released</span></div><div class="o-name">Safety stock rebalancing</div><div class="o-desc">Working capital, unfrozen.</div></div>
+      <div class="out reveal"><div class="o-num" data-count="1.4" data-prefix="+" data-suffix="%" data-dec="1"></div><div class="o-name">Revenue growth</div><div class="o-desc">Service held. Demand captured.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMAND -->
+<section class="sec" id="command">
+  <div class="wrap command">
+    <div class="reveal">
+      <div class="sec-tag"><b>04</b> Command</div>
+      <h2>One command center.</h2>
+      <p>Skip the dashboard. Pre-built prompts when you know the question — open-ended when you don't. Every answer rendered the way you need to see it.</p>
+    </div>
+    <div class="console reveal">
+      <div class="c-bar"><i></i><i></i><i></i><span class="c-title">optaro · command</span></div>
+      <div class="c-body">
+        <div class="prompt on"><span class="arrow">›</span><span>Where is working capital trapped this week?</span></div>
+        <div class="prompt"><span class="arrow">›</span><span>Which lanes are drifting from planned lead time?</span></div>
+        <div class="prompt"><span class="arrow">›</span><span>Show SKUs at stockout risk in the next 7 days</span></div>
+        <div class="prompt"><span class="arrow">›</span><span>Rebalance safety stock for Lane DE-07</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="sec founder">
+  <div class="wrap reveal">
+    <div class="sec-tag"><b>05</b> From the founder</div>
+    <blockquote>We built Optaro to be the agentic team that <em>acts</em> on it — every signal, every loop, every day.</blockquote>
+    <div class="who"><div class="av">MR</div><div><div class="nm">Mark Robinson</div><div class="rl">Founder &amp; CEO</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec cta" id="contact">
+  <div class="wrap cta-grid">
+    <div class="reveal">
+      <div class="sec-tag"><b>06</b> Contact · Optaro</div>
+      <h2>See it on <em>your</em> data.</h2>
+      <p class="cta-sub">One risk. One lane. Live. Book a personalized demo and see how Optaro agents transform your operations.</p>
+      <div class="hero-meta" style="margin-top:44px">
+        <div class="m"><div class="n" style="color:var(--ember)">36s</div><div class="l">Sense → decide → execute</div></div>
+        <div class="m"><div class="n" style="color:var(--ember)">$142K</div><div class="l">Freed in one loop</div></div>
+      </div>
+    </div>
+    <form class="form reveal" id="demoForm" novalidate>
+      <div class="row">
+        <div class="field"><label for="f-first">First name</label><input id="f-first" type="text" autocomplete="given-name"></div>
+        <div class="field"><label for="f-last">Last name</label><input id="f-last" type="text" autocomplete="family-name"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" required autocomplete="email"></div>
+        <div class="field"><label for="f-company">Company</label><input id="f-company" type="text" required autocomplete="organization"></div>
+      </div>
+      <div class="field"><label for="f-title">Title</label><input id="f-title" type="text" autocomplete="organization-title"></div>
+      <div class="field"><label for="f-problem">Supply chain problem you're trying to solve</label><textarea id="f-problem" placeholder="Briefly describe the problem you want to solve."></textarea></div>
+      <button type="submit" class="btn btn-primary submit" id="demoSubmit">Request a demo</button>
+      <p class="consent">By submitting, you consent to processing of your data as described in our <a href="privacy-policy.html">Privacy &amp; Cookie Policy</a>.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="brand">OPT<b>A</b>RO<p>The pre-trained agentic supply chain platform. Sense. Analyze. Execute.</p></div>
+      <div class="cols">
+        <div><h4>Platform</h4><a href="#command">Command Center</a><a href="#loop">The Loop</a><a href="#scale">Scale</a></div>
+        <div><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#contact">Contact</a><a href="privacy-policy.html">Privacy &amp; Cookie Policy</a></div>
+        <div><h4>Connect</h4><a href="#">LinkedIn</a><a href="mailto:marketing@optaro.ai">marketing@optaro.ai</a></div>
+      </div>
+    </div>
+    <div class="foot-base"><span>© 2026 Optaro</span><span>Sense · Analyze · Execute</span></div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  document.documentElement.classList.add('js');
+  // nav scrolled state
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>{ nav.classList.toggle('scrolled', scrollY>30); },{passive:true});
+
+  // reveal on scroll
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // count-up (once, on view)
+  function countUp(el){
+    const target=parseFloat(el.dataset.count), dec=parseInt(el.dataset.dec||'0');
+    const pre=el.dataset.prefix||'', suf=el.dataset.suffix||'';
+    if(REDUCE){ el.textContent=pre+target.toFixed(dec)+suf; return; }
+    const dur=1000, t0=performance.now();
+    function step(t){ const p=Math.min((t-t0)/dur,1); const v=(1-Math.pow(1-p,3))*target;
+      el.textContent=pre+v.toFixed(dec)+suf; if(p<1)requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  const cio=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+    e.target.querySelectorAll('[data-count]').forEach(countUp); cio.unobserve(e.target);}});},{threshold:.4});
+  document.querySelectorAll('.out').forEach(el=>cio.observe(el));
+
+  // parallax on stage images
+  (function(){
+    if(REDUCE)return;
+    const items=[...document.querySelectorAll('[data-parallax]')]; if(!items.length)return;
+    let tick=false;
+    function upd(){ const vh=innerHeight;
+      for(const el of items){ const h=el.closest('.s-img')||el.parentElement; const r=h.getBoundingClientRect();
+        if(r.bottom<-60||r.top>vh+60)continue;
+        const prog=Math.max(0,Math.min(1,(vh-r.top)/(vh+r.height)));
+        const f=parseFloat(el.dataset.parallax)||.1;
+        el.style.transform='translate3d(0,'+((prog-.5)*2*r.height*f).toFixed(1)+'px,0)'; }
+      tick=false; }
+    addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd);}},{passive:true});
+    addEventListener('resize',()=>{if(!tick){tick=true;requestAnimationFrame(upd);}},{passive:true});
+    upd();
+  })();
+
+  // mobile menu (simple: reveal links)
+  const burger=document.getElementById('burger');
+  if(burger){ burger.addEventListener('click',()=>{
+    const links=document.querySelector('nav.top .links');
+    const open=links.style.display==='flex';
+    links.style.cssText = open ? '' : 'display:flex;position:fixed;top:60px;left:0;right:0;flex-direction:column;gap:18px;padding:24px 22px;background:rgba(15,12,10,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);';
+  }); }
+
+  // demo form → Web3Forms
+  (function(){
+    const form=document.getElementById('demoForm'), btn=document.getElementById('demoSubmit'); if(!form||!btn)return;
+    const done=()=>{btn.disabled=true;btn.textContent='✓ Request received';btn.classList.add('done');form.querySelectorAll('input,textarea').forEach(el=>el.disabled=true);};
+    form.addEventListener('submit',e=>{ e.preventDefault();
+      if(!form.checkValidity()){form.reportValidity();return;}
+      const g=id=>(document.getElementById(id).value||'').trim();
+      const first=g('f-first'),last=g('f-last'),email=g('f-email'),company=g('f-company'),title=g('f-title'),problem=g('f-problem');
+      const full=(first+' '+last).trim();
+      btn.disabled=true;btn.textContent='Sending…';
+      fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({access_key:'a307bbb3-2ed2-4fc0-ba48-0c3748eeccf9',subject:'Demo Request from '+(full||email)+' at '+company,from_name:'Optaro.ai Website',
+          first_name:first||'(not provided)',last_name:last||'(not provided)',name:full||'(not provided)',email,company,title:title||'(not provided)',message:problem||'(No problem description provided)'})
+      }).then(()=>done()).catch(()=>done());
+    });
+  })();
+</script>
+</body>
+</html>

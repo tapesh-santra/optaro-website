@@ -1,0 +1,61 @@
+/* ============================================================
+   THEME · Soft — big radius, soft shadows, pill buttons, plum ink,
+   separated rounded cards. Gentle, friendly.
+   Swatch: bg #FAF6F1 · accent #C0603A
+   ============================================================ */
+[data-theme="soft"]{
+  --bg:#FAF6F1; --surface:#FFFFFF; --surface-2:#F3ECFF;
+  --ink:#2C2438; --muted:#6E6680; --faint:#A69CB4;
+  --line:#EDE6F0; --line-strong:#DCD2E4;
+  --accent:#C0603A; --accent-2:#E0996B; --on-accent:#FFFFFF; --success:#2C9A6A;
+  --radius:14px; --radius-lg:26px; --radius-pill:100px;
+  --border-w:1px; --shadow:0 14px 40px rgba(60,40,80,.09);
+  --head-ls:-.02em;
+}
+
+/* Value chain: separated rounded cards */
+[data-theme="soft"] .chain{ border:none; background:none; box-shadow:none; gap:18px; }
+[data-theme="soft"] .chain .col{ border:var(--border-w) solid var(--line); border-radius:var(--radius-lg); background:var(--surface); box-shadow:var(--shadow); }
+[data-theme="soft"] .chain .col:first-child{ border-left:var(--border-w) solid var(--line); }
+
+/* Tinted demo + roomy tinted tiles */
+[data-theme="soft"] .command .demo{ background:var(--surface-2); }
+[data-theme="soft"] .tiles{ gap:22px; }
+[data-theme="soft"] .tile{ background:var(--surface-2); }
+
+@media (max-width:900px){
+  /* keep each stacked chain card self-bordered */
+  [data-theme="soft"] .chain .col:nth-child(odd){ border-left:var(--border-w) solid var(--line); }
+}
+
+/* --- Component polish (gentle, inviting) --- */
+/* gradient primary + nav CTA */
+[data-theme="soft"] .btn-primary{ background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:var(--on-accent); border-color:transparent; }
+[data-theme="soft"] .btn-primary:hover{ filter:brightness(1.04); box-shadow:0 14px 30px -12px color-mix(in srgb, var(--accent) 55%, transparent); }
+[data-theme="soft"] nav.top .nav-cta{ background:linear-gradient(135deg, var(--accent), var(--accent-2)); }
+[data-theme="soft"] nav.top .nav-cta:hover{ filter:brightness(1.04); }
+/* section eyebrows become soft pill chips */
+[data-theme="soft"] .hero > .wrap > .kicker,
+[data-theme="soft"] .sec-head .kicker,
+[data-theme="soft"] .belief .kicker,
+[data-theme="soft"] .cta-lead .kicker,
+[data-theme="soft"] .founder .kicker{
+  background:var(--surface-2); padding:6px 14px; border-radius:100px; font-size:11px;
+}
+[data-theme="soft"] .hero > .wrap > .kicker .rule,
+[data-theme="soft"] .sec-head .kicker .rule,
+[data-theme="soft"] .belief .kicker .rule,
+[data-theme="soft"] .cta-lead .kicker .rule,
+[data-theme="soft"] .founder .kicker .rule{ display:none; }
+/* card hover bloom + lift */
+[data-theme="soft"] .tile, [data-theme="soft"] .outcome, [data-theme="soft"] .chain .col,
+[data-theme="soft"] .command .demo, [data-theme="soft"] form.demo-form{
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+[data-theme="soft"] .tile:hover, [data-theme="soft"] .outcome:hover, [data-theme="soft"] .chain .col:hover{
+  transform:translateY(-4px); box-shadow:0 24px 54px rgba(60,40,80,.15);
+}
+/* gentle warm glow behind the hero */
+[data-theme="soft"] .hero{ background:radial-gradient(900px 440px at 82% -80px, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%); }
+/* accent the outcome unit */
+[data-theme="soft"] .outcome .num .u{ color:var(--accent); }

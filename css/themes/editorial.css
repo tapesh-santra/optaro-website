@@ -1,0 +1,79 @@
+/* ============================================================
+   THEME · Editorial — Fraunces serif, centered magazine layout,
+   borderless & airy, ruled sections.
+   Swatch: bg #FBFAF6 · accent #A6431B
+   ============================================================ */
+[data-theme="editorial"]{
+  --bg:#FBFAF6; --surface:#FFFFFF; --surface-2:#F3EFE6;
+  --ink:#211C15; --muted:#6A6152; --faint:#9A9081;
+  --line:#E6E0D4; --line-strong:#D2C9B8;
+  --accent:#A6431B; --accent-2:#C67A3F; --on-accent:#FFFFFF; --success:#2C7A54;
+  --font-display:'Fraunces', Georgia, serif;
+  --head-weight:500; --head-ls:-.005em; --h1-ls:-.01em; --h1-lh:1.02;
+  --radius:4px; --radius-lg:10px; --radius-pill:4px;
+  --kicker-ff:var(--font-display); --kicker-tt:none; --kicker-ls:.02em; --kicker-style:italic;
+  --sec-pad:120px; --center:center;
+  --card-bg:transparent; --card-border:transparent;
+}
+
+/* Centered hero */
+[data-theme="editorial"] .hero .lead{ margin-left:auto; margin-right:auto; }
+[data-theme="editorial"] .hero h1{ margin-left:auto; margin-right:auto; }
+[data-theme="editorial"] .hero .cta-row,
+[data-theme="editorial"] .hero-meta{ justify-content:center; }
+
+/* Centered section heads */
+[data-theme="editorial"] .sec-head{ margin-left:auto; margin-right:auto; text-align:center; }
+[data-theme="editorial"] .sec-head .lead{ margin-left:auto; margin-right:auto; }
+[data-theme="editorial"] .sec-head .kicker{ justify-content:center; }
+
+/* Borderless ruled tiles */
+[data-theme="editorial"] .tile{ border-bottom:1px solid var(--line); border-radius:0; padding:34px 0; }
+
+/* Centered belief */
+[data-theme="editorial"] .belief{ text-align:center; }
+[data-theme="editorial"] .belief h2, [data-theme="editorial"] .belief .lead{ margin-left:auto; margin-right:auto; }
+[data-theme="editorial"] .belief .kicker{ justify-content:center; }
+
+/* Value chain: borderless columns divided by hairlines */
+[data-theme="editorial"] .chain{ border:none; border-top:1px solid var(--line); border-radius:0; }
+[data-theme="editorial"] .chain .col{ border-left:none; border-right:1px solid var(--line); }
+[data-theme="editorial"] .chain .col:last-child{ border-right:none; }
+
+/* Outcomes: ruled serif row */
+[data-theme="editorial"] .outcomes{ grid-template-columns:repeat(3,1fr); gap:0; }
+[data-theme="editorial"] .outcome{ border:none; border-top:1px solid var(--line-strong); border-radius:0; padding:26px 28px 0 0; }
+[data-theme="editorial"] .outcome .num{ font-weight:500; }
+
+/* Command: figure-style ruled demo */
+[data-theme="editorial"] .command .demo{ border:none; border-left:2px solid var(--ink); border-radius:0; padding:8px 0 8px 26px; box-shadow:none; }
+
+/* Founder: italic pull-quote */
+[data-theme="editorial"] .founder blockquote{ font-style:italic; font-weight:500; }
+[data-theme="editorial"] .founder blockquote em{ font-style:italic; }
+
+/* --- Component polish --- */
+/* italic serif accent words in display type — the editorial signature */
+[data-theme="editorial"] h1 .accent,
+[data-theme="editorial"] .belief .b2,
+[data-theme="editorial"] .cta-lead .accent{ font-style:italic; }
+/* cleaner centered kickers: drop the inline tick, let the italic label stand */
+[data-theme="editorial"] .sec-head .kicker .rule,
+[data-theme="editorial"] .belief .kicker .rule{ display:none; }
+[data-theme="editorial"] .kicker{ font-size:13px; letter-spacing:.04em; }
+/* decorative opening quote on the founder pull-quote */
+[data-theme="editorial"] .founder blockquote{ position:relative; }
+[data-theme="editorial"] .founder blockquote::before{ content:"\201C"; position:absolute; left:-.52em; top:-.34em;
+  font-family:var(--font-display); font-style:italic; font-size:2.6em; line-height:1; color:var(--accent); opacity:.4; }
+/* tiles: range warms on hover, hairline deepens */
+[data-theme="editorial"] .tile{ transition:border-color .2s var(--ease); }
+[data-theme="editorial"] .tile .range{ transition:color .2s var(--ease); }
+[data-theme="editorial"] .tile:hover{ border-bottom-color:var(--accent); }
+[data-theme="editorial"] .tile:hover .range{ color:var(--accent); }
+/* outcome unit set in italic serif accent */
+[data-theme="editorial"] .outcome .num .u{ font-style:italic; color:var(--accent-2); }
+[data-theme="editorial"] .outcome:hover{ border-top-color:var(--accent); }
+[data-theme="editorial"] .outcome{ transition:border-top-color .2s var(--ease); }
+/* chain: phase title warms on hover */
+[data-theme="editorial"] .chain .col h3{ transition:color .2s var(--ease); }
+[data-theme="editorial"] .chain .col:hover h3{ color:var(--accent); }

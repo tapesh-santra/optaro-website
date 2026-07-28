@@ -1,0 +1,51 @@
+/* ============================================================
+   THEME · Warm Premium — Space Grotesk, cream + burnt-orange,
+   asymmetric 2-column section heads, soft seamless cards.
+   Swatch: bg #F6F0E7 · accent #A64C1C
+   ============================================================ */
+[data-theme="warm-premium"]{
+  --bg:#F6F0E7; --surface:#FDFBF7; --surface-2:#F1E9DB;
+  --ink:#1B1714; --muted:#6B6058; --faint:#9C8E7D;
+  --line:#E7DDCC; --line-strong:#D8CBB6;
+  --accent:#A64C1C; --accent-2:#E8935A; --on-accent:#FDFBF7; --success:#2C7A54;
+  /* gentle premium depth */
+  --shadow:0 1px 2px rgba(27,23,20,.04), 0 12px 34px -20px rgba(27,23,20,.28);
+  --shadow-btn:0 1px 2px rgba(27,23,20,.10);
+}
+
+/* Asymmetric section head: title left · lead right */
+[data-theme="warm-premium"] .sec-head{ max-width:none; display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:end; }
+[data-theme="warm-premium"] .sec-head .kicker{ grid-column:1; }
+[data-theme="warm-premium"] .sec-head h2{ grid-column:1; }
+[data-theme="warm-premium"] .sec-head .lead{ grid-column:2; grid-row:1 / span 3; align-self:end; margin:0; padding-bottom:6px; }
+
+@media (max-width:900px){
+  [data-theme="warm-premium"] .sec-head{ grid-template-columns:1fr; gap:16px; }
+  [data-theme="warm-premium"] .sec-head .lead{ grid-column:1; grid-row:auto; }
+}
+
+/* --- Component polish --- */
+/* tactile hover on cards */
+[data-theme="warm-premium"] .tile,
+[data-theme="warm-premium"] .outcome,
+[data-theme="warm-premium"] form.demo-form,
+[data-theme="warm-premium"] .command .demo{
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+}
+[data-theme="warm-premium"] .tile:hover,
+[data-theme="warm-premium"] .outcome:hover{
+  transform:translateY(-3px);
+  box-shadow:0 2px 4px rgba(27,23,20,.05), 0 22px 44px -22px rgba(27,23,20,.34);
+  border-color:var(--line-strong);
+}
+/* seamless chain: quiet column highlight on hover */
+[data-theme="warm-premium"] .chain .col{ transition:background .2s var(--ease); }
+[data-theme="warm-premium"] .chain .col:hover{ background:var(--surface-2); }
+/* accent detailing */
+[data-theme="warm-premium"] .outcome .num .u{ color:var(--accent-2); }
+[data-theme="warm-premium"] .outcome:hover .num{ color:var(--accent); }
+/* image warms slightly on hover */
+[data-theme="warm-premium"] .chain .col-img img{ transition:filter .3s var(--ease), transform .3s var(--ease); }
+[data-theme="warm-premium"] .chain .col:hover .col-img img{ filter:saturate(.95) contrast(1.03); }
+/* primary button lift */
+[data-theme="warm-premium"] .btn-primary:hover{ box-shadow:0 8px 20px -8px color-mix(in srgb, var(--accent) 60%, transparent); }
