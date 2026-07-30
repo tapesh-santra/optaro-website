@@ -2222,69 +2222,56 @@
   }
   .founder-coda em{ color: var(--amber); font-style: italic; }
 
-  /* ---------- Scale (built for every scale) ---------- */
-  .scale{
+  /* ============ 01 / WHAT WE BUILT ============ */
+  .built{
     padding: 160px 40px 140px;
     border-bottom: 1px solid var(--line);
   }
-  .scale-head{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 28px;
-    max-width: 1100px;
-    margin-bottom: 64px;
+  .built-head{
+    max-width: 1200px;
+    margin-bottom: 60px;
   }
-  .scale-label{
+  .built-label{
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: var(--fg-dim);
     display: flex; align-items: center; gap: 10px;
+    margin-bottom: 28px;
   }
-  .scale-label::before{
+  .built-label::before{
     content: ""; width: 24px; height: 1px; background: var(--fg-faint);
   }
-  .scale h2{
+  .built h2{
     font-weight: 800;
-    font-size: clamp(48px, 7vw, 112px);
-    line-height: 0.92;
-    letter-spacing: -0.04em;
+    font-size: clamp(40px, 5.6vw, 88px);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    max-width: 1120px;
   }
-  .scale h2 em{
+  .built h2 em{
     font-family: 'Instrument Serif', serif;
     font-style: italic;
     color: var(--amber);
     font-weight: 400;
   }
-  .scale-sub{
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-size: clamp(20px, 1.9vw, 28px);
-    color: var(--fg);
-    line-height: 1.4;
-    max-width: 760px;
-  }
-  .scale-sub em{ color: var(--amber); font-style: italic; }
-
-  .scale-tiles{
+  .built-grid{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
     border: 1px solid var(--line-bright);
     background: var(--bg);
   }
-  .scale-tile{
-    padding: 36px 36px 32px;
+  .built-card{
+    padding: 40px 34px 34px;
     display: flex;
     flex-direction: column;
     gap: 18px;
     position: relative;
   }
-  .scale-tile + .scale-tile{
-    border-left: 1px solid var(--line);
-  }
-  .scale-tile-tag{
+  .built-card + .built-card{ border-left: 1px solid var(--line); }
+  .built-card-tag{
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.22em;
@@ -2292,51 +2279,220 @@
     text-transform: uppercase;
     display: flex; align-items: center; gap: 10px;
   }
-  .scale-tile-tag::before{
+  .built-card-tag::before{
     content: ""; width: 18px; height: 1px; background: var(--amber);
   }
-  .scale-tile-range{
-    font-weight: 800;
-    font-size: clamp(36px, 4.6vw, 64px);
-    line-height: 1;
-    letter-spacing: -0.03em;
+  .built-card-headline{
+    font-weight: 700;
+    font-size: clamp(22px, 2.1vw, 29px);
+    line-height: 1.18;
+    letter-spacing: -0.02em;
     color: var(--fg);
   }
-  .scale-tile-range em{
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    color: var(--amber);
-    font-weight: 400;
-    letter-spacing: 0;
-  }
-  .scale-tile-headline{
-    font-weight: 600;
-    font-size: clamp(20px, 2vw, 26px);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    color: var(--fg);
-    margin-top: 4px;
-  }
-  .scale-tile-headline em{
+  .built-card-headline em{
     font-family: 'Instrument Serif', serif;
     font-style: italic;
     color: var(--amber);
     font-weight: 400;
   }
-  .scale-tile-body{
+  .built-card-body{
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.6;
+    color: var(--fg-dim);
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .built-card-body strong{ color: var(--fg); font-weight: 600; }
+
+  /* ============ 03 / AI ARCHITECTURE ============ */
+  .arch{
+    padding: 160px 40px 140px;
+    border-bottom: 1px solid var(--line);
+  }
+  .arch-head{
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 48px;
+    align-items: end;
+    margin-bottom: 54px;
+    max-width: 1400px;
+  }
+  .arch-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 24px;
+  }
+  .arch-label::before{ content:""; width:24px; height:1px; background: var(--fg-faint); }
+  .arch h2{
+    font-weight: 800;
+    font-size: clamp(40px, 5.4vw, 84px);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+  }
+  .arch h2 em{
+    font-family: 'Instrument Serif', serif; font-style: italic; color: var(--amber); font-weight: 400;
+  }
+  .arch-lead{
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: clamp(19px, 1.7vw, 25px);
+    line-height: 1.45;
+    color: var(--fg);
+    padding-bottom: 6px;
+  }
+  .arch-lead em{ color: var(--amber); font-style: italic; }
+  .arch-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--line-bright);
+    background: var(--bg);
+  }
+  .arch-card{
+    padding: 34px 26px 30px;
+    display: flex; flex-direction: column; gap: 15px;
+    position: relative;
+  }
+  .arch-card + .arch-card{ border-left: 1px solid var(--line); }
+  .arch-card-tag{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; color: var(--amber); text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    min-height: 20px;
+  }
+  .arch-card-badge{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--fg-dim);
+    border: 1px solid var(--line-bright);
+    padding: 2px 7px; border-radius: 100px;
+  }
+  .arch-card-headline{
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.22;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+  }
+  .arch-card-headline em{ font-family:'Instrument Serif',serif; font-style:italic; color:var(--amber); font-weight:400; }
+  .arch-card-body{
+    font-size: 14px;
+    line-height: 1.6;
     color: var(--fg-dim);
     margin-top: auto;
     padding-top: 18px;
     border-top: 1px solid var(--line);
   }
-  .scale-tile-body strong{ color: var(--fg); font-weight: 600; }
-  .scale-tile-body em{
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    color: var(--amber);
+  .arch-card-body strong{ color: var(--fg); font-weight: 600; }
+  .arch-note{
+    margin-top: 24px;
+    display: flex; align-items: center; gap: 16px;
+    padding: 24px 30px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    font-size: clamp(16px, 1.35vw, 19px);
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1.5;
+    max-width: 1400px;
   }
+  .arch-note::before{
+    content:""; flex: none; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--amber);
+  }
+  .arch-note em{ font-family:'Instrument Serif',serif; font-style:italic; color: var(--amber); font-weight: 400; }
+
+  /* ============ 06 / PRODUCT ============ */
+  .journey{
+    padding: 160px 40px 140px;
+    border-bottom: 1px solid var(--line);
+  }
+  .journey-head{
+    max-width: 1200px;
+    margin-bottom: 56px;
+  }
+  .journey-label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--fg-dim);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 28px;
+  }
+  .journey-label::before{ content:""; width:24px; height:1px; background: var(--fg-faint); }
+  .journey h2{
+    font-weight: 800;
+    font-size: clamp(44px, 6.2vw, 104px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    max-width: 1200px;
+  }
+  .journey h2 em{ font-family:'Instrument Serif',serif; font-style:italic; color:var(--amber); font-weight:400; }
+  .journey-steps{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--line-bright);
+    background: var(--bg);
+  }
+  .journey-step{
+    padding: 34px 28px 32px;
+    display: flex; flex-direction: column; gap: 16px;
+    position: relative;
+  }
+  .journey-step + .journey-step{ border-left: 1px solid var(--line); }
+  .journey-step + .journey-step::before{
+    content: "\2192";
+    position: absolute;
+    left: -14px; top: 42px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg);
+    color: var(--amber);
+    font-size: 15px;
+    border: 1px solid var(--line-bright);
+    border-radius: 50%;
+    z-index: 2;
+  }
+  .journey-step-num{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em;
+    color: var(--fg-faint);
+  }
+  .journey-step-title{
+    font-weight: 700;
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+  }
+  .journey-step-body{
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--fg-dim);
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .journey-step-body em{ font-family:'Instrument Serif',serif; font-style:italic; color:var(--amber); }
+  .journey-note{
+    margin-top: 24px;
+    display: flex; align-items: center; gap: 16px;
+    padding: 26px 32px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    font-weight: 600;
+    font-size: clamp(16px, 1.45vw, 21px);
+    color: var(--fg);
+    line-height: 1.5;
+    max-width: 1400px;
+  }
+  .journey-note::before{
+    content:""; flex:none; width: 10px; height: 10px; border-radius: 50%; background: var(--amber);
+  }
+  .journey-note em{ font-family:'Instrument Serif',serif; font-style:italic; color: var(--amber); font-weight: 400; }
 
   /* ---------- CTA ---------- */
   .cta{
@@ -2591,13 +2747,29 @@
   @media (max-width: 960px){
     nav.top{ padding: 16px 20px; }
     nav.top .links{ display: none; }
-    .hero, .manifesto, .network, .scope-intro, .command, .scale, .founder, .cta{ padding-left: 20px; padding-right: 20px; }
+    .hero, .manifesto, .network, .scope-intro, .command, .built, .arch, .journey, .founder, .cta{ padding-left: 20px; padding-right: 20px; }
     .cta-grid{ grid-template-columns: 1fr; gap: 36px; }
     .cta-form{ padding: 22px; }
     .cta-form .row{ grid-template-columns: 1fr; }
-    .scale-tiles{ grid-template-columns: 1fr; }
-    .scale-tile + .scale-tile{ border-left: none; border-top: 1px solid var(--line); }
-    .scale-tile{ padding: 28px 22px; }
+    .built-grid, .arch-grid, .journey-steps{ grid-template-columns: 1fr; }
+    .built-card + .built-card,
+    .arch-card + .arch-card,
+    .journey-step + .journey-step{ border-left: none; border-top: 1px solid var(--line); }
+    .built-card{ padding: 30px 22px; }
+    .arch-card{ padding: 28px 22px; }
+    .journey-step{ padding: 30px 22px; }
+    .arch-head{ grid-template-columns: 1fr; gap: 20px; align-items: start; }
+    .arch-label{ margin-bottom: 18px; }
+    .arch-note, .journey-note{ padding: 20px 22px; align-items: flex-start; }
+    /* stacked step connector points down */
+    .journey-step + .journey-step::before{
+      left: 50%; top: -14px; transform: translateX(-50%) rotate(90deg);
+    }
+    /* keep long headings inside narrow viewports */
+    .built h2{ font-size: clamp(30px, 7.6vw, 60px); }
+    .arch h2{ font-size: clamp(30px, 7.4vw, 60px); }
+    .journey h2{ font-size: clamp(30px, 7.6vw, 64px); }
+    .built h2, .arch h2, .journey h2{ overflow-wrap: anywhere; }
     .hero-bottom{ grid-template-columns: 1fr; }
     .hero-cta{ justify-self: start; }
     .proof{ grid-template-columns: 1fr; }
@@ -2830,33 +3002,36 @@
   <div class="bleed-caption">Your supply chain, in real time</div>
 </section>
 
-<!-- Scale (audience: who this is for) -->
-<section class="scale reveal">
-  <div class="scale-head">
-    <div class="scale-label">01 / SCALE</div>
-    <h2>Built for complexity at <em>every</em> scale.</h2>
-    <p class="scale-sub">
-      One agentic platform &mdash; configured to your data, your ERP, your guardrails. From the mid-market floor to enterprise breadth, deployed in days rather than months.
-    </p>
+<!-- What we built -->
+<section class="built reveal">
+  <div class="built-head">
+    <div class="built-label">01 / WHAT WE BUILT</div>
+    <h2>Pre-trained agents, <em>contextualized</em> to supply chain logic.</h2>
   </div>
 
-  <div class="scale-tiles">
+  <div class="built-grid">
 
-    <div class="scale-tile">
-      <div class="scale-tile-tag">Mid-Market &middot; Operators</div>
-      <div class="scale-tile-range">$10M &ndash; $500M</div>
-      <div class="scale-tile-headline">Enterprise-grade AI. <em>Without</em> enterprise overhead.</div>
-      <div class="scale-tile-body">
-        Our <strong>fit-to-standard</strong> approach matures your supply chain operations <em>at speed</em> as your business scales up.
+    <div class="built-card">
+      <div class="built-card-tag">Pre-trained</div>
+      <div class="built-card-headline">Decades of supply chain logic, <em>encoded.</em></div>
+      <div class="built-card-body">
+        Configured to your data and contextualized to supply chain expertise. No need for system integration effort and protracted build.
       </div>
     </div>
 
-    <div class="scale-tile">
-      <div class="scale-tile-tag">Enterprise &middot; Operators</div>
-      <div class="scale-tile-range">$500M &ndash; $5B+</div>
-      <div class="scale-tile-headline">Complexity, <em>handled.</em></div>
-      <div class="scale-tile-body">
-        Optimize your enterprise ecosystem by delivering agentic solutions that <em>replace</em> manual work and larger enterprise-grade platforms.
+    <div class="built-card">
+      <div class="built-card-tag">Fit-to-standard</div>
+      <div class="built-card-headline">Lifts <em>mid-market</em> productivity.</div>
+      <div class="built-card-body">
+        Our control toolkit supports execution &mdash; benefits embedded, sustainable, fast.
+      </div>
+    </div>
+
+    <div class="built-card">
+      <div class="built-card-tag">Self-executing</div>
+      <div class="built-card-headline">Decisions written back, <em>automatically.</em></div>
+      <div class="built-card-body">
+        Recommendations execute into your source systems with human approval. Loops close in seconds.
       </div>
     </div>
 
@@ -3356,11 +3531,60 @@
   </div>
 </section>
 
+<!-- AI Architecture -->
+<section class="arch reveal">
+  <div class="arch-head">
+    <div>
+      <div class="arch-label">03 / AI ARCHITECTURE</div>
+      <h2>Cutting-edge AI, <em>purpose-built</em> for supply chain decisions.</h2>
+    </div>
+    <p class="arch-lead">Four engineering choices that differentiate Optaro &mdash; each one embedding <em>best AI practices</em> across the stack.</p>
+  </div>
+
+  <div class="arch-grid">
+
+    <div class="arch-card">
+      <div class="arch-card-tag">Frontier foundation</div>
+      <div class="arch-card-headline">Best-in-class models, <em>orchestrated.</em></div>
+      <div class="arch-card-body">
+        Built on the leading frontier LLMs. We add a proprietary reasoning layer and SME-encoded supply chain logic. Not a wrapper &mdash; a system.
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-card-tag">TokenOps</div>
+      <div class="arch-card-headline">Smart routing. Lower cost. <em>Better answers.</em></div>
+      <div class="arch-card-body">
+        Our cost-optimisation layer routes each task to the cheapest sufficient model. Frontier reserved for high-value reasoning. Domain SLMs handle the rest.
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-card-tag">Supply Chain LLM <span class="arch-card-badge">On the roadmap</span></div>
+      <div class="arch-card-headline">The first <em>domain-specific</em> SLM.</div>
+      <div class="arch-card-body">
+        A purpose-built Supply Chain LLM trained on agent interactions. Removes public-model dependency. Compounds into our moat.
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-card-tag">AI-for-AI</div>
+      <div class="arch-card-headline">Agents that <em>improve</em> each other.</div>
+      <div class="arch-card-body">
+        Self-evaluating loops. Agents critique outputs, retrain prompts, and surface edge cases. The platform gets smarter with every deployment.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="arch-note">Build on best-in-class AI practices for competitive edge today. <em>Proprietary moat tomorrow.</em></div>
+</section>
+
 <!-- Command Center -->
 <section class="command reveal" id="platform">
   <div class="command-head">
     <div>
-      <div class="command-label">03 / SURFACE</div>
+      <div class="command-label">04 / SURFACE</div>
       <h2>One <em>Command Center.</em></h2>
     </div>
     <div class="command-sub">
@@ -3483,7 +3707,7 @@
 
 <!-- SPMD intro -->
 <section class="scope-intro reveal" id="scope">
-  <div class="label">04 / SCOPE</div>
+  <div class="label">05 / SCOPE</div>
   <h2>Across <em>every</em> phase of the value chain.</h2>
   <div class="scope-tags">
     <span>Source</span>
@@ -3629,6 +3853,44 @@
   </div>
 </section>
 
+<!-- Product journey -->
+<section class="journey reveal" id="product">
+  <div class="journey-head">
+    <div class="journey-label">06 / PRODUCT</div>
+    <h2>From sign-up to live recommendations <em>in days.</em></h2>
+  </div>
+
+  <div class="journey-steps">
+
+    <div class="journey-step">
+      <div class="journey-step-num">01</div>
+      <div class="journey-step-title">Register</div>
+      <div class="journey-step-body">Sign up on optaro.ai. Pick an agent across <em>Source, Plan, Make, Deliver.</em></div>
+    </div>
+
+    <div class="journey-step">
+      <div class="journey-step-num">02</div>
+      <div class="journey-step-title">See value</div>
+      <div class="journey-step-body">Upload a spreadsheet / CSV or link your (anonymised) data. Trial the platform &mdash; see recommendations and automation in action. Accept, modify, or analyse further.</div>
+    </div>
+
+    <div class="journey-step">
+      <div class="journey-step-num">03</div>
+      <div class="journey-step-title">Sign up</div>
+      <div class="journey-step-body">Pay for ongoing use post-trial. Stripe-like frictionless payment processing. No procurement bottleneck.</div>
+    </div>
+
+    <div class="journey-step">
+      <div class="journey-step-num">04</div>
+      <div class="journey-step-title">Expand</div>
+      <div class="journey-step-body">Next agent in hours. Adjacent use cases extend the <em>same value driver.</em></div>
+    </div>
+
+  </div>
+
+  <div class="journey-note">No demo deck. No POC project. No SI build. <em>Just sign up, see value on your own data, and pay when it proves out.</em></div>
+</section>
+
 <!-- Marquee -->
 <section class="marquee">
   <div class="marquee-track">
@@ -3641,7 +3903,7 @@
 <!-- Founder -->
 <section class="founder reveal">
   <div class="founder-inner">
-    <div class="founder-label">05 / BELIEF</div>
+    <div class="founder-label">07 / BELIEF</div>
     <div class="founder-quote">
       Supply chain has always had the data. Now it has an agentic team that <em>acts</em> on it &mdash; every signal, every loop, every day. That&rsquo;s why we built Optaro.
     </div>
